@@ -118,8 +118,11 @@ pnpm dev          # lance Chrome avec l'extension, rechargée à chaque modif
 pnpm typecheck
 pnpm lint
 pnpm test
+pnpm build        # compile l'extension dans .output/chrome-mv3
 pnpm zip          # génère .output/nowtify-x.y.z-chrome.zip
 ```
+
+Pour la charger dans ton Chrome habituel : `pnpm build`, puis dans `chrome://extensions`, « Charger l'extension non empaquetée » sur le dossier `.output/chrome-mv3`. La racine du dépôt ne contient pas de `manifest.json`, WXT le génère au build.
 
 Pour publier une version : monte `version` dans `package.json`, lance `pnpm zip`, envoie le zip sur le tableau de bord du Chrome Web Store, puis joins-le à une release GitHub.
 
