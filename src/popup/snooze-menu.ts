@@ -41,6 +41,9 @@ export function openSnoozeMenu(
     })
     return button
   })
-  card.append(h('div', { class: 'snooze-menu', role: 'menu' }, buttons))
+  const menu = h('div', { class: 'snooze-menu', role: 'menu' }, buttons)
+  card.append(menu)
+  if (menu.getBoundingClientRect().bottom > document.documentElement.clientHeight)
+    menu.classList.add('upward')
   buttons[0]?.focus()
 }

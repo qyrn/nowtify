@@ -95,6 +95,7 @@
   "timeDays": { "message": "$COUNT$d", "placeholders": { "count": { "content": "$1" } } },
   "timeWeeks": { "message": "$COUNT$w", "placeholders": { "count": { "content": "$1" } } },
   "timeMonths": { "message": "$COUNT$mo", "placeholders": { "count": { "content": "$1" } } },
+  "timeYear": { "message": "$COUNT$y", "placeholders": { "count": { "content": "$1" } } },
   "timeYears": { "message": "$COUNT$y", "placeholders": { "count": { "content": "$1" } } },
   "scheduleInMinutes": { "message": "in $COUNT$ min", "placeholders": { "count": { "content": "$1" } } },
   "scheduleToday": { "message": "today, $TIME$", "placeholders": { "time": { "content": "$1" } } },

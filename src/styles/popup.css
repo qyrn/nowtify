@@ -545,13 +545,15 @@ body {
 }
 
 .card:hover .card-actions,
-.card:focus-within .card-actions {
+.card:has(:focus-visible) .card-actions,
+.card:has(.snooze-menu) .card-actions {
   visibility: visible;
   opacity: 1;
 }
 
 .card:hover .team,
-.card:focus-within .team {
+.card:has(:focus-visible) .team,
+.card:has(.snooze-menu) .team {
   visibility: hidden;
 }
 
@@ -584,6 +586,11 @@ body {
 .card-action.remove:hover {
   border-color: var(--danger-border);
   color: var(--danger);
+}
+
+.snooze-menu.upward {
+  top: auto;
+  bottom: calc(100% - 26px);
 }
 
 .snoozed-indicator {
@@ -723,8 +730,8 @@ body {
 
 .compact .card-sub,
 .compact .schedule,
-.compact .preview,
-.compact .preview-toggle {
+.compact .preview-toggle,
+.streamer-list.compact .card .preview {
   display: none;
 }
 
@@ -747,6 +754,11 @@ body {
   top: 26px;
   right: 3px;
   min-width: 150px;
+}
+
+.compact .snooze-menu.upward {
+  top: auto;
+  bottom: calc(100% - 22px);
 }
 
 .compact .card:nth-child(3n + 1) .snooze-menu {

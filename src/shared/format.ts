@@ -1,4 +1,4 @@
-import { locale, t } from './i18n'
+import { locale, plural, t } from './i18n'
 
 const MINUTE = 60_000
 const HOUR = 60 * MINUTE
@@ -18,7 +18,7 @@ export function formatSince(timestamp: number, now = Date.now()): string {
   if (days < 7) return t('timeDays', days)
   if (days < 35) return t('timeWeeks', Math.floor(days / 7))
   if (days < 365) return t('timeMonths', Math.floor(days / 30))
-  return t('timeYears', Math.floor(days / 365))
+  return plural(Math.floor(days / 365), 'timeYear', 'timeYears')
 }
 
 export function formatUntil(timestamp: number, now = Date.now()): string | null {
