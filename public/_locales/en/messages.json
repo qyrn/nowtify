@@ -1,0 +1,185 @@
+{
+  "extName": { "message": "Nowtify" },
+  "extDescription": {
+    "message": "Get a desktop notification the moment your favorite Twitch streamers go live"
+  },
+
+  "refreshTitle": { "message": "Refresh" },
+  "compactModeTitle": { "message": "Compact view" },
+  "settingsTitle": { "message": "Settings" },
+  "searchPlaceholder": { "message": "Streamer name, link or team/name" },
+  "addButton": { "message": "Add" },
+  "allTeams": { "message": "All teams" },
+  "emptyStateTitle": { "message": "Nobody here yet" },
+  "emptyStateText": {
+    "message": "Search for a streamer above, or type team/ followed by a Twitch team name to add the whole roster."
+  },
+  "liveCountLabel": {
+    "message": "$LIVE$/$TOTAL$ live",
+    "placeholders": { "live": { "content": "$1" }, "total": { "content": "$2" } }
+  },
+
+  "twitchConnectRequiredText": { "message": "Connect your Twitch account to start tracking" },
+  "authExpiredText": { "message": "Your Twitch session expired" },
+  "connectButton": { "message": "Connect" },
+  "reconnectButton": { "message": "Reconnect" },
+  "twitchConnectedToast": { "message": "Connected to Twitch" },
+  "twitchDisconnectedToast": { "message": "Disconnected from Twitch" },
+  "disconnectError": { "message": "Could not disconnect, try again" },
+  "loginCancelledError": { "message": "Twitch login was cancelled" },
+  "loginProfileError": { "message": "Connected, but Twitch did not return your profile" },
+  "unknownError": { "message": "Something went wrong, try again" },
+  "loadErrorText": { "message": "Could not refresh the list" },
+
+  "enterUrlOrName": { "message": "Type a streamer name or a Twitch link" },
+  "unrecognizedFormat": { "message": "That does not look like a Twitch name or link" },
+  "streamerAddedToast": {
+    "message": "$NAME$ added",
+    "placeholders": { "name": { "content": "$1" } }
+  },
+  "streamerAlreadyInList": { "message": "This streamer is already in your list" },
+  "streamerNotFound": { "message": "No Twitch channel with that name" },
+  "addErrorGeneric": { "message": "Could not add it, try again" },
+  "teamAddedToast": {
+    "message": "$TEAM$ added. New streamers: $COUNT$",
+    "placeholders": { "team": { "content": "$1" }, "count": { "content": "$2" } }
+  },
+  "teamNotFoundError": { "message": "No Twitch team with that name" },
+  "noMembersInTeamError": { "message": "This team has no members" },
+  "teamMembersCount": {
+    "message": "$COUNT$ member",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "teamMembersCountPlural": {
+    "message": "$COUNT$ members",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+
+  "liveBadge": { "message": "Live" },
+  "statusOffline": { "message": "Offline" },
+  "streamInProgress": { "message": "Stream in progress" },
+  "previewTitle": { "message": "Show stream preview" },
+  "viewersCount": {
+    "message": "$COUNT$ viewers",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "nextStreamLabel": {
+    "message": "Next stream: $WHEN$",
+    "placeholders": { "when": { "content": "$1" } }
+  },
+  "notifPaused": { "message": "Notifications paused" },
+  "notifPauseAction": { "message": "Pause notifications" },
+  "snooze1h": { "message": "Pause for 1 hour" },
+  "snoozeTomorrow": { "message": "Pause until tomorrow morning" },
+  "snoozeCancel": { "message": "Resume notifications" },
+  "snoozeToastPaused": { "message": "Notifications paused for this streamer" },
+  "snoozeToastResumed": { "message": "Notifications resumed" },
+
+  "deleteTitle": { "message": "Remove" },
+  "cancelLabel": { "message": "Cancel" },
+  "deleteStreamerModalTitle": { "message": "Remove streamer" },
+  "confirmRemoveStreamerText": {
+    "message": "$NAME$ will be removed from your list.",
+    "placeholders": { "name": { "content": "$1" } }
+  },
+  "deleteModalTeamText": {
+    "message": "$NAME$ was added with the $TEAM$ team. Remove only this streamer, or the whole team?",
+    "placeholders": { "name": { "content": "$1" }, "team": { "content": "$2" } }
+  },
+  "deleteThisStreamer": { "message": "This streamer" },
+  "deleteWholeTeam": { "message": "Whole team" },
+  "deleteErrorGeneric": { "message": "Could not remove it, try again" },
+
+  "timeLessThanHour": { "message": "< 1h" },
+  "timeHours": { "message": "$COUNT$h", "placeholders": { "count": { "content": "$1" } } },
+  "timeDays": { "message": "$COUNT$d", "placeholders": { "count": { "content": "$1" } } },
+  "timeWeeks": { "message": "$COUNT$w", "placeholders": { "count": { "content": "$1" } } },
+  "timeMonths": { "message": "$COUNT$mo", "placeholders": { "count": { "content": "$1" } } },
+  "timeYears": { "message": "$COUNT$y", "placeholders": { "count": { "content": "$1" } } },
+  "scheduleInMinutes": { "message": "in $COUNT$ min", "placeholders": { "count": { "content": "$1" } } },
+  "scheduleToday": { "message": "today, $TIME$", "placeholders": { "time": { "content": "$1" } } },
+  "scheduleTomorrow": { "message": "tomorrow, $TIME$", "placeholders": { "time": { "content": "$1" } } },
+  "agoJustNow": { "message": "just now" },
+  "agoMinutes": { "message": "$COUNT$ min ago", "placeholders": { "count": { "content": "$1" } } },
+  "agoHours": { "message": "$COUNT$h ago", "placeholders": { "count": { "content": "$1" } } },
+  "agoDays": { "message": "$COUNT$d ago", "placeholders": { "count": { "content": "$1" } } },
+
+  "notificationTitle": {
+    "message": "$NAME$ is live",
+    "placeholders": { "name": { "content": "$1" } }
+  },
+  "notificationBodyFallback": {
+    "message": "$NAME$ just went live on Twitch",
+    "placeholders": { "name": { "content": "$1" } }
+  },
+
+  "optionsTitle": { "message": "Nowtify settings" },
+  "optionsSubtitle": { "message": "Settings, history and backups" },
+  "twitchConnectionHeader": { "message": "Twitch account" },
+  "twitchNotConnectedText": {
+    "message": "Nowtify needs a Twitch login to ask Twitch who is live. It only reads public data and never sees your password."
+  },
+  "connectWithTwitch": { "message": "Connect with Twitch" },
+  "connectedStatus": { "message": "Connected" },
+  "disconnectButton": { "message": "Disconnect" },
+  "preferencesHeader": { "message": "Preferences" },
+  "notificationsToggleTitle": { "message": "Desktop notifications" },
+  "notificationsToggleDesc": { "message": "Get notified when a streamer in your list goes live" },
+  "persistentToggleTitle": { "message": "Keep notifications on screen" },
+  "persistentToggleDesc": { "message": "Notifications stay until you close them instead of fading out" },
+  "confirmDeleteToggleTitle": { "message": "Confirm before removing" },
+  "confirmDeleteToggleDesc": { "message": "Ask before a streamer or a team is removed from your list" },
+  "settingsSaveError": { "message": "Could not save the setting" },
+
+  "statisticsHeader": { "message": "Statistics" },
+  "statsNoData": { "message": "Stats show up once Nowtify has caught a first live." },
+  "statsLoadError": { "message": "Could not load statistics" },
+  "statStreamsCaught": { "message": "Lives caught" },
+  "statStreamsCaughtSub": { "message": "Last 500 kept" },
+  "statThisWeek": { "message": "This week" },
+  "statTopStreamer": { "message": "Most frequent streamer" },
+  "statTopGame": { "message": "Most frequent game" },
+  "statStreamsCount": { "message": "$COUNT$ live", "placeholders": { "count": { "content": "$1" } } },
+  "statStreamsCountPlural": { "message": "$COUNT$ lives", "placeholders": { "count": { "content": "$1" } } },
+  "statTimesCount": { "message": "$COUNT$ time", "placeholders": { "count": { "content": "$1" } } },
+  "statTimesCountPlural": { "message": "$COUNT$ times", "placeholders": { "count": { "content": "$1" } } },
+
+  "historyHeader": { "message": "Recent lives" },
+  "emptyHistory": { "message": "Lives caught by Nowtify will show up here." },
+  "historyLoadError": { "message": "Could not load the history" },
+  "clearHistoryButton": { "message": "Clear" },
+  "clearHistoryModalTitle": { "message": "Clear history" },
+  "clearHistoryConfirmText": {
+    "message": "Every recorded live and the statistics built from them will be deleted."
+  },
+  "clearLabel": { "message": "Clear" },
+  "historyClearError": { "message": "Could not clear the history" },
+
+  "teamsManagementHeader": { "message": "Teams" },
+  "noTeamsAdded": { "message": "No team yet. Type team/name in the popup to add a whole Twitch team." },
+  "deleteTeamButton": { "message": "Remove team" },
+  "confirmDeleteTeamText": {
+    "message": "Every $TEAM$ member will be removed from your list.",
+    "placeholders": { "team": { "content": "$1" } }
+  },
+  "teamDeleteError": { "message": "Could not remove the team" },
+
+  "backupHeader": { "message": "Backup" },
+  "exportImportDesc": {
+    "message": "Export your streamers, settings and history to a file. Importing one adds what is missing without touching what you already have."
+  },
+  "exportButton": { "message": "Export" },
+  "importButton": { "message": "Import" },
+  "exportSuccessToast": { "message": "Backup downloaded" },
+  "exportError": { "message": "Could not export your data" },
+  "fileTooLarge": { "message": "This file is too large to be a Nowtify backup" },
+  "invalidFileFormat": { "message": "This file is not a Nowtify backup" },
+  "importSuccessToast": {
+    "message": "Import done. New streamers: $STREAMERS$, history entries: $HISTORY$",
+    "placeholders": { "streamers": { "content": "$1" }, "history": { "content": "$2" } }
+  },
+
+  "websiteLink": { "message": "Website" },
+  "reportBugLink": { "message": "Report a bug" },
+  "privacyLink": { "message": "Privacy" }
+}

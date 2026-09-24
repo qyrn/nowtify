@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="manifest.open_in_tab" content="true" />
+    <title>Nowtify</title>
+  </head>
+  <body>
+    <div class="page">
+      <header class="page-header">
+        <img src="/icon-128.png" alt="" width="40" height="40" />
+        <div>
+          <h1 class="wordmark">Now<span class="brand-accent">tify</span></h1>
+          <p class="page-subtitle" data-i18n="optionsSubtitle"></p>
+        </div>
+      </header>
+
+      <main class="sections">
+        <section class="section" aria-labelledby="accountTitle">
+          <h2 class="section-title" id="accountTitle" data-i18n="twitchConnectionHeader"></h2>
+          <div class="account hidden" id="accountDisconnected">
+            <p class="muted" data-i18n="twitchNotConnectedText"></p>
+            <button type="button" class="btn btn-primary" id="loginBtn">
+              <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path
+                  d="M11.571 4.714h1.715v5.143H11.57zm4.715 0H18v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714Z"
+                />
+              </svg>
+              <span data-i18n="connectWithTwitch"></span>
+            </button>
+          </div>
+          <div class="account account-connected hidden" id="accountConnected">
+            <div class="account-user">
+              <span id="accountAvatar"></span>
+              <div>
+                <p class="account-name" id="accountName"></p>
+                <p class="account-status" data-i18n="connectedStatus"></p>
+              </div>
+            </div>
+            <button type="button" class="btn" id="logoutBtn" data-i18n="disconnectButton"></button>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="preferencesTitle">
+          <h2 class="section-title" id="preferencesTitle" data-i18n="preferencesHeader"></h2>
+          <label class="setting">
+            <span class="setting-text">
+              <span class="setting-title" data-i18n="notificationsToggleTitle"></span>
+              <span class="setting-desc" data-i18n="notificationsToggleDesc"></span>
+            </span>
+            <input type="checkbox" class="switch" id="notificationsToggle" />
+          </label>
+          <label class="setting">
+            <span class="setting-text">
+              <span class="setting-title" data-i18n="persistentToggleTitle"></span>
+              <span class="setting-desc" data-i18n="persistentToggleDesc"></span>
+            </span>
+            <input type="checkbox" class="switch" id="persistentToggle" />
+          </label>
+          <label class="setting">
+            <span class="setting-text">
+              <span class="setting-title" data-i18n="confirmDeleteToggleTitle"></span>
+              <span class="setting-desc" data-i18n="confirmDeleteToggleDesc"></span>
+            </span>
+            <input type="checkbox" class="switch" id="confirmDeleteToggle" />
+          </label>
+        </section>
+
+        <section class="section" aria-labelledby="statsTitle">
+          <h2 class="section-title" id="statsTitle" data-i18n="statisticsHeader"></h2>
+          <div class="stats" id="stats"></div>
+        </section>
+
+        <section class="section" aria-labelledby="historyTitle">
+          <div class="section-head">
+            <h2 class="section-title" id="historyTitle" data-i18n="historyHeader"></h2>
+            <button
+              type="button"
+              class="btn btn-small btn-danger-ghost"
+              id="clearHistoryBtn"
+              data-i18n="clearHistoryButton"
+            ></button>
+          </div>
+          <ol class="history" id="history"></ol>
+        </section>
+
+        <section class="section" aria-labelledby="teamsTitle">
+          <h2 class="section-title" id="teamsTitle" data-i18n="teamsManagementHeader"></h2>
+          <div class="teams" id="teams"></div>
+        </section>
+
+        <section class="section" aria-labelledby="backupTitle">
+          <h2 class="section-title" id="backupTitle" data-i18n="backupHeader"></h2>
+          <p class="muted" data-i18n="exportImportDesc"></p>
+          <div class="button-row">
+            <button type="button" class="btn" id="exportBtn" data-i18n="exportButton"></button>
+            <button type="button" class="btn" id="importBtn" data-i18n="importButton"></button>
+            <input type="file" id="importFile" accept=".json,application/json" hidden />
+          </div>
+        </section>
+      </main>
+
+      <footer class="page-footer">
+        <span id="version"></span>
+        <nav class="footer-links">
+          <a href="https://nowtify.qyrn.dev" target="_blank" rel="noopener" data-i18n="websiteLink"></a>
+          <a href="https://github.com/qyrn/nowtify" target="_blank" rel="noopener">GitHub</a>
+          <a
+            href="https://github.com/qyrn/nowtify/issues"
+            target="_blank"
+            rel="noopener"
+            data-i18n="reportBugLink"
+          ></a>
+          <a
+            href="https://nowtify.qyrn.dev/privacy.html"
+            target="_blank"
+            rel="noopener"
+            data-i18n="privacyLink"
+          ></a>
+          <a href="https://ko-fi.com/qyrnsec" target="_blank" rel="noopener">Ko-fi</a>
+        </nav>
+      </footer>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

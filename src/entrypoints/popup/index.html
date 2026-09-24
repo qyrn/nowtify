@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nowtify</title>
+  </head>
+  <body>
+    <div class="popup">
+      <header class="header">
+        <h1 class="wordmark">Now<span class="brand-accent">tify</span></h1>
+        <div class="header-actions">
+          <button type="button" class="icon-btn" id="refreshBtn" data-i18n-title="refreshTitle">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+              <path d="M21 3v5h-5" />
+              <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+              <path d="M3 21v-5h5" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            class="icon-btn"
+            id="compactBtn"
+            data-i18n-title="compactModeTitle"
+            aria-pressed="false"
+          >
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <rect x="3" y="3" width="7" height="7" rx="1" />
+              <rect x="14" y="3" width="7" height="7" rx="1" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <rect x="14" y="14" width="7" height="7" rx="1" />
+            </svg>
+          </button>
+          <button type="button" class="icon-btn" id="settingsBtn" data-i18n-title="settingsTitle">
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+              />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="auth-banner hidden" id="authBanner" role="alert">
+        <span class="auth-banner-text" id="authBannerText"></span>
+        <button type="button" class="auth-banner-btn" id="authBannerBtn" data-i18n="connectButton"></button>
+      </div>
+
+      <form class="add-form" id="addForm" autocomplete="off">
+        <input
+          type="text"
+          class="add-input"
+          id="addInput"
+          maxlength="80"
+          spellcheck="false"
+          role="combobox"
+          aria-autocomplete="list"
+          aria-expanded="false"
+          aria-controls="suggestions"
+          data-i18n-placeholder="searchPlaceholder"
+        />
+        <button type="submit" class="add-btn" id="addBtn">
+          <svg
+            class="icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M5 12h14M12 5v14" />
+          </svg>
+          <span data-i18n="addButton"></span>
+        </button>
+        <div class="suggestions hidden" id="suggestions" role="listbox"></div>
+      </form>
+
+      <div class="toolbar" id="toolbar">
+        <span class="live-count" id="liveCount"></span>
+        <div class="team-filter hidden" id="teamFilter">
+          <button
+            type="button"
+            class="team-filter-btn"
+            id="teamFilterBtn"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+          >
+            <svg
+              class="icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+            <span id="teamFilterLabel" data-i18n="allTeams"></span>
+            <svg
+              class="icon chevron"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="m6 9 6 6 6-6" />
+            </svg>
+          </button>
+          <div class="team-filter-menu hidden" id="teamFilterMenu" role="listbox"></div>
+        </div>
+      </div>
+
+      <div class="streamer-list" id="streamerList"></div>
+
+      <div class="empty-state hidden" id="emptyState">
+        <img src="/icon-128.png" alt="" width="56" height="56" />
+        <p class="empty-title" data-i18n="emptyStateTitle"></p>
+        <p class="empty-text" data-i18n="emptyStateText"></p>
+      </div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

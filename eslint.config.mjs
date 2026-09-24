@@ -1,34 +1,27 @@
-import js from '@eslint/js';
-import globals from 'globals';
+import js from '@eslint/js'
+import tseslint from 'typescript-eslint'
+import globals from 'globals'
 
-export default [
-  {
-    ignores: ['node_modules/**', 'landing/**']
-  },
+export default tseslint.config(
+  { ignores: ['.output', '.wxt', 'node_modules', 'landing'] },
   js.configs.recommended,
+  ...tseslint.configs.strictTypeChecked,
   {
-    files: ['**/*.js'],
     languageOptions: {
-      ecmaVersion: 2023,
-      sourceType: 'script',
-      globals: {
-        ...globals.browser,
-        ...globals.webextensions
-      }
-    },
-    rules: {
-      'no-empty': ['error', { allowEmptyCatch: true }],
-      'no-unused-vars': ['error', { args: 'none', caughtErrors: 'none', ignoreRestSiblings: true }]
+      parserOptions: { projectService: true, tsconfigRootDir: import.meta.dirname },
+      globals: { ...globals.browser }
     }
   },
   {
-    files: ['popup.js', 'options.js'],
-    languageOptions: {
-      globals: {
-        DB: 'readonly',
-        UI: 'readonly',
-        I18N: 'readonly'
-      }
+    files: ['**/*.mjs'],
+    extends: [tseslint.configs.disableTypeChecked],
+    languageOptions: { globals: { ...globals.node } }
+  },
+  {
+    files: ['**/*.ts'],
+    rules: {
+      '@typescript-eslint/restrict-template-expressions': ['error', { allowNumber: true }],
+      '@typescript-eslint/no-unused-vars': ['error', { ignoreRestSiblings: true }]
     }
   }
-];
+)
