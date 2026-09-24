@@ -1,498 +1,225 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nowtify - Privacy Policy</title>
-    <meta name="description" content="What data Nowtify accesses, what it never does, and why. No backend, no analytics, nothing leaves your device.">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0E0E10;
-            --surface: #18181B;
-            --surface-hover: #1F1F23;
-            --border: #27272A;
-            --border-hover: #3F3F46;
-            --text: #FAFAFA;
-            --text-dim: #A1A1AA;
-            --text-faint: #52525B;
-            --accent: #FCD34D;
-            --accent-soft: rgba(252, 211, 77, 0.1);
-            --accent-border: rgba(252, 211, 77, 0.35);
-            --radius: 12px;
-            --ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
-        }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Nowtify privacy policy</title>
+    <meta
+      name="description"
+      content="What data Nowtify touches, where it is stored and what it never does. No server, no analytics."
+    />
+    <meta name="theme-color" content="#0b0b0d" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="brand" href="index.html" aria-label="Nowtify">
+          <img src="assets/img/logo.png" alt="" width="28" height="28" />
+          <span>Now<span>tify</span></span>
+        </a>
+        <nav>
+          <a class="text" href="index.html" data-i18n="nav.back">Back to the home page</a>
+          <button type="button" class="lang-switch">FR</button>
+        </nav>
+      </div>
+    </header>
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+    <main class="wrap doc">
+      <p class="kicker" data-i18n="updated">Last updated on September 24, 2026</p>
+      <h1 data-i18n="title">Privacy policy</h1>
+      <p data-i18n="intro">
+        Nowtify is a Chrome extension that notifies you when Twitch streamers go live. This page lists every
+        piece of data it touches and where that data goes.
+      </p>
+      <p class="summary" data-i18n="summary">
+        Short version: Nowtify has no server and no analytics. Everything it knows stays in your browser, and
+        the only outside service it talks to is Twitch.
+      </p>
 
-        body {
-            font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.65;
-            -webkit-font-smoothing: antialiased;
-        }
+      <h2 data-i18n="stored.title">What is stored, and where</h2>
+      <ul>
+        <li data-i18n="stored.token">
+          Your Twitch access token and your public Twitch profile (name and avatar), in Chrome's local
+          extension storage. They never leave your computer except to be sent to Twitch.
+        </li>
+        <li data-i18n="stored.list">
+          The streamers and teams you add, and the history of lives Nowtify caught (the last 500), in your
+          browser's IndexedDB.
+        </li>
+        <li data-i18n="stored.settings">
+          Your preferences (notifications, notifications kept on screen, delete confirmation, compact view),
+          in Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your
+          bookmarks. The developer never receives them.
+        </li>
+      </ul>
 
-        ::selection { background: var(--text); color: var(--bg); }
+      <h2 data-i18n="network.title">Who Nowtify talks to</h2>
+      <ul>
+        <li data-i18n="network.id">
+          id.twitch.tv, to log you in, check that your token is still valid, and revoke it when you
+          disconnect.
+        </li>
+        <li data-i18n="network.api">
+          api.twitch.tv, to find channels, read who is live, and fetch teams, past broadcasts and schedules.
+        </li>
+        <li data-i18n="network.cdn">
+          static-cdn.jtvnw.net, Twitch's image server, to display avatars, team logos and stream thumbnails.
+        </li>
+      </ul>
+      <p data-i18n="network.none">
+        That's the whole list. Fonts and icons ship inside the extension, and there is no analytics, crash
+        reporting or advertising code.
+      </p>
 
-        a { color: inherit; }
+      <h2 data-i18n="login.title">The Twitch login</h2>
+      <p data-i18n="login.text">
+        The login goes through Chrome's own identity window, on Twitch's website. Nowtify never sees your
+        password. It asks for no permission scope, so the token can only read public data. Disconnecting from
+        the settings page deletes the token and asks Twitch to revoke it.
+      </p>
 
-        .container { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+      <h2 data-i18n="permissions.title">Permissions requested</h2>
+      <table class="perm-table">
+        <tbody>
+          <tr>
+            <th scope="row">notifications</th>
+            <td data-i18n="permissions.notifications">
+              Show a desktop notification when a streamer goes live.
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">storage</th>
+            <td data-i18n="permissions.storage">Keep your token, profile and preferences.</td>
+          </tr>
+          <tr>
+            <th scope="row">alarms</th>
+            <td data-i18n="permissions.alarms">Wake up every few minutes to ask Twitch who is live.</td>
+          </tr>
+          <tr>
+            <th scope="row">identity</th>
+            <td data-i18n="permissions.identity">Open the Twitch login window.</td>
+          </tr>
+          <tr>
+            <th scope="row">api.twitch.tv, id.twitch.tv</th>
+            <td data-i18n="permissions.hosts">The only two hosts the extension sends requests to.</td>
+          </tr>
+        </tbody>
+      </table>
 
-        nav {
-            padding: 20px 0;
-            border-bottom: 1px solid var(--border);
-        }
+      <h2 data-i18n="site.title">This website</h2>
+      <p data-i18n="site.text">
+        nowtify.qyrn.dev is a static page hosted by Vercel. It sets no cookie and loads nothing from other
+        sites. The only thing it stores is your language choice, in your browser, if you use the language
+        switch. Like any web host, Vercel keeps technical access logs.
+      </p>
 
-        nav .container {
-            max-width: 1120px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+      <h2 data-i18n="delete.title">Deleting your data</h2>
+      <p data-i18n="delete.text">
+        Uninstalling the extension deletes everything it stored. You can also disconnect Twitch, clear the
+        history or remove streamers at any time from the settings page. There is no account to delete anywhere
+        else, because there isn't one.
+      </p>
 
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .nav-logo img { width: 28px; height: 28px; border-radius: 7px; }
-
-        .nav-logo span { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.02em; }
-
-        .brand-accent { color: var(--accent); }
-
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.86rem;
-            font-weight: 500;
-            transition: color 0.2s var(--ease);
-        }
-
-        .back-link:hover { color: var(--text); }
-
-        .back-link svg { width: 15px; height: 15px; }
-
-        main { padding: 64px 0 100px; }
-
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-dim);
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: clamp(2rem, 4.4vw, 2.75rem);
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-            margin-bottom: 14px;
-        }
-
-        .lede {
-            color: var(--text-dim);
-            font-size: 1.05rem;
-            max-width: 560px;
-            margin-bottom: 40px;
-        }
-
-        .summary-card {
-            background: var(--surface);
-            border: 1px solid var(--accent-border);
-            border-radius: var(--radius);
-            padding: 24px 28px;
-            margin-bottom: 56px;
-            display: flex;
-            gap: 16px;
-            align-items: flex-start;
-        }
-
-        .summary-card svg {
-            width: 22px;
-            height: 22px;
-            color: var(--accent);
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .summary-card p { color: var(--text); font-size: 0.96rem; }
-
-        section { margin-bottom: 52px; }
-
-        .section-eyebrow {
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-faint);
-            margin-bottom: 10px;
-        }
-
-        h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 18px;
-        }
-
-        .data-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .data-item {
-            background: var(--surface);
-            padding: 20px 22px;
-        }
-
-        .data-item strong {
-            display: block;
-            font-size: 0.95rem;
-            font-weight: 600;
-            margin-bottom: 6px;
-            color: var(--text);
-        }
-
-        .data-item p { color: var(--text-dim); font-size: 0.92rem; }
-
-        code {
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid var(--border);
-            padding: 1px 6px;
-            border-radius: 5px;
-            font-family: var(--mono);
-            font-size: 0.85em;
-        }
-
-        .no-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .no-list li {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            font-size: 0.95rem;
-            color: var(--text-dim);
-        }
-
-        .no-list svg {
-            width: 16px;
-            height: 16px;
-            color: var(--text);
-            flex-shrink: 0;
-            margin-top: 3px;
-        }
-
-        .perm-table {
-            display: flex;
-            flex-direction: column;
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .perm-row {
-            display: grid;
-            grid-template-columns: 168px 1fr;
-            gap: 16px;
-            padding: 16px 20px;
-            background: var(--surface);
-        }
-
-        .perm-row:not(:last-child) { border-bottom: 1px solid var(--border); }
-
-        .perm-name {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--accent);
-        }
-
-        .perm-desc { color: var(--text-dim); font-size: 0.9rem; }
-
-        .contact-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 22px 26px;
-        }
-
-        .contact-card p { color: var(--text); font-size: 0.95rem; }
-
-        .contact-card a { color: var(--accent); text-decoration: none; }
-
-        .contact-card a:hover { text-decoration: underline; }
-
-        footer {
-            padding: 28px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-content {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 0 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-left { color: var(--text-faint); font-size: 0.85rem; }
-
-        .footer-links { display: flex; align-items: center; gap: 22px; }
-
-        .footer-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.2s var(--ease);
-        }
-
-        .footer-links a:hover { color: var(--text); }
-
-        @media (max-width: 560px) {
-            main { padding: 44px 0 72px; }
-            .perm-row { grid-template-columns: 1fr; gap: 4px; }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="container">
-            <a href="index.html" class="nav-logo">
-                <img src="logo.png" alt="Nowtify">
-                <span>Now<span class="brand-accent">tify</span></span>
-            </a>
-            <a href="index.html" class="back-link" data-i18n="nav.back">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-                <span data-i18n="nav.back.text">Back to Nowtify</span>
-            </a>
-        </div>
-    </nav>
-
-    <main>
-        <div class="container">
-            <div class="pill"><span data-i18n="pill.updated">Last updated August 23, 2026</span></div>
-            <h1 data-i18n="h1">Privacy Policy</h1>
-            <p class="lede" data-i18n="lede">Nowtify is a Chrome extension that notifies you when your favorite Twitch streamers go live. This page explains exactly what data it touches and where it goes.</p>
-
-            <div class="summary-card">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                <p data-i18n="summary">Nowtify has no backend and no analytics. Everything the extension knows about you stays on your device, and the only third party it ever talks to is Twitch's own API, directly from your browser.</p>
-            </div>
-
-            <section>
-                <div class="section-eyebrow" data-i18n="data.eyebrow">Data</div>
-                <h2 data-i18n="data.title">What data Nowtify accesses</h2>
-                <div class="data-list">
-                    <div class="data-item">
-                        <strong data-i18n="data.item1.title">Twitch login (OAuth)</strong>
-                        <p data-i18n-html="data.item1.desc">When you connect your Twitch account, Nowtify uses Chrome's built-in <code>identity</code> API to open Twitch's own login page and receive an access token. Nowtify never sees your Twitch password. The token is stored locally (<code>chrome.storage</code>) and sent only to <code>api.twitch.tv</code> / <code>id.twitch.tv</code> to check which of your streamers are live.</p>
-                    </div>
-                    <div class="data-item">
-                        <strong data-i18n="data.item2.title">The streamers, teams, and history you add</strong>
-                        <p data-i18n="data.item2.desc">Stored locally in your browser's IndexedDB. Nowtify never uploads this list anywhere.</p>
-                    </div>
-                    <div class="data-item">
-                        <strong data-i18n="data.item3.title">Your preferences</strong>
-                        <p data-i18n-html="data.item3.desc">The notification toggle, delete confirmations, compact mode, and similar settings are stored via <code>chrome.storage.sync</code>, Chrome's own account-sync mechanism, the same one that syncs your bookmarks. Nowtify's developer never receives it.</p>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <div class="section-eyebrow" data-i18n="boundaries.eyebrow">Boundaries</div>
-                <h2 data-i18n-html="boundaries.title">What Nowtify does <em>not</em> do</h2>
-                <ul class="no-list">
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="boundaries.li1">No analytics, telemetry, or crash reporting</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="boundaries.li2">No advertising or ad tracking</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="boundaries.li3">No servers operated by Nowtify: there is nothing to breach because there is nothing to store off-device</span></li>
-                    <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="boundaries.li4">No selling or sharing of data with third parties, ever</span></li>
-                </ul>
-            </section>
-
-            <section>
-                <div class="section-eyebrow" data-i18n="permissions.eyebrow">Permissions</div>
-                <h2 data-i18n="permissions.title">Permissions explained</h2>
-                <div class="perm-table">
-                    <div class="perm-row">
-                        <div class="perm-name">notifications</div>
-                        <div class="perm-desc" data-i18n="permissions.desc1">To show a desktop notification when a streamer goes live.</div>
-                    </div>
-                    <div class="perm-row">
-                        <div class="perm-name">storage</div>
-                        <div class="perm-desc" data-i18n="permissions.desc2">To save your streamers, teams, history, and settings locally.</div>
-                    </div>
-                    <div class="perm-row">
-                        <div class="perm-name">alarms</div>
-                        <div class="perm-desc" data-i18n="permissions.desc3">To periodically check the Twitch API in the background.</div>
-                    </div>
-                    <div class="perm-row">
-                        <div class="perm-name">identity</div>
-                        <div class="perm-desc" data-i18n="permissions.desc4">To run the Twitch OAuth login flow described above.</div>
-                    </div>
-                    <div class="perm-row">
-                        <div class="perm-name">host: api.twitch.tv, id.twitch.tv</div>
-                        <div class="perm-desc" data-i18n="permissions.desc5">The only two hosts Nowtify ever sends requests to.</div>
-                    </div>
-                </div>
-            </section>
-
-            <section>
-                <div class="section-eyebrow" data-i18n="yourdata.eyebrow">Your data</div>
-                <h2 data-i18n="yourdata.title">Removing your data</h2>
-                <p class="lede" style="margin-bottom: 0;" data-i18n="yourdata.desc">Uninstalling the extension removes everything it stored. There is no account to delete anywhere else, because none exists. You can also disconnect Twitch or clear your history at any time from the options page.</p>
-            </section>
-
-            <div class="contact-card">
-                <p data-i18n-html="contact.text">Questions about this policy? Contact <a href="mailto:contact@qyrn.dev">contact@qyrn.dev</a>.</p>
-            </div>
-        </div>
+      <h2 data-i18n="contact.title">Contact</h2>
+      <p>
+        <span data-i18n="contact.text">Questions about this policy:</span>
+        <a href="mailto:contact@qyrn.dev">contact@qyrn.dev</a>
+      </p>
     </main>
 
-    <footer>
-        <div class="footer-content">
-            <div class="footer-left" data-i18n="footer.made">Made by qyrn.</div>
-            <div class="footer-links">
-                <a href="index.html">Nowtify</a>
-                <a href="https://github.com/qyrn/nowtify" target="_blank">GitHub</a>
-                <a href="https://ko-fi.com/qyrnsec" target="_blank">Ko-fi</a>
-            </div>
-        </div>
+    <footer class="footer">
+      <div class="wrap">
+        <span
+          ><span data-i18n="footer.made">Made by</span>
+          <a href="https://github.com/qyrn" rel="noopener">qyrn</a></span
+        >
+        <nav>
+          <a href="index.html">Nowtify</a>
+          <a href="https://github.com/qyrn/nowtify" rel="noopener">GitHub</a>
+          <a href="https://ko-fi.com/qyrnsec" rel="noopener">Ko-fi</a>
+        </nav>
+      </div>
     </footer>
 
-    <script>
-        const translations = {
-            en: {
-                "doc.title": "Nowtify - Privacy Policy",
-                "doc.description": "What data Nowtify accesses, what it never does, and why. No backend, no analytics, nothing leaves your device.",
-                "nav.back.text": "Back to Nowtify",
-                "pill.updated": "Last updated August 23, 2026",
-                "h1": "Privacy Policy",
-                "lede": "Nowtify is a Chrome extension that notifies you when your favorite Twitch streamers go live. This page explains exactly what data it touches and where it goes.",
-                "summary": "Nowtify has no backend and no analytics. Everything the extension knows about you stays on your device, and the only third party it ever talks to is Twitch's own API, directly from your browser.",
-                "data.eyebrow": "Data",
-                "data.title": "What data Nowtify accesses",
-                "data.item1.title": "Twitch login (OAuth)",
-                "data.item1.desc": "When you connect your Twitch account, Nowtify uses Chrome's built-in <code>identity</code> API to open Twitch's own login page and receive an access token. Nowtify never sees your Twitch password. The token is stored locally (<code>chrome.storage</code>) and sent only to <code>api.twitch.tv</code> / <code>id.twitch.tv</code> to check which of your streamers are live.",
-                "data.item2.title": "The streamers, teams, and history you add",
-                "data.item2.desc": "Stored locally in your browser's IndexedDB. Nowtify never uploads this list anywhere.",
-                "data.item3.title": "Your preferences",
-                "data.item3.desc": "The notification toggle, delete confirmations, compact mode, and similar settings are stored via <code>chrome.storage.sync</code>, Chrome's own account-sync mechanism, the same one that syncs your bookmarks. Nowtify's developer never receives it.",
-                "boundaries.eyebrow": "Boundaries",
-                "boundaries.title": "What Nowtify does <em>not</em> do",
-                "boundaries.li1": "No analytics, telemetry, or crash reporting",
-                "boundaries.li2": "No advertising or ad tracking",
-                "boundaries.li3": "No servers operated by Nowtify: there is nothing to breach because there is nothing to store off-device",
-                "boundaries.li4": "No selling or sharing of data with third parties, ever",
-                "permissions.eyebrow": "Permissions",
-                "permissions.title": "Permissions explained",
-                "permissions.desc1": "To show a desktop notification when a streamer goes live.",
-                "permissions.desc2": "To save your streamers, teams, history, and settings locally.",
-                "permissions.desc3": "To periodically check the Twitch API in the background.",
-                "permissions.desc4": "To run the Twitch OAuth login flow described above.",
-                "permissions.desc5": "The only two hosts Nowtify ever sends requests to.",
-                "yourdata.eyebrow": "Your data",
-                "yourdata.title": "Removing your data",
-                "yourdata.desc": "Uninstalling the extension removes everything it stored. There is no account to delete anywhere else, because none exists. You can also disconnect Twitch or clear your history at any time from the options page.",
-                "contact.text": "Questions about this policy? Contact <a href=\"mailto:contact@qyrn.dev\">contact@qyrn.dev</a>.",
-                "footer.made": "Made by qyrn."
-            },
-            fr: {
-                "doc.title": "Nowtify - Politique de confidentialité",
-                "doc.description": "Quelles données Nowtify utilise, ce qu'elle ne fait jamais, et pourquoi. Pas de serveur, pas d'analyse, rien ne quitte votre appareil.",
-                "nav.back.text": "Retour à Nowtify",
-                "pill.updated": "Dernière mise à jour : 23 août 2026",
-                "h1": "Politique de confidentialité",
-                "lede": "Nowtify est une extension Chrome qui vous notifie quand vos streamers Twitch favoris passent en live. Cette page explique précisément quelles données l'extension utilise et où elles vont.",
-                "summary": "Nowtify n'a pas de serveur ni d'outil d'analyse. Tout ce que l'extension sait de vous reste sur votre appareil, et le seul tiers auquel elle parle jamais est l'API de Twitch elle-même, directement depuis votre navigateur.",
-                "data.eyebrow": "Données",
-                "data.title": "Quelles données Nowtify utilise",
-                "data.item1.title": "Connexion Twitch (OAuth)",
-                "data.item1.desc": "Quand vous connectez votre compte Twitch, Nowtify utilise l'API <code>identity</code> intégrée à Chrome pour ouvrir la page de connexion de Twitch et recevoir un token d'accès. Nowtify ne voit jamais votre mot de passe Twitch. Le token est stocké localement (<code>chrome.storage</code>) et envoyé uniquement à <code>api.twitch.tv</code> / <code>id.twitch.tv</code> pour vérifier lesquels de vos streamers sont en direct.",
-                "data.item2.title": "Les streamers, teams et l'historique que vous ajoutez",
-                "data.item2.desc": "Stockés localement dans l'IndexedDB de votre navigateur. Nowtify ne met jamais cette liste en ligne.",
-                "data.item3.title": "Vos préférences",
-                "data.item3.desc": "L'activation des notifications, la confirmation de suppression, le mode compact et les réglages similaires sont stockés via <code>chrome.storage.sync</code>, le mécanisme de synchronisation propre à Chrome, celui qui synchronise aussi vos favoris. Le développeur de Nowtify ne les reçoit jamais.",
-                "boundaries.eyebrow": "Limites",
-                "boundaries.title": "Ce que Nowtify ne fait <em>jamais</em>",
-                "boundaries.li1": "Aucune analyse, télémétrie ou rapport de crash",
-                "boundaries.li2": "Aucune publicité ni pistage publicitaire",
-                "boundaries.li3": "Aucun serveur exploité par Nowtify : il n'y a rien à compromettre puisqu'il n'y a rien à stocker hors de l'appareil",
-                "boundaries.li4": "Aucune vente ni partage de données avec des tiers, jamais",
-                "permissions.eyebrow": "Permissions",
-                "permissions.title": "Permissions expliquées",
-                "permissions.desc1": "Pour afficher une notification quand un streamer passe en live.",
-                "permissions.desc2": "Pour sauvegarder vos streamers, teams, historique et paramètres localement.",
-                "permissions.desc3": "Pour vérifier périodiquement l'API Twitch en arrière-plan.",
-                "permissions.desc4": "Pour exécuter le flux de connexion OAuth Twitch décrit ci-dessus.",
-                "permissions.desc5": "Les deux seuls hôtes auxquels Nowtify envoie des requêtes.",
-                "yourdata.eyebrow": "Vos données",
-                "yourdata.title": "Supprimer vos données",
-                "yourdata.desc": "Désinstaller l'extension supprime tout ce qu'elle a stocké. Il n'y a aucun compte à supprimer ailleurs, puisqu'aucun n'existe. Vous pouvez aussi déconnecter Twitch ou effacer votre historique à tout moment depuis la page des paramètres.",
-                "contact.text": "Des questions sur cette politique ? Contactez <a href=\"mailto:contact@qyrn.dev\">contact@qyrn.dev</a>.",
-                "footer.made": "Fait par qyrn."
-            }
-        };
-
-        function detectLang() {
-            const langs = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || "en"];
-            for (const l of langs) {
-                if (l.toLowerCase().startsWith("fr")) return "fr";
-            }
-            return "en";
+    <script type="application/json" id="strings">
+      {
+        "en": {
+          "meta.title": "Nowtify privacy policy",
+          "meta.description": "What data Nowtify touches, where it is stored and what it never does. No server, no analytics.",
+          "lang.switch": "Passer en français",
+          "nav.back": "Back to the home page",
+          "updated": "Last updated on September 24, 2026",
+          "title": "Privacy policy",
+          "intro": "Nowtify is a Chrome extension that notifies you when Twitch streamers go live. This page lists every piece of data it touches and where that data goes.",
+          "summary": "Short version: Nowtify has no server and no analytics. Everything it knows stays in your browser, and the only outside service it talks to is Twitch.",
+          "stored.title": "What is stored, and where",
+          "stored.token": "Your Twitch access token and your public Twitch profile (name and avatar), in Chrome's local extension storage. They never leave your computer except to be sent to Twitch.",
+          "stored.list": "The streamers and teams you add, and the history of lives Nowtify caught (the last 500), in your browser's IndexedDB.",
+          "stored.settings": "Your preferences (notifications, notifications kept on screen, delete confirmation, compact view), in Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your bookmarks. The developer never receives them.",
+          "network.title": "Who Nowtify talks to",
+          "network.id": "id.twitch.tv, to log you in, check that your token is still valid, and revoke it when you disconnect.",
+          "network.api": "api.twitch.tv, to find channels, read who is live, and fetch teams, past broadcasts and schedules.",
+          "network.cdn": "static-cdn.jtvnw.net, Twitch's image server, to display avatars, team logos and stream thumbnails.",
+          "network.none": "That's the whole list. Fonts and icons ship inside the extension, and there is no analytics, crash reporting or advertising code.",
+          "login.title": "The Twitch login",
+          "login.text": "The login goes through Chrome's own identity window, on Twitch's website. Nowtify never sees your password. It asks for no permission scope, so the token can only read public data. Disconnecting from the settings page deletes the token and asks Twitch to revoke it.",
+          "permissions.title": "Permissions requested",
+          "permissions.notifications": "Show a desktop notification when a streamer goes live.",
+          "permissions.storage": "Keep your token, profile and preferences.",
+          "permissions.alarms": "Wake up every few minutes to ask Twitch who is live.",
+          "permissions.identity": "Open the Twitch login window.",
+          "permissions.hosts": "The only two hosts the extension sends requests to.",
+          "site.title": "This website",
+          "site.text": "nowtify.qyrn.dev is a static page hosted by Vercel. It sets no cookie and loads nothing from other sites. The only thing it stores is your language choice, in your browser, if you use the language switch. Like any web host, Vercel keeps technical access logs.",
+          "delete.title": "Deleting your data",
+          "delete.text": "Uninstalling the extension deletes everything it stored. You can also disconnect Twitch, clear the history or remove streamers at any time from the settings page. There is no account to delete anywhere else, because there isn't one.",
+          "contact.title": "Contact",
+          "contact.text": "Questions about this policy:",
+          "footer.made": "Made by"
+        },
+        "fr": {
+          "meta.title": "Nowtify : politique de confidentialité",
+          "meta.description": "Les données que Nowtify utilise, où elles sont stockées et ce qu'elle ne fait jamais. Pas de serveur, pas de stats.",
+          "lang.switch": "Switch to English",
+          "nav.back": "Retour à l'accueil",
+          "updated": "Mise à jour le 24 septembre 2026",
+          "title": "Politique de confidentialité",
+          "intro": "Nowtify est une extension Chrome qui te prévient quand des streamers Twitch passent en live. Cette page liste toutes les données qu'elle manipule et où elles vont.",
+          "summary": "En bref : Nowtify n'a ni serveur ni outil de stats. Tout ce qu'elle sait reste dans ton navigateur, et le seul service extérieur auquel elle parle, c'est Twitch.",
+          "stored.title": "Ce qui est stocké, et où",
+          "stored.token": "Ton token d'accès Twitch et ton profil Twitch public (nom et avatar), dans le stockage local de l'extension. Ils ne quittent jamais ton ordinateur, sauf pour être envoyés à Twitch.",
+          "stored.list": "Les streamers et les teams que tu ajoutes, et l'historique des lives repérés (les 500 derniers), dans l'IndexedDB de ton navigateur.",
+          "stored.settings": "Tes préférences (notifications, notifications gardées à l'écran, confirmation de suppression, vue compacte), dans le stockage synchronisé de Chrome. Si la synchro Chrome est activée, Google les synchronise entre tes appareils comme tes favoris. Le développeur ne les reçoit jamais.",
+          "network.title": "À qui Nowtify parle",
+          "network.id": "id.twitch.tv, pour te connecter, vérifier que ton token est encore valide, et le révoquer quand tu te déconnectes.",
+          "network.api": "api.twitch.tv, pour chercher des chaînes, savoir qui est en live, et récupérer les teams, les anciens lives et les plannings.",
+          "network.cdn": "static-cdn.jtvnw.net, le serveur d'images de Twitch, pour afficher les avatars, les logos de team et les miniatures.",
+          "network.none": "C'est toute la liste. Les polices et les icônes sont incluses dans l'extension, et il n'y a aucun code de stats, de rapport de crash ou de pub.",
+          "login.title": "La connexion Twitch",
+          "login.text": "La connexion passe par la fenêtre d'identification de Chrome, sur le site de Twitch. Nowtify ne voit jamais ton mot de passe. Elle ne demande aucun droit, donc le token ne peut lire que des données publiques. Te déconnecter depuis les réglages supprime le token et demande à Twitch de le révoquer.",
+          "permissions.title": "Permissions demandées",
+          "permissions.notifications": "Afficher une notification quand un streamer passe en live.",
+          "permissions.storage": "Garder ton token, ton profil et tes préférences.",
+          "permissions.alarms": "Se réveiller toutes les quelques minutes pour demander à Twitch qui est en live.",
+          "permissions.identity": "Ouvrir la fenêtre de connexion Twitch.",
+          "permissions.hosts": "Les deux seuls domaines auxquels l'extension envoie des requêtes.",
+          "site.title": "Ce site",
+          "site.text": "nowtify.qyrn.dev est une page statique hébergée par Vercel. Elle ne pose aucun cookie et ne charge rien depuis d'autres sites. La seule chose qu'elle garde, c'est ton choix de langue, dans ton navigateur, si tu utilises le bouton de langue. Comme tout hébergeur, Vercel conserve des journaux techniques d'accès.",
+          "delete.title": "Supprimer tes données",
+          "delete.text": "Désinstaller l'extension supprime tout ce qu'elle a stocké. Tu peux aussi te déconnecter de Twitch, effacer l'historique ou retirer des streamers à tout moment depuis les réglages. Il n'y a aucun compte à supprimer ailleurs, puisqu'il n'y en a pas.",
+          "contact.title": "Contact",
+          "contact.text": "Une question sur cette politique :",
+          "footer.made": "Fait par"
         }
-
-        const lang = detectLang();
-        const dict = translations[lang];
-
-        document.documentElement.lang = lang;
-        document.title = dict["doc.title"];
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) metaDescription.setAttribute("content", dict["doc.description"]);
-
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-            const key = el.getAttribute("data-i18n");
-            if (dict[key] !== undefined) el.textContent = dict[key];
-        });
-
-        document.querySelectorAll("[data-i18n-html]").forEach((el) => {
-            const key = el.getAttribute("data-i18n-html");
-            if (dict[key] !== undefined) el.innerHTML = dict[key];
-        });
+      }
     </script>
-</body>
+    <script src="assets/site.js"></script>
+  </body>
 </html>

@@ -1,1330 +1,531 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nowtify - Never Miss a Stream</title>
-    <meta name="description" content="Nowtify is a Chrome extension that notifies you when your favorite Twitch streamers go live. No account, no backend, no data leaves your device.">
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #0E0E10;
-            --surface: #18181B;
-            --surface-hover: #1F1F23;
-            --border: #27272A;
-            --border-hover: #3F3F46;
-            --text: #FAFAFA;
-            --text-dim: #A1A1AA;
-            --text-faint: #52525B;
-            --accent: #FCD34D;
-            --accent-soft: rgba(252, 211, 77, 0.1);
-            --accent-border: rgba(252, 211, 77, 0.35);
-            --danger: #FF5C5C;
-            --radius: 12px;
-            --radius-sm: 9px;
-            --ease: cubic-bezier(0.4, 0, 0.2, 1);
-            --mono: 'Geist Mono', ui-monospace, 'SF Mono', monospace;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            overflow-x: hidden;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 0;
-            pointer-events: none;
-            background-image: radial-gradient(circle, rgba(252, 211, 77, 0.05) 1px, transparent 1px);
-            background-size: 28px 28px;
-            mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, black 10%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, black 10%, transparent 70%);
-        }
-
-        ::selection {
-            background: var(--text);
-            color: var(--bg);
-        }
-
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 5px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
-
-        .container {
-            position: relative;
-            z-index: 1;
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        a { color: inherit; }
-
-        nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            padding: 14px 0;
-            background: rgba(14, 14, 16, 0.72);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-        }
-
-        nav .container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-decoration: none;
-        }
-
-        .nav-logo img {
-            width: 28px;
-            height: 28px;
-            border-radius: 7px;
-        }
-
-        .nav-logo span {
-            font-size: 1.05rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-
-        .brand-accent {
-            color: var(--accent);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-        }
-
-        .nav-links a.text-link {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.88rem;
-            font-weight: 500;
-            transition: color 0.2s var(--ease);
-        }
-
-        .nav-links a.text-link:hover {
-            color: var(--text);
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 18px;
-            font-family: inherit;
-            font-size: 0.86rem;
-            font-weight: 600;
-            border-radius: var(--radius-sm);
-            text-decoration: none;
-            transition: opacity 0.15s var(--ease), transform 0.1s var(--ease), border-color 0.15s var(--ease), background 0.15s var(--ease);
-            cursor: pointer;
-            border: 1px solid transparent;
-            white-space: nowrap;
-        }
-
-        .btn:active { transform: scale(0.97); }
-
-        .btn-primary {
-            background: var(--accent);
-            color: var(--bg);
-        }
-
-        .btn-primary:hover { opacity: 0.88; }
-
-        .btn-secondary {
-            background: var(--surface);
-            border-color: var(--border);
-            color: var(--text);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--border-hover);
-            background: var(--surface-hover);
-        }
-
-        .btn svg { width: 16px; height: 16px; flex-shrink: 0; }
-
-        .pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-dim);
-            white-space: nowrap;
-        }
-
-        .pill .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--text);
-            flex-shrink: 0;
-        }
-
-        .hero {
-            padding: 168px 0 100px;
-        }
-
-        .hero .container {
-            display: grid;
-            grid-template-columns: 1fr 460px;
-            gap: 56px;
-            align-items: center;
-        }
-
-        .hero-text {
-            opacity: 0;
-            transform: translateY(14px);
-            animation: rise 0.6s var(--ease) forwards;
-        }
-
-        .hero-text .pill { margin-bottom: 24px; }
-
-        .hero h1 {
-            font-size: clamp(2.4rem, 4.4vw, 3.4rem);
-            font-weight: 800;
-            letter-spacing: -0.035em;
-            line-height: 1.08;
-            margin-bottom: 20px;
-            text-wrap: balance;
-        }
-
-        .hero-subtitle {
-            font-size: 1.08rem;
-            color: var(--text-dim);
-            max-width: 460px;
-            margin-bottom: 32px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 28px;
-        }
-
-        .trust-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .trust-row .pill { font-size: 0.68rem; padding: 5px 10px; }
-
-        .mock-shell {
-            opacity: 0;
-            transform: translateY(14px) scale(0.98);
-            animation: rise 0.6s var(--ease) 0.15s forwards;
-        }
-
-        .mock-window {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55);
-        }
-
-        .mock-topbar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            background: var(--surface-hover);
-            border-bottom: 1px solid var(--border);
-        }
-
-        .mock-dots { display: flex; gap: 6px; }
-        .mock-dots span {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--border-hover);
-        }
-
-        .mock-url {
-            flex: 1;
-            font-family: var(--mono);
-            font-size: 0.68rem;
-            color: var(--text-faint);
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 4px 10px;
-            text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .mock-popup {
-            padding: 16px;
-            font-size: 13px;
-        }
-
-        .mock-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-bottom: 14px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .mock-header-logo {
-            display: flex;
-            align-items: center;
-            gap: 9px;
-        }
-
-        .mock-header-logo img {
-            width: 24px;
-            height: 24px;
-            border-radius: 6px;
-        }
-
-        .mock-header-logo span {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .mock-header-actions { display: flex; gap: 6px; }
-
-        .mock-icon-btn {
-            width: 26px;
-            height: 26px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 7px;
-            color: var(--text-faint);
-        }
-
-        .mock-icon-btn svg { width: 13px; height: 13px; }
-
-        .mock-search {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .mock-search-input {
-            flex: 1;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 8px 11px;
-            color: var(--text-faint);
-            font-size: 12px;
-        }
-
-        .mock-add-btn {
-            background: var(--accent);
-            color: var(--bg);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 11.5px;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .mock-filters {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 12px;
-        }
-
-        .mock-chip {
-            font-size: 11px;
-            font-weight: 500;
-            padding: 5px 11px;
-            border-radius: 7px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text-dim);
-        }
-
-        .mock-chip.active {
-            background: var(--accent-soft);
-            border-color: var(--accent-border);
-            color: var(--text);
-        }
-
-        .mock-team-filter {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            padding: 6px 8px;
-            border-radius: 7px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text-faint);
-        }
-
-        .mock-team-filter svg:first-child { width: 12px; height: 12px; }
-        .mock-team-filter svg:last-child { width: 8px; height: 8px; }
-
-        .mock-list {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .mock-card {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            padding: 9px 10px;
-        }
-
-        .mock-card.live {
-            background: var(--surface-hover);
-            border-color: rgba(252, 211, 77, 0.5);
-        }
-
-        .mock-avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--mono);
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-dim);
-            background: var(--surface-hover);
-            border: 1px solid var(--border);
-        }
-
-        .mock-card.live .mock-avatar {
-            border: 2px solid var(--accent);
-            color: var(--text);
-        }
-
-        .mock-card.offline .mock-avatar { opacity: 0.5; }
-
-        .mock-card-info { flex: 1; min-width: 0; }
-
-        .mock-card-name-row {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 2px;
-        }
-
-        .mock-card-name {
-            font-weight: 600;
-            font-size: 12.5px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .mock-card.offline .mock-card-name { color: var(--text-dim); }
-
-        .mock-card-secondary {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .mock-card-sub {
-            flex: 1;
-            min-width: 0;
-            font-size: 11px;
-            color: var(--text-faint);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .mock-schedule {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-top: 3px;
-            font-size: 10.5px;
-            color: var(--text-faint);
-        }
-
-        .mock-schedule svg {
-            width: 11px;
-            height: 11px;
-            flex-shrink: 0;
-        }
-
-        .mock-platform-icon {
-            color: var(--text-faint);
-            display: flex;
-            flex-shrink: 0;
-        }
-
-        .mock-platform-icon svg { width: 11px; height: 11px; }
-
-        .mock-team {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            flex-shrink: 0;
-        }
-
-        .mock-team-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
-        .mock-team-name {
-            font-size: 10px;
-            color: var(--text-faint);
-        }
-
-        .mock-status {
-            font-family: var(--mono);
-            font-size: 10px;
-            color: var(--text-faint);
-            flex-shrink: 0;
-        }
-
-        .mock-status.live {
-            background: var(--accent);
-            color: var(--bg);
-            padding: 3px 7px;
-            border-radius: 5px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .mock-status.live .mock-live-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: var(--bg);
-            animation: mock-pulse 2s var(--ease) infinite;
-        }
-
-        @keyframes mock-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        @keyframes rise {
-            to { opacity: 1; transform: none; }
-        }
-
-        section { position: relative; z-index: 1; }
-
-        #features, #how-it-works, #privacy { scroll-margin-top: 88px; }
-
-        .section-eyebrow {
-            font-family: var(--mono);
-            font-size: 0.72rem;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            color: var(--text-faint);
-            margin-bottom: 12px;
-        }
-
-        .section-header {
-            max-width: 560px;
-            margin-bottom: 52px;
-        }
-
-        .section-header h2 {
-            font-size: clamp(1.7rem, 3.4vw, 2.3rem);
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            margin-bottom: 12px;
-            text-wrap: balance;
-        }
-
-        .section-header p {
-            color: var(--text-dim);
-            font-size: 1.02rem;
-        }
-
-        .features { padding: 40px 0 120px; }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1px;
-            background: var(--border);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .feature-card {
-            background: var(--surface);
-            padding: 28px;
-            transition: background 0.2s var(--ease);
-        }
-
-        .feature-card:hover { background: var(--surface-hover); }
-
-        .feature-icon {
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 9px;
-            margin-bottom: 18px;
-            color: var(--text);
-        }
-
-        .feature-icon svg { width: 18px; height: 18px; }
-
-        .feature-card h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            margin-bottom: 7px;
-            letter-spacing: -0.01em;
-        }
-
-        .feature-card p {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            line-height: 1.6;
-        }
-
-        .steps {
-            padding: 0 0 120px;
-        }
-
-        .steps-grid {
-            position: relative;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 32px;
-        }
-
-        .steps-grid::before {
-            content: '';
-            position: absolute;
-            top: 21px;
-            left: calc(100% / 6);
-            right: calc(100% / 6);
-            height: 1px;
-            background: var(--border);
-        }
-
-        .step {
-            position: relative;
-        }
-
-        .step-number {
-            position: relative;
-            z-index: 1;
-            width: 42px;
-            height: 42px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg);
-            border: 1px solid var(--border-hover);
-            border-radius: 50%;
-            font-family: var(--mono);
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 18px;
-        }
-
-        .step h3 {
-            font-size: 1.02rem;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .step p {
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
-
-        .privacy {
-            padding: 0 0 120px;
-        }
-
-        .privacy-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 56px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .privacy-card h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            margin-bottom: 14px;
-            text-wrap: balance;
-        }
-
-        .privacy-card p {
-            color: var(--text-dim);
-            max-width: 480px;
-            margin-bottom: 20px;
-        }
-
-        .privacy-list {
-            list-style: none;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .privacy-list li {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
-
-        .privacy-list svg {
-            width: 15px;
-            height: 15px;
-            color: var(--text);
-            flex-shrink: 0;
-        }
-
-        .privacy-badge {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            color: var(--text);
-        }
-
-        .privacy-badge svg { width: 48px; height: 48px; }
-
-        .cta {
-            padding: 0 0 120px;
-            text-align: center;
-        }
-
-        .cta h2 {
-            font-size: clamp(1.8rem, 3.6vw, 2.6rem);
-            font-weight: 700;
-            letter-spacing: -0.025em;
-            margin-bottom: 14px;
-            text-wrap: balance;
-        }
-
-        .cta p {
-            color: var(--text-dim);
-            margin-bottom: 32px;
-        }
-
-        .cta-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-
-        footer {
-            padding: 32px 0;
-            border-top: 1px solid var(--border);
-        }
-
-        .footer-content {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 16px;
-        }
-
-        .footer-left {
-            color: var(--text-faint);
-            font-size: 0.85rem;
-        }
-
-        .footer-links {
-            display: flex;
-            align-items: center;
-            gap: 22px;
-        }
-
-        .footer-links a {
-            color: var(--text-dim);
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.2s var(--ease);
-        }
-
-        .footer-links a:hover { color: var(--text); }
-
-        .footer-author-link {
-            color: var(--text-dim);
-            text-decoration: none;
-            transition: color 0.2s var(--ease);
-        }
-
-        .footer-author-link:hover { color: var(--text); }
-
-        .fade-in {
-            opacity: 0;
-            transform: translateY(18px);
-            transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
-        }
-
-        .fade-in.visible {
-            opacity: 1;
-            transform: none;
-        }
-
-        @media (max-width: 900px) {
-            .hero .container {
-                grid-template-columns: 1fr;
-            }
-
-            .mock-shell { max-width: 440px; }
-
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .steps-grid { grid-template-columns: 1fr; gap: 28px; }
-            .steps-grid::before { display: none; }
-
-            .privacy-card {
-                grid-template-columns: 1fr;
-                text-align: left;
-                padding: 36px 28px;
-            }
-
-            .privacy-badge { display: none; }
-        }
-
-        @media (max-width: 640px) {
-            .nav-links a.text-link { display: none; }
-            .nav-github { display: none; }
-            .hero { padding: 128px 0 72px; }
-            .features-grid { grid-template-columns: 1fr; }
-            .footer-content { flex-direction: column; align-items: flex-start; }
-        }
-    </style>
-</head>
-<body>
-
-    <nav>
-        <div class="container">
-            <a href="#" class="nav-logo">
-                <img src="logo.png" alt="Nowtify">
-                <span>Now<span class="brand-accent">tify</span></span>
-            </a>
-            <div class="nav-links">
-                <a href="#features" class="text-link" data-i18n="nav.features">Features</a>
-                <a href="#how-it-works" class="text-link" data-i18n="nav.how">How it works</a>
-                <a href="https://github.com/qyrn/nowtify" target="_blank" class="btn btn-secondary nav-github">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                    </svg>
-                    GitHub
-                </a>
-                <a href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg" target="_blank" class="btn btn-primary">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <circle cx="12" cy="12" r="4"></circle>
-                        <line x1="21.17" y1="8" x2="12" y2="8"></line>
-                        <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
-                        <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
-                    </svg>
-                    <span data-i18n="nav.store">Chrome Web Store</span>
-                </a>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Nowtify: Twitch live notifications for Chrome</title>
+    <meta
+      name="description"
+      content="Nowtify is a free Chrome extension that sends a desktop notification when a Twitch streamer you follow goes live. No account, no server, nothing leaves your browser."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Nowtify" />
+    <meta property="og:description" content="Know when your Twitch streamers go live." />
+    <meta property="og:url" content="https://nowtify.qyrn.dev/" />
+    <meta property="og:image" content="https://nowtify.qyrn.dev/assets/img/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0b0b0d" />
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link
+      rel="preload"
+      href="assets/fonts/geist-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link rel="stylesheet" href="assets/site.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrap">
+        <a class="brand" href="#top" aria-label="Nowtify">
+          <img src="assets/img/logo.png" alt="" width="28" height="28" />
+          <span>Now<span>tify</span></span>
+        </a>
+        <nav>
+          <a class="text" href="#how" data-i18n="nav.how">How it works</a>
+          <a class="text" href="#faq" data-i18n="nav.faq">FAQ</a>
+          <a class="text" href="https://github.com/qyrn/nowtify" rel="noopener">GitHub</a>
+          <button type="button" class="lang-switch">FR</button>
+          <a
+            class="button small"
+            href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg"
+            rel="noopener"
+            data-i18n="nav.install"
+            >Add to Chrome</a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main id="top">
+      <div class="hero">
+        <div class="fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="wrap">
+          <div>
+            <p class="kicker" data-i18n="hero.kicker">Chrome extension for Twitch</p>
+            <h1 data-i18n="hero.title">Know when they go live.</h1>
+            <p class="lede" data-i18n="hero.lede">
+              Nowtify keeps an eye on the Twitch channels you care about and sends a desktop notification when
+              one of them starts streaming. No account to create, no server in the middle.
+            </p>
+            <div class="cta-row">
+              <a
+                class="button"
+                href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg"
+                rel="noopener"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M21.17 8H12M3.95 6.06 8.54 14M10.88 21.94 15.46 14" />
+                </svg>
+                <span data-i18n="hero.cta">Add to Chrome</span>
+              </a>
+              <span class="cta-note" data-i18n="hero.note">Free, open source, MIT</span>
             </div>
-        </div>
-    </nav>
+            <p class="browsers" data-i18n="hero.browsers">Also installs on Edge, Brave and Vivaldi.</p>
+          </div>
 
-    <div class="container">
-        <section class="hero">
-            <div class="hero-text">
-                <div class="pill"><span class="dot"></span><span data-i18n="hero.badge">Manifest V3 &middot; No account required</span></div>
-                <h1 data-i18n="hero.title">Never miss a stream.</h1>
-                <p class="hero-subtitle" data-i18n="hero.subtitle">Nowtify watches your favorite Twitch streamers in the background and sends a native desktop notification shortly after one goes live. No backend, no tracking, nothing leaves your machine.</p>
-                <div class="hero-buttons">
-                    <a href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg" class="btn btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <circle cx="12" cy="12" r="4"></circle>
-                            <line x1="21.17" y1="8" x2="12" y2="8"></line>
-                            <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
-                            <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
-                        </svg>
-                        <span data-i18n="hero.cta_primary">Add to Chrome</span>
-                    </a>
-                    <a href="#how-it-works" class="btn btn-secondary" data-i18n="hero.cta_secondary">See how it works</a>
-                </div>
-                <div class="trust-row">
-                    <span class="pill" data-i18n="hero.trust1">100% local storage</span>
-                    <span class="pill" data-i18n="hero.trust2">Zero analytics</span>
-                    <span class="pill" data-i18n="hero.trust3">Open source</span>
-                </div>
-            </div>
-
-            <div class="mock-shell">
-                <div class="mock-window">
-                    <div class="mock-topbar">
-                        <div class="mock-dots"><span></span><span></span><span></span></div>
-                        <div class="mock-url">chrome-extension://nowtify/popup</div>
-                    </div>
-                    <div class="mock-popup">
-                        <div class="mock-header">
-                            <div class="mock-header-logo">
-                                <span>Now<span class="brand-accent">tify</span></span>
-                            </div>
-                            <div class="mock-header-actions">
-                                <div class="mock-icon-btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
-                                </div>
-                                <div class="mock-icon-btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>
-                                </div>
-                                <div class="mock-icon-btn">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path></svg>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mock-search">
-                            <div class="mock-search-input" data-i18n="mock.search">Search for a streamer...</div>
-                            <div class="mock-add-btn" data-i18n="mock.add">+ Add</div>
-                        </div>
-
-                        <div class="mock-filters">
-                            <div class="mock-chip active" data-i18n="mock.all">All</div>
-                            <div class="mock-team-filter">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg>
-                            </div>
-                        </div>
-
-                        <div class="mock-list">
-                            <div class="mock-card live">
-                                <div class="mock-avatar" style="background: linear-gradient(135deg, #FCD34D, #F59E0B); color: #1A1305;">PA</div>
-                                <div class="mock-card-info">
-                                    <div class="mock-card-name-row">
-                                        <span class="mock-platform-icon">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path></svg>
-                                        </span>
-                                        <span class="mock-card-name">pixel_ash</span>
-                                    </div>
-                                    <div class="mock-card-secondary">
-                                        <div class="mock-card-sub" data-i18n="mock.title_live">Ranked grind, chill vibes</div>
-                                        <div class="mock-team">
-                                            <span class="mock-team-dot" style="background: #F59E0B;"></span>
-                                            <span class="mock-team-name">Solary</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mock-status live"><span class="mock-live-dot"></span><span data-i18n="mock.live">Live</span></div>
-                            </div>
-
-                            <div class="mock-card">
-                                <div class="mock-avatar" style="background: linear-gradient(135deg, #5EEAD4, #14B8A6); color: #052E2B;">NC</div>
-                                <div class="mock-card-info">
-                                    <div class="mock-card-name-row">
-                                        <span class="mock-platform-icon">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path></svg>
-                                        </span>
-                                        <span class="mock-card-name">nova.codes</span>
-                                    </div>
-                                    <div class="mock-card-secondary">
-                                        <div class="mock-card-sub" data-i18n="mock.title_recent">Code review, chill stream</div>
-                                        <div class="mock-team">
-                                            <span class="mock-team-dot" style="background: #14B8A6;"></span>
-                                            <span class="mock-team-name">KOI</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mock-status" data-i18n="mock.ago">2h ago</div>
-                            </div>
-
-                            <div class="mock-card offline">
-                                <div class="mock-avatar" style="background: linear-gradient(135deg, #FDA4AF, #FB7185); color: #3F0A10;">RG</div>
-                                <div class="mock-card-info">
-                                    <div class="mock-card-name-row">
-                                        <span class="mock-platform-icon">
-                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2H3v16h5v4l4-4h5l4-4V2zm-10 9V7m5 4V7"></path></svg>
-                                        </span>
-                                        <span class="mock-card-name">retrograde</span>
-                                    </div>
-                                    <div class="mock-schedule">
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                        <span data-i18n="mock.schedule">Next: tomorrow, 8 PM</span>
-                                    </div>
-                                </div>
-                                <div class="mock-status">&mdash;</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="features" id="features">
-            <div class="section-header fade-in">
-                <div class="section-eyebrow" data-i18n="features.eyebrow">Features</div>
-                <h2 data-i18n="features.title">Everything the popup actually does</h2>
-                <p data-i18n="features.subtitle">No filler features. This is what ships in the extension today.</p>
-            </div>
-
-            <div class="features-grid">
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-                    </div>
-                    <h3 data-i18n="feat1.title">Background notifications</h3>
-                    <p data-i18n="feat1.desc">A native notification fires the moment one of your streamers goes live.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                    </div>
-                    <h3 data-i18n="feat2.title">Twitch team import</h3>
-                    <p data-i18n="feat2.desc">Add an entire Twitch team in one click and filter your list by team.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8.7 3A6 6 0 0 1 18 8a21.3 21.3 0 0 0 .6 5"></path><path d="M17 17H3s3-2 3-9a4.67 4.67 0 0 1 .3-1.7"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>
-                    </div>
-                    <h3 data-i18n="feat3.title">Per-streamer snooze</h3>
-                    <p data-i18n="feat3.desc">Pause notifications for one streamer for an hour, a day, or until tomorrow.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                    </div>
-                    <h3 data-i18n="feat4.title">Upcoming stream schedule</h3>
-                    <p data-i18n="feat4.desc">See when an offline streamer is scheduled to go live next, from Twitch.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
-                    </div>
-                    <h3 data-i18n="feat5.title">History &amp; stats</h3>
-                    <p data-i18n="feat5.desc">Every live you've caught, plus your top streamer and game, at a glance.</p>
-                </div>
-
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 7l-7 5 7 5V7z"></path><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
-                    </div>
-                    <h3 data-i18n="feat6.title">Live thumbnail preview</h3>
-                    <p data-i18n="feat6.desc">Click a live card to see its thumbnail, category, and viewer count.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="steps" id="how-it-works">
-            <div class="section-header fade-in">
-                <div class="section-eyebrow" data-i18n="steps.eyebrow">How it works</div>
-                <h2 data-i18n="steps.title">Three steps, then it runs itself</h2>
-            </div>
-            <div class="steps-grid">
-                <div class="step fade-in">
-                    <div class="step-number">01</div>
-                    <h3 data-i18n="step1.title">Connect Twitch</h3>
-                    <p data-i18n="step1.desc">Sign in with your Twitch account via Chrome's built-in OAuth flow. Your credentials never touch Nowtify's code.</p>
-                </div>
-                <div class="step fade-in">
-                    <div class="step-number">02</div>
-                    <h3 data-i18n="step2.title">Add your streamers</h3>
-                    <p data-i18n="step2.desc">Search and add streamers one by one, or import an entire Twitch team in a single click.</p>
-                </div>
-                <div class="step fade-in">
-                    <div class="step-number">03</div>
-                    <h3 data-i18n="step3.title">Get out of the way</h3>
-                    <p data-i18n="step3.desc">The service worker checks Twitch in the background every few minutes and notifies you as soon as it catches someone live.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="privacy" id="privacy">
-            <div class="privacy-card fade-in">
+          <div class="showcase">
+            <img
+              src="assets/img/popup-en.png"
+              data-src-fr="assets/img/popup-fr.png"
+              width="360"
+              height="600"
+              alt="The Nowtify popup with two live streamers and an open stream preview"
+              data-i18n-alt="hero.alt"
+            />
+            <div class="toast" aria-hidden="true">
+              <div class="toast-head">
+                <img src="assets/img/logo.png" alt="" width="16" height="16" />
+                <span>Google Chrome</span>
+                <time data-i18n="toast.time">now</time>
+              </div>
+              <div class="toast-body">
+                <span class="toast-avatar">P</span>
                 <div>
-                    <div class="section-eyebrow" data-i18n="privacy.eyebrow">Privacy</div>
-                    <h2 data-i18n="privacy.title">There's nowhere for your data to go.</h2>
-                    <p data-i18n="privacy.desc">Nowtify has no server. There's no account with Nowtify, no database, no analytics SDK, just your browser talking directly to Twitch's own API.</p>
-                    <ul class="privacy-list">
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="privacy.li1">Your streamer list and history stay in your browser's local storage</span></li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="privacy.li2">Your Twitch token is only ever sent to api.twitch.tv / id.twitch.tv</span></li>
-                        <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span data-i18n="privacy.li3">No analytics, no telemetry, no third-party scripts</span></li>
-                    </ul>
-                    <div style="margin-top: 20px;">
-                        <a href="privacy.html" class="btn btn-secondary" data-i18n="privacy.cta">Read the full privacy policy</a>
-                    </div>
+                  <strong data-i18n="toast.title">pixel_ash is live</strong>
+                  <p data-i18n="toast.body">Speedrun practice, chat chill</p>
+                  <small>Celeste</small>
                 </div>
-                <div class="privacy-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-                </div>
+              </div>
             </div>
-        </section>
-
-        <section class="cta">
-            <div class="fade-in">
-                <h2 data-i18n="cta.title">Ready to never miss a stream?</h2>
-                <p data-i18n="cta.desc">Free, open source, and it stays that way.</p>
-                <div class="cta-buttons">
-                    <a href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg" class="btn btn-primary">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <circle cx="12" cy="12" r="4"></circle>
-                            <line x1="21.17" y1="8" x2="12" y2="8"></line>
-                            <line x1="3.95" y1="6.06" x2="8.54" y2="14"></line>
-                            <line x1="10.88" y1="21.94" x2="15.46" y2="14"></line>
-                        </svg>
-                        <span data-i18n="cta.primary">Add to Chrome</span>
-                    </a>
-                    <a href="https://github.com/qyrn/nowtify" target="_blank" class="btn btn-secondary" data-i18n="cta.secondary">View source</a>
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-left"><span data-i18n="footer.made_prefix">Made by</span> <a href="https://github.com/qyrn" target="_blank" class="footer-author-link">qyrn</a>.</div>
-                <div class="footer-links">
-                    <a href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
-                    <a href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg" target="_blank" data-i18n="footer.store">Chrome Web Store</a>
-                    <a href="https://github.com/qyrn/nowtify" target="_blank">GitHub</a>
-                    <a href="https://ko-fi.com/qyrnsec" target="_blank">Ko-fi</a>
-                </div>
-            </div>
+          </div>
         </div>
+      </div>
+
+      <section id="how" aria-labelledby="how-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="section-index">01</p>
+            <div>
+              <h2 id="how-title" data-i18n="how.title">What it does while you do something else</h2>
+              <p data-i18n="how.lede">
+                The popup is only the part you see. The real work happens in a background worker that talks
+                straight to Twitch.
+              </p>
+            </div>
+          </div>
+          <div class="indented">
+            <div
+              class="log"
+              role="img"
+              aria-label="Example of background checks"
+              data-i18n-label="how.logAlt"
+            >
+              <div class="log-line">
+                <span class="log-time">20:55</span><span class="log-kind">check</span
+                ><span class="log-text" data-i18n="log.1">14 channels, nobody live</span>
+              </div>
+              <div class="log-line">
+                <span class="log-time">21:00</span><span class="log-kind">check</span
+                ><span class="log-text" data-i18n="log.2">14 channels, nobody live</span>
+              </div>
+              <div class="log-line hit">
+                <span class="log-time">21:05</span><span class="log-kind">check</span
+                ><span class="log-text" data-i18n="log.3">pixel_ash started streaming</span>
+              </div>
+              <div class="log-line hit">
+                <span class="log-time">21:05</span><span class="log-kind">notify</span
+                ><span class="log-text" data-i18n="log.4">"pixel_ash is live"</span>
+              </div>
+              <div class="log-line">
+                <span class="log-time">21:06</span><span class="log-kind">check</span
+                ><span class="log-text" data-i18n="log.5">someone is live, checking every minute</span>
+              </div>
+            </div>
+            <dl class="facts">
+              <div>
+                <dt data-i18n="fact1.term">Every 5 minutes</dt>
+                <dd data-i18n="fact1.text">
+                  It asks Twitch who is live among your channels, up to 100 of them per request.
+                </dd>
+              </div>
+              <div>
+                <dt data-i18n="fact2.term">Every minute</dt>
+                <dd data-i18n="fact2.text">
+                  While someone on your list is live, checks speed up so the next one doesn't slip by.
+                </dd>
+              </div>
+              <div>
+                <dt data-i18n="fact3.term">One click</dt>
+                <dd data-i18n="fact3.text">Clicking the notification opens the stream in a new tab.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="features-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="section-index">02</p>
+            <div>
+              <h2 id="features-title" data-i18n="features.title">The rest of the popup</h2>
+              <p data-i18n="features.lede">Small things that make a long list easier to live with.</p>
+            </div>
+          </div>
+          <div class="specs">
+            <div class="spec">
+              <code>team/nightowls</code>
+              <h3 data-i18n="spec1.title">Whole teams</h3>
+              <p data-i18n="spec1.text">
+                Type team/ followed by a Twitch team name to add every member at once, then filter the list by
+                team.
+              </p>
+            </div>
+            <div class="spec">
+              <code data-i18n="spec2.label">1 h / tomorrow</code>
+              <h3 data-i18n="spec2.title">Snooze one channel</h3>
+              <p data-i18n="spec2.text">
+                Mute a single streamer for an hour or until tomorrow morning, without removing them.
+              </p>
+            </div>
+            <div class="spec">
+              <code data-i18n="spec3.label">next: tomorrow, 8:00 PM</code>
+              <h3 data-i18n="spec3.title">Next scheduled stream</h3>
+              <p data-i18n="spec3.text">
+                Offline channels show their next stream when it's set in their Twitch schedule.
+              </p>
+            </div>
+            <div class="spec">
+              <code>1.2K viewers</code>
+              <h3 data-i18n="spec4.title">Live preview</h3>
+              <p data-i18n="spec4.text">
+                Unfold a live card to see the thumbnail, the game and the viewer count.
+              </p>
+            </div>
+            <div class="spec">
+              <code data-i18n="spec5.label">stats</code>
+              <h3 data-i18n="spec5.title">History and stats</h3>
+              <p data-i18n="spec5.text">
+                Every live Nowtify catches is logged with its duration. The settings page sums it up: lives
+                this week, most frequent streamer, most frequent game.
+              </p>
+            </div>
+            <div class="spec">
+              <code>backup.json</code>
+              <h3 data-i18n="spec6.title">Backup</h3>
+              <p data-i18n="spec6.text">
+                Export your list, settings and history to a file, then import it in another browser.
+              </p>
+            </div>
+          </div>
+          <div class="gallery">
+            <figure>
+              <img
+                src="assets/img/compact-en.png"
+                data-src-fr="assets/img/compact-fr.png"
+                width="360"
+                height="396"
+                loading="lazy"
+                alt=""
+              />
+              <figcaption data-i18n="gallery.compact">The compact grid, for long lists</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="assets/img/snooze-en.png"
+                data-src-fr="assets/img/snooze-fr.png"
+                width="360"
+                height="600"
+                loading="lazy"
+                alt=""
+              />
+              <figcaption data-i18n="gallery.snooze">Pausing a single streamer</figcaption>
+            </figure>
+            <figure>
+              <img
+                src="assets/img/activity-en.png"
+                data-src-fr="assets/img/activity-fr.png"
+                width="680"
+                height="802"
+                loading="lazy"
+                alt=""
+              />
+              <figcaption data-i18n="gallery.activity">History and stats, in the settings page</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="privacy-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="section-index">03</p>
+            <div>
+              <h2 id="privacy-title" data-i18n="privacy.title">Your data stays in your browser</h2>
+            </div>
+          </div>
+          <div class="indented">
+            <div class="flow">
+              <div class="node">
+                <strong data-i18n="flow.browser">Your Chrome</strong>
+                <span data-i18n="flow.browserText">list, history, settings</span>
+              </div>
+              <span class="link-arrow" aria-hidden="true">&lt;-&gt;</span>
+              <div class="node">
+                <strong>api.twitch.tv</strong>
+                <span data-i18n="flow.twitchText">login and live status</span>
+              </div>
+              <span class="link-arrow cut" aria-hidden="true">-/-</span>
+              <div class="node gone">
+                <strong data-i18n="flow.server">Nowtify server</strong>
+                <span data-i18n="flow.serverText">doesn't exist</span>
+              </div>
+            </div>
+            <div class="privacy-text">
+              <p data-i18n="privacy.p1">
+                Your list, history and settings are stored by Chrome on your machine. The only requests go to
+                Twitch, to log in and to ask who is live. No analytics, no tracker, and even the fonts on this
+                page are served from this site.
+              </p>
+              <p><a href="privacy.html" data-i18n="privacy.link">Read the privacy policy</a></p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" aria-labelledby="faq-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="section-index">04</p>
+            <div>
+              <h2 id="faq-title" data-i18n="faq.title">Questions people ask</h2>
+            </div>
+          </div>
+          <div class="faq indented">
+            <details>
+              <summary data-i18n="faq1.q">Why does it need my Twitch account?</summary>
+              <p data-i18n="faq1.a">
+                Twitch refuses API requests without a token, even for public data. Nowtify asks for no
+                permission on your account: the token can only read what anyone can already see on Twitch.
+              </p>
+            </details>
+            <details>
+              <summary data-i18n="faq2.q">How long before the notification shows up?</summary>
+              <p data-i18n="faq2.a">
+                Nowtify checks every 5 minutes, and every minute once someone on your list is live. Expect the
+                notification within 5 minutes of the stream starting.
+              </p>
+            </details>
+            <details>
+              <summary data-i18n="faq3.q">Does it work when Chrome is closed?</summary>
+              <p data-i18n="faq3.a">No, Chrome has to be open. A minimized window is enough.</p>
+            </details>
+            <details>
+              <summary data-i18n="faq4.q">Firefox or Safari?</summary>
+              <p data-i18n="faq4.a">
+                Not for now. Edge, Brave and Vivaldi can install it straight from the Chrome Web Store.
+              </p>
+            </details>
+            <details>
+              <summary data-i18n="faq5.q">Is it really free?</summary>
+              <p>
+                <span data-i18n="faq5.a"
+                  >Yes, and the code is on GitHub under the MIT license. If you want to chip in, there's
+                  a</span
+                >
+                <a href="https://ko-fi.com/qyrnsec" rel="noopener">Ko-fi</a>.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="wrap">
+        <span
+          ><span data-i18n="footer.made">Made by</span>
+          <a href="https://github.com/qyrn" rel="noopener">qyrn</a></span
+        >
+        <nav>
+          <a href="privacy.html" data-i18n="footer.privacy">Privacy</a>
+          <a
+            href="https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg"
+            rel="noopener"
+            >Chrome Web Store</a
+          >
+          <a href="https://github.com/qyrn/nowtify" rel="noopener">GitHub</a>
+          <a href="https://ko-fi.com/qyrnsec" rel="noopener">Ko-fi</a>
+        </nav>
+      </div>
     </footer>
 
-    <script>
-        const translations = {
-            en: {
-                "doc.title": "Nowtify - Never Miss a Stream",
-                "doc.description": "Nowtify is a Chrome extension that notifies you when your favorite Twitch streamers go live. No account, no backend, no data leaves your device.",
-                "nav.features": "Features",
-                "nav.how": "How it works",
-                "nav.store": "Chrome Web Store",
-                "hero.badge": "Manifest V3 · No account required",
-                "hero.title": "Never miss a stream.",
-                "hero.subtitle": "Nowtify watches your favorite Twitch streamers in the background and sends a native desktop notification shortly after one goes live. No backend, no tracking, nothing leaves your machine.",
-                "hero.cta_primary": "Add to Chrome",
-                "hero.cta_secondary": "See how it works",
-                "hero.trust1": "100% local storage",
-                "hero.trust2": "Zero analytics",
-                "hero.trust3": "Open source",
-                "mock.search": "Search for a streamer...",
-                "mock.add": "+ Add",
-                "mock.all": "All",
-                "mock.live": "Live",
-                "mock.ago": "2h ago",
-                "mock.title_live": "Ranked grind, chill vibes",
-                "mock.title_recent": "Code review, chill stream",
-                "mock.schedule": "Next: tomorrow, 8 PM",
-                "features.eyebrow": "Features",
-                "features.title": "Everything the extension actually does",
-                "features.subtitle": "No filler features. This is what ships today.",
-                "feat1.title": "Background notifications",
-                "feat1.desc": "A native notification fires the moment one of your streamers goes live.",
-                "feat2.title": "Twitch team import",
-                "feat2.desc": "Add an entire Twitch team in one click and filter your list by team.",
-                "feat3.title": "Per-streamer snooze",
-                "feat3.desc": "Pause notifications for one streamer for an hour, a day, or until tomorrow.",
-                "feat4.title": "Upcoming stream schedule",
-                "feat4.desc": "See when an offline streamer is scheduled to go live next, from Twitch.",
-                "feat5.title": "History & stats",
-                "feat5.desc": "Every live you've caught, plus your top streamer and game, at a glance.",
-                "feat6.title": "Live thumbnail preview",
-                "feat6.desc": "Click a live card to see its thumbnail, category, and viewer count.",
-                "steps.eyebrow": "Steps",
-                "steps.title": "Three steps, then it runs itself",
-                "step1.title": "Connect Twitch",
-                "step1.desc": "Sign in with your Twitch account via Chrome's built-in OAuth flow. Your credentials never touch Nowtify's code.",
-                "step2.title": "Add your streamers",
-                "step2.desc": "Search and add streamers one by one, or import an entire Twitch team in a single click.",
-                "step3.title": "Get out of the way",
-                "step3.desc": "The service worker checks Twitch in the background every few minutes and notifies you as soon as it catches someone live.",
-                "privacy.eyebrow": "Privacy",
-                "privacy.title": "There's nowhere for your data to go.",
-                "privacy.desc": "Nowtify has no server. There's no account with Nowtify, no database, no analytics SDK, just your browser talking directly to Twitch's own API.",
-                "privacy.li1": "Your streamer list and history stay in your browser's local storage",
-                "privacy.li2": "Your Twitch token is only ever sent to api.twitch.tv / id.twitch.tv",
-                "privacy.li3": "No analytics, no telemetry, no third-party scripts",
-                "privacy.cta": "Read the full privacy policy",
-                "cta.title": "Ready to never miss a stream?",
-                "cta.desc": "Free, open source, and it stays that way.",
-                "cta.primary": "Add to Chrome",
-                "cta.secondary": "View source",
-                "footer.made_prefix": "Made by",
-                "footer.privacy": "Privacy Policy",
-                "footer.store": "Chrome Web Store"
-            },
-            fr: {
-                "doc.title": "Nowtify - Ne ratez plus jamais un live",
-                "doc.description": "Nowtify est une extension Chrome qui vous notifie quand vos streamers Twitch favoris passent en live. Pas de compte, pas de serveur, aucune donnée ne quitte votre appareil.",
-                "nav.features": "Fonctionnalités",
-                "nav.how": "Étapes",
-                "nav.store": "Chrome Web Store",
-                "hero.badge": "Manifest V3 · Aucun compte requis",
-                "hero.title": "Ne ratez plus jamais un live.",
-                "hero.subtitle": "Nowtify surveille vos streamers Twitch favoris en arrière-plan et envoie une notification native peu après le début d'un live. Pas de serveur, pas de pistage, rien ne quitte votre machine.",
-                "hero.cta_primary": "Ajouter à Chrome",
-                "hero.cta_secondary": "Voir comment ça marche",
-                "hero.trust1": "Stockage 100% local",
-                "hero.trust2": "Zéro analytique",
-                "hero.trust3": "Open source",
-                "mock.search": "Rechercher un streamer...",
-                "mock.add": "+ Ajouter",
-                "mock.all": "Tous",
-                "mock.live": "Live",
-                "mock.ago": "il y a 2h",
-                "mock.title_live": "Ranked tranquille, on papote",
-                "mock.title_recent": "Revue de code, stream tranquille",
-                "mock.schedule": "Prochain : demain, 20h",
-                "features.eyebrow": "Fonctionnalités",
-                "features.title": "Tout ce que fait vraiment l'extension",
-                "features.subtitle": "Pas de fonctionnalités gadget. Voici ce qui est réellement dans l'extension aujourd'hui.",
-                "feat1.title": "Notifications en arrière-plan",
-                "feat1.desc": "Une notification native s'affiche dès qu'un de vos streamers passe en direct.",
-                "feat2.title": "Import de teams Twitch",
-                "feat2.desc": "Ajoutez une team Twitch entière en un clic et filtrez votre liste par team.",
-                "feat3.title": "Snooze par streamer",
-                "feat3.desc": "Mettez en pause les notifications d'un streamer pour une heure, une journée, ou jusqu'à demain.",
-                "feat4.title": "Horaire du prochain live",
-                "feat4.desc": "Voyez quand un streamer hors ligne est prévu en direct, directement depuis Twitch.",
-                "feat5.title": "Historique et stats",
-                "feat5.desc": "Chaque live détecté, votre streamer et jeu préférés, en un coup d'œil.",
-                "feat6.title": "Aperçu du stream en direct",
-                "feat6.desc": "Cliquez sur une carte en live pour voir sa miniature, sa catégorie et ses viewers.",
-                "steps.eyebrow": "Étapes",
-                "steps.title": "Trois étapes, puis ça tourne tout seul",
-                "step1.title": "Connectez Twitch",
-                "step1.desc": "Connectez-vous avec votre compte Twitch via le flux OAuth natif de Chrome. Vos identifiants ne passent jamais par le code de Nowtify.",
-                "step2.title": "Ajoutez vos streamers",
-                "step2.desc": "Recherchez et ajoutez des streamers un par un, ou importez une team Twitch entière en un clic.",
-                "step3.title": "Laissez faire",
-                "step3.desc": "Le service worker vérifie Twitch en arrière-plan toutes les quelques minutes et vous notifie dès qu'il détecte quelqu'un en direct.",
-                "privacy.eyebrow": "Confidentialité",
-                "privacy.title": "Vos données ne vont nulle part.",
-                "privacy.desc": "Nowtify n'a pas de serveur. Pas de compte Nowtify, pas de base de données, pas de SDK analytique, juste votre navigateur qui parle directement à l'API de Twitch.",
-                "privacy.li1": "Votre liste de streamers et votre historique restent dans le stockage local de votre navigateur",
-                "privacy.li2": "Votre token Twitch n'est envoyé qu'à api.twitch.tv / id.twitch.tv",
-                "privacy.li3": "Aucune analyse, aucune télémétrie, aucun script tiers",
-                "privacy.cta": "Lire la politique de confidentialité complète",
-                "cta.title": "Prêt à ne plus rater un live ?",
-                "cta.desc": "Gratuit, open source, et ça le restera.",
-                "cta.primary": "Ajouter à Chrome",
-                "cta.secondary": "Voir le code source",
-                "footer.made_prefix": "Fait par",
-                "footer.privacy": "Politique de confidentialité",
-                "footer.store": "Chrome Web Store"
-            }
-        };
-
-        function detectLang() {
-            const primary = (navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language) || "en";
-            return primary.toLowerCase().startsWith("fr") ? "fr" : "en";
+    <script type="application/json" id="strings">
+      {
+        "en": {
+          "meta.title": "Nowtify: Twitch live notifications for Chrome",
+          "meta.description": "Nowtify is a free Chrome extension that sends a desktop notification when a Twitch streamer you follow goes live. No account, no server, nothing leaves your browser.",
+          "lang.switch": "Passer en français",
+          "nav.how": "How it works",
+          "nav.faq": "FAQ",
+          "nav.install": "Add to Chrome",
+          "hero.kicker": "Chrome extension for Twitch",
+          "hero.title": "Know when they go live.",
+          "hero.lede": "Nowtify keeps an eye on the Twitch channels you care about and sends a desktop notification when one of them starts streaming. No account to create, no server in the middle.",
+          "hero.cta": "Add to Chrome",
+          "hero.note": "Free, open source, MIT",
+          "hero.browsers": "Also installs on Edge, Brave and Vivaldi.",
+          "hero.alt": "The Nowtify popup with two live streamers and an open stream preview",
+          "toast.time": "now",
+          "toast.title": "pixel_ash is live",
+          "toast.body": "Speedrun practice, chat chill",
+          "how.title": "What it does while you do something else",
+          "how.lede": "The popup is only the part you see. The real work happens in a background worker that talks straight to Twitch.",
+          "how.logAlt": "Example of background checks",
+          "log.1": "14 channels, nobody live",
+          "log.2": "14 channels, nobody live",
+          "log.3": "pixel_ash started streaming",
+          "log.4": "\"pixel_ash is live\"",
+          "log.5": "someone is live, checking every minute",
+          "fact1.term": "Every 5 minutes",
+          "fact1.text": "It asks Twitch who is live among your channels, up to 100 of them per request.",
+          "fact2.term": "Every minute",
+          "fact2.text": "While someone on your list is live, checks speed up so the next one doesn't slip by.",
+          "fact3.term": "One click",
+          "fact3.text": "Clicking the notification opens the stream in a new tab.",
+          "features.title": "The rest of the popup",
+          "features.lede": "Small things that make a long list easier to live with.",
+          "spec1.title": "Whole teams",
+          "spec1.text": "Type team/ followed by a Twitch team name to add every member at once, then filter the list by team.",
+          "spec2.label": "1 h / tomorrow",
+          "spec2.title": "Snooze one channel",
+          "spec2.text": "Mute a single streamer for an hour or until tomorrow morning, without removing them.",
+          "spec3.label": "next: tomorrow, 8:00 PM",
+          "spec3.title": "Next scheduled stream",
+          "spec3.text": "Offline channels show their next stream when it's set in their Twitch schedule.",
+          "spec4.title": "Live preview",
+          "spec4.text": "Unfold a live card to see the thumbnail, the game and the viewer count.",
+          "spec5.label": "stats",
+          "spec5.title": "History and stats",
+          "spec5.text": "Every live Nowtify catches is logged with its duration. The settings page sums it up: lives this week, most frequent streamer, most frequent game.",
+          "spec6.title": "Backup",
+          "spec6.text": "Export your list, settings and history to a file, then import it in another browser.",
+          "gallery.compact": "The compact grid, for long lists",
+          "gallery.snooze": "Pausing a single streamer",
+          "gallery.activity": "History and stats, in the settings page",
+          "privacy.title": "Your data stays in your browser",
+          "flow.browser": "Your Chrome",
+          "flow.browserText": "list, history, settings",
+          "flow.twitchText": "login and live status",
+          "flow.server": "Nowtify server",
+          "flow.serverText": "doesn't exist",
+          "privacy.p1": "Your list, history and settings are stored by Chrome on your machine. The only requests go to Twitch, to log in and to ask who is live. No analytics, no tracker, and even the fonts on this page are served from this site.",
+          "privacy.link": "Read the privacy policy",
+          "faq.title": "Questions people ask",
+          "faq1.q": "Why does it need my Twitch account?",
+          "faq1.a": "Twitch refuses API requests without a token, even for public data. Nowtify asks for no permission on your account: the token can only read what anyone can already see on Twitch.",
+          "faq2.q": "How long before the notification shows up?",
+          "faq2.a": "Nowtify checks every 5 minutes, and every minute once someone on your list is live. Expect the notification within 5 minutes of the stream starting.",
+          "faq3.q": "Does it work when Chrome is closed?",
+          "faq3.a": "No, Chrome has to be open. A minimized window is enough.",
+          "faq4.q": "Firefox or Safari?",
+          "faq4.a": "Not for now. Edge, Brave and Vivaldi can install it straight from the Chrome Web Store.",
+          "faq5.q": "Is it really free?",
+          "faq5.a": "Yes, and the code is on GitHub under the MIT license. If you want to chip in, there's a",
+          "footer.made": "Made by",
+          "footer.privacy": "Privacy"
+        },
+        "fr": {
+          "meta.title": "Nowtify : les lives Twitch en notification dans Chrome",
+          "meta.description": "Nowtify est une extension Chrome gratuite qui t'envoie une notification quand un streamer Twitch que tu suis passe en live. Pas de compte, pas de serveur, rien ne sort de ton navigateur.",
+          "lang.switch": "Switch to English",
+          "nav.how": "Fonctionnement",
+          "nav.faq": "FAQ",
+          "nav.install": "Ajouter à Chrome",
+          "hero.kicker": "Extension Chrome pour Twitch",
+          "hero.title": "Sache quand ils passent en live.",
+          "hero.lede": "Nowtify garde un œil sur les chaînes Twitch qui t'intéressent et t'envoie une notification sur ton bureau dès que l'une d'elles lance un live. Pas de compte à créer, pas de serveur entre toi et Twitch.",
+          "hero.cta": "Ajouter à Chrome",
+          "hero.note": "Gratuit, open source, MIT",
+          "hero.browsers": "S'installe aussi sur Edge, Brave et Vivaldi.",
+          "hero.alt": "La popup de Nowtify avec deux streamers en live et un aperçu de stream ouvert",
+          "toast.time": "maintenant",
+          "toast.title": "pixel_ash est en live",
+          "toast.body": "Entraînement speedrun, chat posé",
+          "how.title": "Ce qu'elle fait pendant que tu fais autre chose",
+          "how.lede": "La popup, c'est juste la partie visible. Le vrai boulot se fait en arrière-plan, directement avec Twitch.",
+          "how.logAlt": "Exemple de vérifications en arrière-plan",
+          "log.1": "14 chaînes, personne en live",
+          "log.2": "14 chaînes, personne en live",
+          "log.3": "pixel_ash vient de lancer son live",
+          "log.4": "« pixel_ash est en live »",
+          "log.5": "quelqu'un est en live, vérif chaque minute",
+          "fact1.term": "Toutes les 5 minutes",
+          "fact1.text": "Elle demande à Twitch qui est en live parmi tes chaînes, jusqu'à 100 par requête.",
+          "fact2.term": "Toutes les minutes",
+          "fact2.text": "Tant qu'un de tes streamers est en live, les vérifs s'accélèrent pour ne pas rater le suivant.",
+          "fact3.term": "Un clic",
+          "fact3.text": "Un clic sur la notification ouvre le live dans un nouvel onglet.",
+          "features.title": "Le reste de la popup",
+          "features.lede": "Des petits détails qui rendent une longue liste plus facile à gérer.",
+          "spec1.title": "Des teams entières",
+          "spec1.text": "Tape team/ suivi du nom d'une team Twitch pour ajouter tous ses membres d'un coup, puis filtre ta liste par team.",
+          "spec2.label": "1 h / demain",
+          "spec2.title": "Mettre un streamer en pause",
+          "spec2.text": "Coupe les notifs d'un seul streamer pendant une heure ou jusqu'à demain matin, sans le retirer de ta liste.",
+          "spec3.label": "prochain : demain, 20:00",
+          "spec3.title": "Prochain live prévu",
+          "spec3.text": "Les chaînes hors ligne affichent leur prochain live quand il est renseigné dans leur planning Twitch.",
+          "spec4.title": "Aperçu du live",
+          "spec4.text": "Déplie une carte en live pour voir la miniature, le jeu et le nombre de viewers.",
+          "spec5.label": "stats",
+          "spec5.title": "Historique et stats",
+          "spec5.text": "Chaque live repéré est noté avec sa durée. La page de réglages fait le bilan : lives de la semaine, streamer et jeu les plus fréquents.",
+          "spec6.title": "Sauvegarde",
+          "spec6.text": "Exporte ta liste, tes réglages et ton historique dans un fichier, puis réimporte-le dans un autre navigateur.",
+          "gallery.compact": "La grille compacte, pour les longues listes",
+          "gallery.snooze": "La pause sur un seul streamer",
+          "gallery.activity": "Historique et stats, dans la page de réglages",
+          "privacy.title": "Tes données restent dans ton navigateur",
+          "flow.browser": "Ton Chrome",
+          "flow.browserText": "liste, historique, réglages",
+          "flow.twitchText": "connexion et statut des lives",
+          "flow.server": "Serveur Nowtify",
+          "flow.serverText": "n'existe pas",
+          "privacy.p1": "Ta liste, ton historique et tes réglages sont stockés par Chrome sur ta machine. Les seules requêtes partent vers Twitch, pour la connexion et pour savoir qui est en live. Aucun outil de stats, aucun traqueur, et même les polices de cette page sont servies par ce site.",
+          "privacy.link": "Lire la politique de confidentialité",
+          "faq.title": "Les questions qu'on me pose",
+          "faq1.q": "Pourquoi il faut se connecter à Twitch ?",
+          "faq1.a": "Twitch refuse toute requête sans token, même pour des infos publiques. Nowtify ne demande aucun droit sur ton compte : le token ne peut lire que ce que tout le monde voit déjà sur Twitch.",
+          "faq2.q": "Combien de temps avant la notification ?",
+          "faq2.a": "Nowtify vérifie toutes les 5 minutes, et toutes les minutes dès qu'un de tes streamers est en live. Compte jusqu'à 5 minutes après le début du live.",
+          "faq3.q": "Ça marche quand Chrome est fermé ?",
+          "faq3.a": "Non, Chrome doit être ouvert. Une fenêtre réduite suffit.",
+          "faq4.q": "Et sur Firefox ou Safari ?",
+          "faq4.a": "Pas pour l'instant. Edge, Brave et Vivaldi peuvent l'installer directement depuis le Chrome Web Store.",
+          "faq5.q": "C'est vraiment gratuit ?",
+          "faq5.a": "Oui, et le code est sur GitHub sous licence MIT. Si tu veux donner un coup de pouce, il y a un",
+          "footer.made": "Fait par",
+          "footer.privacy": "Confidentialité"
         }
-
-        const lang = detectLang();
-        const dict = translations[lang];
-
-        document.documentElement.lang = lang;
-        document.title = dict["doc.title"];
-        const metaDescription = document.querySelector('meta[name="description"]');
-        if (metaDescription) metaDescription.setAttribute("content", dict["doc.description"]);
-
-        document.querySelectorAll("[data-i18n]").forEach((el) => {
-            const key = el.getAttribute("data-i18n");
-            if (dict[key] !== undefined) el.textContent = dict[key];
-        });
-
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-
-        document.querySelectorAll('.fade-in').forEach((el) => observer.observe(el));
-
-        document.querySelectorAll('a[href^="#"]').forEach((a) => {
-            a.addEventListener('click', (e) => {
-                const target = document.querySelector(a.getAttribute('href'));
-                if (target) {
-                    e.preventDefault();
-                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }
-            });
-        });
+      }
     </script>
-</body>
+    <script src="assets/site.js"></script>
+  </body>
 </html>
