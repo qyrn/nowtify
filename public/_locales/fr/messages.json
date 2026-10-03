@@ -105,8 +105,8 @@
   "scheduleTomorrow": { "message": "demain, $TIME$", "placeholders": { "time": { "content": "$1" } } },
   "agoJustNow": { "message": "à l'instant" },
   "agoMinutes": { "message": "il y a $COUNT$ min", "placeholders": { "count": { "content": "$1" } } },
-  "agoHours": { "message": "il y a $COUNT$h", "placeholders": { "count": { "content": "$1" } } },
-  "agoDays": { "message": "il y a $COUNT$j", "placeholders": { "count": { "content": "$1" } } },
+  "agoHours": { "message": "il y a $COUNT$ h", "placeholders": { "count": { "content": "$1" } } },
+  "agoDays": { "message": "il y a $COUNT$ j", "placeholders": { "count": { "content": "$1" } } },
 
   "notificationTitle": {
     "message": "$NAME$ est en live",

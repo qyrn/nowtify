@@ -5,7 +5,6 @@
   color-scheme: light dark;
   --chassis: light-dark(#e8e6e1, #121110);
   --panel: light-dark(#f6f5f2, #1c1a18);
-  --raised: light-dark(#fbfaf8, #24221f);
   --well: light-dark(#ecebe7, #0f0e0d);
   --line: light-dark(#dcd9d3, #2b2926);
   --line-strong: light-dark(#c9c5bd, #3a3733);
@@ -14,7 +13,6 @@
   --faint: light-dark(#8c887f, #6f6a62);
   --accent: #e4572e;
   --accent-text: light-dark(#c2421d, #f0764f);
-  --accent-soft: light-dark(rgba(228, 87, 46, 0.1), rgba(228, 87, 46, 0.14));
   --accent-border: rgba(228, 87, 46, 0.45);
   --on-accent: #fff;
   --led: light-dark(rgba(228, 87, 46, 0.35), rgba(228, 87, 46, 0.5));
@@ -22,7 +20,6 @@
   --bezel: #24201c;
   --danger: light-dark(#c62f2f, #ff5c5c);
   --danger-soft: light-dark(rgba(198, 47, 47, 0.08), rgba(255, 92, 92, 0.1));
-  --danger-border: light-dark(rgba(198, 47, 47, 0.35), rgba(255, 92, 92, 0.35));
   --cap: radial-gradient(circle at 40% 35%, #f48a63, #d4471f);
   --well-shadow:
     inset 0 1px 2px light-dark(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.7)),
@@ -92,8 +89,18 @@ button:disabled {
   flex-shrink: 0;
 }
 
-.brand-accent {
-  color: var(--accent);
+.sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.logo-rim {
+  fill: var(--rim);
+}
+
+.logo-bezel {
+  fill: var(--bezel);
 }
 
 .hidden {

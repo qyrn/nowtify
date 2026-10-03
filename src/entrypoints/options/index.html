@@ -7,11 +7,26 @@
     <title>Nowtify</title>
   </head>
   <body>
+    <svg class="sprite" aria-hidden="true">
+      <defs>
+        <radialGradient id="logoCap" cx="40%" cy="35%" r="70%">
+          <stop offset="0" stop-color="#f48a63" />
+          <stop offset="1" stop-color="#d4471f" />
+        </radialGradient>
+      </defs>
+      <symbol id="logo" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="31" class="logo-rim" />
+        <circle cx="32" cy="32" r="28" class="logo-bezel" />
+        <circle cx="32" cy="32" r="19" fill="url(#logoCap)" />
+        <circle cx="26.5" cy="25.5" r="5" fill="#fff" opacity="0.32" />
+      </symbol>
+    </svg>
+
     <div class="page">
       <header class="page-header">
-        <img src="/icon-128.png" alt="" width="40" height="40" />
+        <svg class="page-logo" aria-hidden="true"><use href="#logo" /></svg>
         <div>
-          <h1 class="wordmark">Now<span class="brand-accent">tify</span></h1>
+          <h1 class="wordmark">Nowtify</h1>
           <p class="page-subtitle" data-i18n="optionsSubtitle"></p>
         </div>
       </header>

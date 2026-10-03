@@ -11,10 +11,18 @@
   margin-bottom: 28px;
 }
 
+.page-logo {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 12px rgba(228, 87, 46, 0.2));
+}
+
 .wordmark {
-  font-size: 22px;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
 }
 
 .page-subtitle {
@@ -32,7 +40,8 @@
   padding: 20px 22px;
   background: var(--panel);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: 12px;
+  box-shadow: var(--panel-shadow);
 }
 
 .section-head {
@@ -45,11 +54,11 @@
 
 .section-title {
   margin-bottom: 14px;
-  color: var(--dim);
+  color: var(--faint);
   font-family: var(--mono);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 500;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 
@@ -78,19 +87,20 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: var(--raised);
-  border: 1px solid var(--line);
+  border: 0;
   border-radius: var(--radius-sm);
+  background: var(--key);
+  box-shadow: var(--key-shadow);
   font-size: 12.5px;
   font-weight: 600;
   transition:
-    border-color 0.15s var(--ease),
+    filter 0.15s var(--ease),
     color 0.15s var(--ease),
     opacity 0.15s var(--ease);
 }
 
-.btn:hover {
-  border-color: var(--line-strong);
+.btn:hover:not(:disabled) {
+  filter: brightness(1.05);
 }
 
 .btn:disabled {
@@ -98,13 +108,9 @@
 }
 
 .btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--cap);
+  box-shadow: var(--cap-shadow);
   color: var(--on-accent);
-}
-
-.btn-primary:hover {
-  opacity: 0.88;
 }
 
 .btn-small {
@@ -117,7 +123,6 @@
 }
 
 .btn-danger-ghost:hover:not(:disabled) {
-  border-color: var(--danger-border);
   color: var(--danger);
 }
 
@@ -153,7 +158,7 @@
 }
 
 .account-status {
-  color: var(--accent);
+  color: var(--accent-text);
   font-family: var(--mono);
   font-size: 10.5px;
   letter-spacing: 0.05em;
@@ -192,16 +197,14 @@
 .switch {
   position: relative;
   flex-shrink: 0;
-  width: 38px;
+  width: 40px;
   height: 22px;
   appearance: none;
-  background: var(--raised);
-  border: 1px solid var(--line-strong);
   border-radius: 999px;
+  background: var(--well);
+  box-shadow: var(--well-shadow);
   cursor: pointer;
-  transition:
-    background 0.2s var(--ease),
-    border-color 0.2s var(--ease);
+  transition: background 0.2s var(--ease);
 }
 
 .switch::before {
@@ -209,23 +212,23 @@
   position: absolute;
   top: 3px;
   left: 3px;
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  background: var(--dim);
-  transition:
-    transform 0.2s var(--ease),
-    background 0.2s var(--ease);
+  background: var(--key);
+  box-shadow: var(--key-shadow);
+  transition: transform 0.2s var(--ease);
 }
 
 .switch:checked {
-  background: var(--accent-soft);
-  border-color: var(--accent-border);
+  background: var(--cap);
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.3),
+    0 0 12px light-dark(transparent, rgba(228, 87, 46, 0.25));
 }
 
 .switch:checked::before {
-  transform: translateX(16px);
-  background: var(--accent);
+  transform: translateX(18px);
 }
 
 .switch:disabled {
@@ -273,16 +276,16 @@ div.setting {
   gap: 4px;
   min-width: 0;
   padding: 12px 14px;
-  background: var(--chassis);
-  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+  background: var(--well);
+  box-shadow: var(--well-shadow);
 }
 
 .stat-value {
   overflow: hidden;
-  font-family: var(--mono);
-  font-size: 18px;
-  font-weight: 600;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   white-space: nowrap;
   text-overflow: ellipsis;
 }
@@ -366,9 +369,9 @@ div.setting {
 
 .team-card {
   padding: 12px 14px;
-  background: var(--chassis);
-  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
+  background: var(--well);
+  box-shadow: var(--well-shadow);
 }
 
 .team-card-head {
@@ -406,14 +409,14 @@ div.setting {
   align-items: center;
   gap: 4px;
   padding: 4px 4px 4px 10px;
-  background: var(--panel);
-  border: 1px solid var(--line);
   border-radius: 999px;
+  background: var(--key);
+  box-shadow: var(--key-shadow);
   font-size: 12px;
 }
 
 .chip-label {
-  color: var(--dim);
+  color: var(--ink);
 }
 
 .chip-remove {
@@ -464,7 +467,7 @@ div.setting {
 }
 
 .footer-links a:hover {
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 @media (max-width: 560px) {
