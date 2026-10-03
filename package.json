@@ -14,13 +14,16 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "icons": "node scripts/render-icons.ts"
   },
   "packageManager": "pnpm@10.23.0",
   "devDependencies": {
     "@eslint/js": "^10",
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@resvg/resvg-js": "^2.6.2",
+    "@types/node": "^26.6.4",
     "eslint": "^10.11.0",
     "globals": "^17",
     "prettier": "^3.9.9",
