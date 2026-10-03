@@ -13,16 +13,18 @@
       name="description"
       content="What data Nowtify touches, where it is stored and what it never does. No server, no analytics."
     />
-    <meta name="theme-color" content="#0b0b0d" />
-    <link rel="icon" href="favicon.ico" sizes="any" />
+    <meta name="theme-color" content="#e8e6e1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="favicon.ico" sizes="32x32" />
+    <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="assets/site.css" />
   </head>
   <body>
     <header class="topbar">
       <div class="wrap">
         <a class="brand" href="index.html" aria-label="Nowtify">
-          <img src="assets/img/logo.png" alt="" width="28" height="28" />
-          <span>Now<span>tify</span></span>
+          <img src="assets/img/logo.svg" alt="" width="28" height="28" />
+          <span>Nowtify</span>
         </a>
         <nav>
           <a class="text" href="index.html" data-i18n="nav.back">Back to the home page</a>
@@ -32,7 +34,7 @@
     </header>
 
     <main class="wrap doc">
-      <p class="kicker" data-i18n="updated">Last updated on September 24, 2026</p>
+      <p class="kicker" data-i18n="updated">Last updated on October 3, 2026</p>
       <h1 data-i18n="title">Privacy policy</h1>
       <p data-i18n="intro">
         Nowtify is a Chrome extension that notifies you when Twitch streamers go live. This page lists every
@@ -54,8 +56,8 @@
           browser's IndexedDB.
         </li>
         <li data-i18n="stored.settings">
-          Your preferences (notifications, notifications kept on screen, delete confirmation, compact view),
-          in Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your
+          Your preferences (notifications, notifications kept on screen, delete confirmation, theme), in
+          Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your
           bookmarks. The developer never receives them.
         </li>
       </ul>
@@ -155,14 +157,14 @@
           "meta.description": "What data Nowtify touches, where it is stored and what it never does. No server, no analytics.",
           "lang.switch": "Passer en français",
           "nav.back": "Back to the home page",
-          "updated": "Last updated on September 24, 2026",
+          "updated": "Last updated on October 3, 2026",
           "title": "Privacy policy",
           "intro": "Nowtify is a Chrome extension that notifies you when Twitch streamers go live. This page lists every piece of data it touches and where that data goes.",
           "summary": "Short version: Nowtify has no server and no analytics. Everything it knows stays in your browser, and the only outside service it talks to is Twitch.",
           "stored.title": "What is stored, and where",
           "stored.token": "Your Twitch access token and your public Twitch profile (name and avatar), in Chrome's local extension storage. They never leave your computer except to be sent to Twitch.",
           "stored.list": "The streamers and teams you add, and the history of lives Nowtify caught (the last 500), in your browser's IndexedDB.",
-          "stored.settings": "Your preferences (notifications, notifications kept on screen, delete confirmation, compact view), in Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your bookmarks. The developer never receives them.",
+          "stored.settings": "Your preferences (notifications, notifications kept on screen, delete confirmation, theme), in Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your bookmarks. The developer never receives them.",
           "network.title": "Who Nowtify talks to",
           "network.id": "id.twitch.tv, to log you in, check that your token is still valid, and revoke it when you disconnect.",
           "network.api": "api.twitch.tv, to find channels, read who is live, and fetch teams, past broadcasts and schedules.",
@@ -189,14 +191,14 @@
           "meta.description": "Les données que Nowtify utilise, où elles sont stockées et ce qu'elle ne fait jamais. Pas de serveur, pas de stats.",
           "lang.switch": "Switch to English",
           "nav.back": "Retour à l'accueil",
-          "updated": "Mise à jour le 24 septembre 2026",
+          "updated": "Mise à jour le 3 octobre 2026",
           "title": "Politique de confidentialité",
           "intro": "Nowtify est une extension Chrome qui te prévient quand des streamers Twitch passent en live. Cette page liste toutes les données qu'elle manipule et où elles vont.",
           "summary": "En bref : Nowtify n'a ni serveur ni outil de stats. Tout ce qu'elle sait reste dans ton navigateur, et le seul service extérieur auquel elle parle, c'est Twitch.",
           "stored.title": "Ce qui est stocké, et où",
           "stored.token": "Ton token d'accès Twitch et ton profil Twitch public (nom et avatar), dans le stockage local de l'extension. Ils ne quittent jamais ton ordinateur, sauf pour être envoyés à Twitch.",
           "stored.list": "Les streamers et les teams que tu ajoutes, et l'historique des lives repérés (les 500 derniers), dans l'IndexedDB de ton navigateur.",
-          "stored.settings": "Tes préférences (notifications, notifications gardées à l'écran, confirmation de suppression, vue compacte), dans le stockage synchronisé de Chrome. Si la synchro Chrome est activée, Google les synchronise entre tes appareils comme tes favoris. Le développeur ne les reçoit jamais.",
+          "stored.settings": "Tes préférences (notifications, notifications gardées à l'écran, confirmation de suppression, thème), dans le stockage synchronisé de Chrome. Si la synchro Chrome est activée, Google les synchronise entre tes appareils comme tes favoris. Le développeur ne les reçoit jamais.",
           "network.title": "À qui Nowtify parle",
           "network.id": "id.twitch.tv, pour te connecter, vérifier que ton token est encore valide, et le révoquer quand tu te déconnectes.",
           "network.api": "api.twitch.tv, pour chercher des chaînes, savoir qui est en live, et récupérer les teams, les anciens lives et les plannings.",

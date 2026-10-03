@@ -19,11 +19,13 @@
     <meta property="og:url" content="https://nowtify.qyrn.dev/" />
     <meta property="og:image" content="https://nowtify.qyrn.dev/assets/img/og.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="theme-color" content="#0b0b0d" />
-    <link rel="icon" href="favicon.ico" sizes="any" />
+    <meta name="theme-color" content="#e8e6e1" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#121110" media="(prefers-color-scheme: dark)" />
+    <link rel="icon" href="favicon.ico" sizes="32x32" />
+    <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml" />
     <link
       rel="preload"
-      href="assets/fonts/geist-latin-wght-normal.woff2"
+      href="assets/fonts/bricolage-grotesque-latin-opsz-normal.woff2"
       as="font"
       type="font/woff2"
       crossorigin
@@ -34,8 +36,8 @@
     <header class="topbar">
       <div class="wrap">
         <a class="brand" href="#top" aria-label="Nowtify">
-          <img src="assets/img/logo.png" alt="" width="28" height="28" />
-          <span>Now<span>tify</span></span>
+          <img src="assets/img/logo.svg" alt="" width="28" height="28" />
+          <span>Nowtify</span>
         </a>
         <nav>
           <a class="text" href="#how" data-i18n="nav.how">How it works</a>
@@ -55,7 +57,6 @@
 
     <main id="top">
       <div class="hero">
-        <div class="fireflies" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
         <div class="wrap">
           <div>
             <p class="kicker" data-i18n="hero.kicker">Chrome extension for Twitch</p>
@@ -95,17 +96,23 @@
               data-src-fr="assets/img/popup-fr.png"
               width="360"
               height="600"
-              alt="The Nowtify popup with two live streamers and an open stream preview"
+              alt="The Nowtify popup with three live streamers and an open stream preview"
               data-i18n-alt="hero.alt"
             />
             <div class="toast" aria-hidden="true">
               <div class="toast-head">
-                <img src="assets/img/logo.png" alt="" width="16" height="16" />
+                <img src="assets/img/logo.svg" alt="" width="16" height="16" />
                 <span>Google Chrome</span>
                 <time data-i18n="toast.time">now</time>
               </div>
               <div class="toast-body">
-                <span class="toast-avatar">P</span>
+                <img
+                  class="toast-avatar"
+                  src="assets/img/avatar-pixel-ash.png"
+                  alt=""
+                  width="40"
+                  height="40"
+                />
                 <div>
                   <strong data-i18n="toast.title">pixel_ash is live</strong>
                   <p data-i18n="toast.body">Speedrun practice, chat chill</p>
@@ -212,40 +219,28 @@
               </p>
             </div>
             <div class="spec">
-              <code>1.2K viewers</code>
+              <code>8 712 viewers</code>
               <h3 data-i18n="spec4.title">Live preview</h3>
               <p data-i18n="spec4.text">
-                Unfold a live card to see the thumbnail, the game and the viewer count.
+                Unfold a live streamer to see the thumbnail, how long they have been live and the exact viewer
+                count.
               </p>
             </div>
             <div class="spec">
-              <code data-i18n="spec5.label">stats</code>
-              <h3 data-i18n="spec5.title">History and stats</h3>
-              <p data-i18n="spec5.text">
-                Every live Nowtify catches is logged with its duration. The settings page sums it up: lives
-                this week, most frequent streamer, most frequent game.
-              </p>
+              <code data-i18n="spec5.label">auto / dark / light</code>
+              <h3 data-i18n="spec5.title">Light or dark</h3>
+              <p data-i18n="spec5.text">Follows the Chrome theme by default, or pick one in the settings.</p>
             </div>
             <div class="spec">
               <code>backup.json</code>
-              <h3 data-i18n="spec6.title">Backup</h3>
+              <h3 data-i18n="spec6.title">History, stats and backup</h3>
               <p data-i18n="spec6.text">
-                Export your list, settings and history to a file, then import it in another browser.
+                Every live Nowtify catches is logged with its duration, and the settings page sums it up.
+                Export everything to a file to move to another browser.
               </p>
             </div>
           </div>
           <div class="gallery">
-            <figure>
-              <img
-                src="assets/img/compact-en.png"
-                data-src-fr="assets/img/compact-fr.png"
-                width="360"
-                height="396"
-                loading="lazy"
-                alt=""
-              />
-              <figcaption data-i18n="gallery.compact">The compact grid, for long lists</figcaption>
-            </figure>
             <figure>
               <img
                 src="assets/img/snooze-en.png"
@@ -259,10 +254,21 @@
             </figure>
             <figure>
               <img
+                src="assets/img/light-en.png"
+                data-src-fr="assets/img/light-fr.png"
+                width="360"
+                height="600"
+                loading="lazy"
+                alt=""
+              />
+              <figcaption data-i18n="gallery.light">The light theme</figcaption>
+            </figure>
+            <figure>
+              <img
                 src="assets/img/activity-en.png"
                 data-src-fr="assets/img/activity-fr.png"
-                width="680"
-                height="802"
+                width="760"
+                height="820"
                 loading="lazy"
                 alt=""
               />
@@ -391,7 +397,7 @@
           "hero.cta": "Add to Chrome",
           "hero.note": "Free, open source, MIT",
           "hero.browsers": "Also installs on Edge, Brave and Vivaldi.",
-          "hero.alt": "The Nowtify popup with two live streamers and an open stream preview",
+          "hero.alt": "The Nowtify popup with three live streamers and an open stream preview",
           "toast.time": "now",
           "toast.title": "pixel_ash is live",
           "toast.body": "Speedrun practice, chat chill",
@@ -420,13 +426,13 @@
           "spec3.title": "Next scheduled stream",
           "spec3.text": "Offline channels show their next stream when it's set in their Twitch schedule.",
           "spec4.title": "Live preview",
-          "spec4.text": "Unfold a live card to see the thumbnail, the game and the viewer count.",
-          "spec5.label": "stats",
-          "spec5.title": "History and stats",
-          "spec5.text": "Every live Nowtify catches is logged with its duration. The settings page sums it up: lives this week, most frequent streamer, most frequent game.",
-          "spec6.title": "Backup",
-          "spec6.text": "Export your list, settings and history to a file, then import it in another browser.",
-          "gallery.compact": "The compact grid, for long lists",
+          "spec4.text": "Unfold a live streamer to see the thumbnail, how long they have been live and the exact viewer count.",
+          "spec5.label": "auto / dark / light",
+          "spec5.title": "Light or dark",
+          "spec5.text": "Follows the Chrome theme by default, or pick one in the settings.",
+          "spec6.title": "History, stats and backup",
+          "spec6.text": "Every live Nowtify catches is logged with its duration, and the settings page sums it up. Export everything to a file to move to another browser.",
+          "gallery.light": "The light theme",
           "gallery.snooze": "Pausing a single streamer",
           "gallery.activity": "History and stats, in the settings page",
           "privacy.title": "Your data stays in your browser",
@@ -464,7 +470,7 @@
           "hero.cta": "Ajouter à Chrome",
           "hero.note": "Gratuit, open source, MIT",
           "hero.browsers": "S'installe aussi sur Edge, Brave et Vivaldi.",
-          "hero.alt": "La popup de Nowtify avec deux streamers en live et un aperçu de stream ouvert",
+          "hero.alt": "La popup de Nowtify avec trois streamers en live et un aperçu de stream ouvert",
           "toast.time": "maintenant",
           "toast.title": "pixel_ash est en live",
           "toast.body": "Entraînement speedrun, chat posé",
@@ -493,13 +499,13 @@
           "spec3.title": "Prochain live prévu",
           "spec3.text": "Les chaînes hors ligne affichent leur prochain live quand il est renseigné dans leur planning Twitch.",
           "spec4.title": "Aperçu du live",
-          "spec4.text": "Déplie une carte en live pour voir la miniature, le jeu et le nombre de viewers.",
-          "spec5.label": "stats",
-          "spec5.title": "Historique et stats",
-          "spec5.text": "Chaque live repéré est noté avec sa durée. La page de réglages fait le bilan : lives de la semaine, streamer et jeu les plus fréquents.",
-          "spec6.title": "Sauvegarde",
-          "spec6.text": "Exporte ta liste, tes réglages et ton historique dans un fichier, puis réimporte-le dans un autre navigateur.",
-          "gallery.compact": "La grille compacte, pour les longues listes",
+          "spec4.text": "Déplie un streamer en live pour voir la miniature, depuis combien de temps il est en live et le nombre exact de viewers.",
+          "spec5.label": "auto / sombre / clair",
+          "spec5.title": "Clair ou sombre",
+          "spec5.text": "Suit le thème de Chrome par défaut, ou choisis le tien dans les réglages.",
+          "spec6.title": "Historique, stats et sauvegarde",
+          "spec6.text": "Chaque live repéré est noté avec sa durée, et la page de réglages en fait le bilan. Exporte le tout dans un fichier pour passer sur un autre navigateur.",
+          "gallery.light": "Le thème clair",
           "gallery.snooze": "La pause sur un seul streamer",
           "gallery.activity": "Historique et stats, dans la page de réglages",
           "privacy.title": "Tes données restent dans ton navigateur",
