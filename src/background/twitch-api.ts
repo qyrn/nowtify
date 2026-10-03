@@ -231,6 +231,14 @@ export async function getChannelTeam(token: string, broadcasterId: string): Prom
   }
 }
 
+export async function getFollowerTotal(token: string, broadcasterId: string): Promise<number | null> {
+  const body = await helix(token, 'channels/followers', [
+    ['broadcaster_id', broadcasterId],
+    ['first', '1']
+  ])
+  return body ? readNumber(body, 'total') : null
+}
+
 export async function getLatestArchiveDate(token: string, userId: string): Promise<number | null> {
   const [video] = await helixList(token, 'videos', [
     ['user_id', userId],
