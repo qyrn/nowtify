@@ -13,6 +13,7 @@ import type {
 import { loadSettings, updateSettings } from '../shared/settings'
 import { createStreamer, isValidLogin, isValidTeamName, type Streamer } from '../shared/streamer'
 import { applyLiveState, checkAllStreamers } from './checker'
+import { rankChannels } from './channel-ranking'
 import { HISTORY_LIMIT } from './config'
 import {
   clearHistory,
@@ -29,6 +30,7 @@ import { getLiveStreams, getTeam, getUsersByLogin, searchChannels } from './twit
 type Handlers = { [K in MessageType]: (payload: MessageRequest<K>) => Promise<MessageResponse<K>> }
 
 const MAX_QUERY_LENGTH = 50
+const SUGGESTION_LIMIT = 5
 
 async function withBaselineLiveState(token: string, streamers: Streamer[]): Promise<Streamer[]> {
   const live = await getLiveStreams(
@@ -102,24 +104,12 @@ async function addTeam(nameInput: string): Promise<AddTeamResult> {
   return { status: 'added', displayName: team.displayName, added: created.length }
 }
 
-function relevance(channel: ChannelSuggestion, query: string): number {
-  const login = channel.login.toLowerCase()
-  const name = channel.displayName.toLowerCase()
-  if (login === query || name === query) return 3
-  if (login.startsWith(query) || name.startsWith(query)) return 2
-  return login.includes(query) || name.includes(query) ? 1 : 0
-}
-
 async function suggestChannels(queryInput: string): Promise<ChannelSuggestion[]> {
   const query = queryInput.trim().toLowerCase().slice(0, MAX_QUERY_LENGTH)
   if (query.length < 2) return []
   const token = await getToken()
   if (!token) return []
-  const channels = await searchChannels(token, query)
-  return channels
-    .filter((channel) => relevance(channel, query) > 0)
-    .sort((a, b) => relevance(b, query) - relevance(a, query) || Number(b.isLive) - Number(a.isLive))
-    .slice(0, 5)
+  return rankChannels(await searchChannels(token, query), query, SUGGESTION_LIMIT)
 }
 
 async function findTeam(nameInput: string): Promise<TeamSuggestion | null> {
