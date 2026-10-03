@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { isLookalike, lookalikeLogins, rankChannels } from '../src/background/channel-ranking'
-import type { ChannelSuggestion } from '../src/shared/messages'
+import { lookalikeLogins, rankChannels } from '../src/background/channel-ranking'
+import type { TwitchChannel } from '../src/background/twitch-api'
 
-function channel(login: string, isLive = false): ChannelSuggestion {
+function channel(login: string, isLive = false): TwitchChannel {
   return { login, displayName: login, avatarUrl: null, isLive }
 }
 
@@ -30,13 +30,6 @@ describe('lookalikeLogins', () => {
   })
 })
 
-describe('isLookalike', () => {
-  it('matches names that only differ by look-alike characters', () => {
-    expect(isLookalike('kamet0', 'kameto')).toBe(true)
-    expect(isLookalike('kametori_', 'kameto')).toBe(false)
-  })
-})
-
 describe('rankChannels', () => {
   it('puts the big look-alike account first, then the exact one', () => {
     const channels = [...TWITCH_SEARCH_FOR_KAMETO, channel('kamet0', true)]
@@ -47,6 +40,20 @@ describe('rankChannels', () => {
     expect(rankChannels(channels, 'kameto', 5, followers).map((item) => item.login)).toEqual([
       'kamet0',
       'kameto',
+      'kametori_',
+      'kametoreact',
+      'kametosha'
+    ])
+  })
+
+  it('sorts names that match equally by followers', () => {
+    const channels = [channel('kametoreact'), channel('kametori_'), channel('kametosha')]
+    const followers = new Map([
+      ['kametoreact', 120],
+      ['kametori_', 5400],
+      ['kametosha', 30]
+    ])
+    expect(rankChannels(channels, 'kameto', 5, followers).map((item) => item.login)).toEqual([
       'kametori_',
       'kametoreact',
       'kametosha'

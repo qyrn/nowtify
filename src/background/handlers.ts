@@ -13,7 +13,7 @@ import type {
 import { loadSettings, updateSettings } from '../shared/settings'
 import { createStreamer, isValidLogin, isValidTeamName, type Streamer } from '../shared/streamer'
 import { applyLiveState, checkAllStreamers } from './checker'
-import { isLookalike, lookalikeLogins, rankChannels } from './channel-ranking'
+import { suggestChannels } from './channel-search'
 import { HISTORY_LIMIT } from './config'
 import {
   clearHistory,
@@ -25,14 +25,7 @@ import {
   putStreamers
 } from './database'
 import { getAuthState, getToken, login, logout } from './twitch-auth'
-import {
-  getFollowerTotal,
-  getLiveStreams,
-  getTeam,
-  getUsersByLogin,
-  searchChannels,
-  type TwitchUser
-} from './twitch-api'
+import { getLiveStreams, getTeam, getUsersByLogin } from './twitch-api'
 
 type Handlers = { [K in MessageType]: (payload: MessageRequest<K>) => Promise<MessageResponse<K>> }
 
@@ -111,46 +104,12 @@ async function addTeam(nameInput: string): Promise<AddTeamResult> {
   return { status: 'added', displayName: team.displayName, added: created.length }
 }
 
-async function followerTotals(token: string, users: TwitchUser[]): Promise<Map<string, number>> {
-  const totals = await Promise.all(
-    users.map(async (user): Promise<[string, number] | null> => {
-      const total = await getFollowerTotal(token, user.id).catch(() => null)
-      return total === null ? null : [user.login, total]
-    })
-  )
-  return new Map(totals.filter((entry) => entry !== null))
-}
-
-async function suggestChannels(queryInput: string): Promise<ChannelSuggestion[]> {
+async function suggestions(queryInput: string): Promise<ChannelSuggestion[]> {
   const query = queryInput.trim().toLowerCase().slice(0, MAX_QUERY_LENGTH)
   if (query.length < 2) return []
   const token = await getToken()
   if (!token) return []
-  const [found, lookalikes] = await Promise.all([
-    searchChannels(token, query),
-    getUsersByLogin(token, lookalikeLogins(query))
-  ])
-  const known = new Set(found.map((channel) => channel.login))
-  const missing = lookalikes.filter((user) => !known.has(user.login))
-  const [live, followers] = await Promise.all([
-    missing.length > 0
-      ? getLiveStreams(
-          token,
-          missing.map((user) => user.login)
-        )
-      : new Map<string, unknown>(),
-    followerTotals(
-      token,
-      lookalikes.filter((user) => isLookalike(user.login, query))
-    )
-  ])
-  const extra = missing.map((user) => ({
-    login: user.login,
-    displayName: user.displayName,
-    avatarUrl: user.avatarUrl,
-    isLive: live.has(user.login)
-  }))
-  return rankChannels([...found, ...extra], query, SUGGESTION_LIMIT, followers)
+  return suggestChannels(token, query, SUGGESTION_LIMIT)
 }
 
 async function findTeam(nameInput: string): Promise<TeamSuggestion | null> {
@@ -204,7 +163,7 @@ export const handlers: Handlers = {
     await patchStreamers(new Map(ids.map((id): [string, Partial<Streamer>] => [id, { snoozedUntil, muted }])))
     return null
   },
-  searchChannels: ({ query }) => suggestChannels(query),
+  searchChannels: ({ query }) => suggestions(query),
   findTeam: ({ name }) => findTeam(name),
   getHistory: ({ limit }) => getHistory(Math.min(Math.max(limit, 1), HISTORY_LIMIT)),
   clearHistory: async () => {

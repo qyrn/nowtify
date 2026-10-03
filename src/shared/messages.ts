@@ -19,6 +19,8 @@ export interface ChannelSuggestion {
   displayName: string
   avatarUrl: string | null
   isLive: boolean
+  followers: number | null
+  partner: boolean
 }
 
 export interface TeamSuggestion {

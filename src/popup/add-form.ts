@@ -1,5 +1,7 @@
 import { avatar, byId, h, monogram } from '../shared/dom'
+import { formatViewers } from '../shared/format'
 import { plural, t } from '../shared/i18n'
+import { icon } from '../shared/icons'
 import { send, type ChannelSuggestion, type TeamSuggestion } from '../shared/messages'
 import { parseAddInput } from '../shared/streamer'
 import { toast } from '../shared/ui'
@@ -83,8 +85,20 @@ export class AddForm {
   private channelItem(channel: ChannelSuggestion): HTMLButtonElement {
     const item = h('button', { type: 'button', class: 'suggestion', role: 'option' }, [
       avatar(channel.avatarUrl, channel.displayName, 'suggestion-avatar'),
-      h('span', { class: 'suggestion-name' }, [channel.displayName]),
-      channel.isLive ? h('span', { class: 'suggestion-badge live' }, [t('liveBadge')]) : null
+      h('span', { class: 'suggestion-name' }, [
+        h('span', { class: 'suggestion-label' }, [channel.displayName]),
+        channel.partner
+          ? h('span', { class: 'suggestion-partner', title: t('partnerTitle') }, [icon('badgeCheck')])
+          : null
+      ]),
+      h('span', { class: 'suggestion-meta' }, [
+        channel.followers === null
+          ? null
+          : h('span', { class: 'suggestion-followers' }, [
+              t('suggestionFollowers', formatViewers(channel.followers))
+            ]),
+        channel.isLive ? h('span', { class: 'suggestion-badge live' }, [t('liveBadge')]) : null
+      ])
     ])
     item.addEventListener('click', () => {
       void this.submit(channel.login)

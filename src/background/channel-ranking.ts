@@ -1,4 +1,3 @@
-import type { ChannelSuggestion } from '../shared/messages'
 import { isValidLogin } from '../shared/streamer'
 
 const TO_LETTER: Record<string, string> = { '0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '7': 't' }
@@ -23,23 +22,24 @@ export function lookalikeLogins(query: string): string[] {
   return [...variants].slice(0, MAX_VARIANTS)
 }
 
-export function isLookalike(login: string, query: string): boolean {
-  return loose(login) === loose(query.trim())
+interface Named {
+  login: string
+  displayName: string
 }
 
-function relevance(channel: ChannelSuggestion, query: string): number {
+function relevance(channel: Named, query: string): number {
   const names = [loose(channel.login), loose(channel.displayName)]
   if (names.some((name) => name === query)) return 3
   if (names.some((name) => name.startsWith(query))) return 2
   return names.some((name) => name.includes(query)) ? 1 : 0
 }
 
-export function rankChannels(
-  channels: ChannelSuggestion[],
+export function rankChannels<T extends Named>(
+  channels: T[],
   query: string,
   limit: number,
   followers: ReadonlyMap<string, number>
-): ChannelSuggestion[] {
+): T[] {
   const needle = loose(query.trim())
   return channels
     .map((channel, order) => ({

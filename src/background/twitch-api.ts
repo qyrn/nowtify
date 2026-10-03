@@ -26,6 +26,7 @@ export interface TwitchUser {
   login: string
   displayName: string
   avatarUrl: string | null
+  partner: boolean
 }
 
 export interface TwitchStream {
@@ -132,7 +133,8 @@ function toUser(record: UnknownRecord): TwitchUser | null {
     id,
     login,
     displayName: readString(record, 'display_name') ?? login,
-    avatarUrl: readHttpsUrl(record, 'profile_image_url')
+    avatarUrl: readHttpsUrl(record, 'profile_image_url'),
+    partner: readString(record, 'broadcaster_type') === 'partner'
   }
 }
 

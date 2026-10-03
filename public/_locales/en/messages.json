@@ -64,6 +64,8 @@
   },
 
   "liveBadge": { "message": "Live" },
+  "partnerTitle": { "message": "Twitch partner" },
+  "suggestionFollowers": { "message": "$COUNT$ followers", "placeholders": { "count": { "content": "$1" } } },
   "statusOffline": { "message": "Offline" },
   "streamInProgress": { "message": "Stream in progress" },
   "previewTitle": { "message": "Show stream preview" },
