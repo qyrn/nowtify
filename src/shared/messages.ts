@@ -52,7 +52,7 @@ export interface MessageMap {
   addTeam: { request: { name: string }; response: AddTeamResult }
   deleteStreamer: { request: { id: string }; response: null }
   deleteTeam: { request: { team: string }; response: null }
-  setSnooze: { request: { id: string; until: number | null }; response: null }
+  setPause: { request: { ids: string[]; snoozedUntil: number | null; muted: boolean }; response: null }
   searchChannels: { request: { query: string }; response: ChannelSuggestion[] }
   findTeam: { request: { name: string }; response: TeamSuggestion | null }
   getHistory: { request: { limit: number }; response: HistoryEntry[] }
@@ -82,7 +82,7 @@ const MESSAGE_TYPES: readonly MessageType[] = [
   'addTeam',
   'deleteStreamer',
   'deleteTeam',
-  'setSnooze',
+  'setPause',
   'searchChannels',
   'findTeam',
   'getHistory',

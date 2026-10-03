@@ -24,6 +24,7 @@ export interface Streamer {
   scheduleCheckedAt: number | null
   notifiedAt: number | null
   snoozedUntil: number | null
+  muted: boolean
 }
 
 export const RECENTLY_LIVE_WINDOW = 12 * 60 * 60 * 1000
@@ -82,7 +83,8 @@ export function createStreamer(profile: {
     vodCheckedAt: null,
     scheduleCheckedAt: null,
     notifiedAt: null,
-    snoozedUntil: null
+    snoozedUntil: null,
+    muted: false
   }
 }
 
@@ -115,7 +117,8 @@ export function normalizeStreamer(raw: unknown): Streamer | null {
     vodCheckedAt: readNumber(raw, 'vodCheckedAt'),
     scheduleCheckedAt: readNumber(raw, 'scheduleCheckedAt'),
     notifiedAt: readNumber(raw, 'notifiedAt'),
-    snoozedUntil: readNumber(raw, 'snoozedUntil')
+    snoozedUntil: readNumber(raw, 'snoozedUntil'),
+    muted: readBoolean(raw, 'muted') ?? false
   }
 }
 
@@ -127,8 +130,8 @@ export function isRecentlyLive(streamer: Streamer, now = Date.now()): boolean {
   return !streamer.isLive && streamer.lastLiveAt !== null && now - streamer.lastLiveAt < RECENTLY_LIVE_WINDOW
 }
 
-export function isSnoozed(streamer: Streamer, now = Date.now()): boolean {
-  return streamer.snoozedUntil !== null && streamer.snoozedUntil > now
+export function notificationsPaused(streamer: Streamer, now = Date.now()): boolean {
+  return streamer.muted || (streamer.snoozedUntil !== null && streamer.snoozedUntil > now)
 }
 
 export function teamLabel(streamer: Streamer): string | null {

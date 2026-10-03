@@ -169,8 +169,8 @@ export const handlers: Handlers = {
     return null
   },
   deleteTeam: ({ team }) => deleteTeam(team),
-  setSnooze: async ({ id, until }) => {
-    await patchStreamers(new Map<string, Partial<Streamer>>([[id, { snoozedUntil: until }]]))
+  setPause: async ({ ids, snoozedUntil, muted }) => {
+    await patchStreamers(new Map(ids.map((id): [string, Partial<Streamer>] => [id, { snoozedUntil, muted }])))
     return null
   },
   searchChannels: ({ query }) => suggestChannels(query),

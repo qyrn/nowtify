@@ -2,7 +2,7 @@ import { avatar, h, monogram } from '../shared/dom'
 import { formatDuration, formatExactCount, formatSince, formatUntil, formatViewers } from '../shared/format'
 import { t } from '../shared/i18n'
 import { icon } from '../shared/icons'
-import { isRecentlyLive, isSnoozed, teamLabel, type Streamer } from '../shared/streamer'
+import { isRecentlyLive, notificationsPaused, teamLabel, type Streamer } from '../shared/streamer'
 
 export interface CardActions {
   open: (streamer: Streamer) => void
@@ -83,13 +83,14 @@ function actionButton(
 }
 
 export function renderCard(streamer: Streamer, actions: CardActions): HTMLElement {
-  const snoozed = isSnoozed(streamer)
+  const paused = notificationsPaused(streamer)
+  const pausedLabel = streamer.muted ? t('notifMuted') : t('notifPaused')
   const previewBlock = preview(streamer)
   const toggle = previewBlock ? actionButton('preview-toggle', t('previewTitle'), 'chevronDown') : null
   toggle?.setAttribute('aria-expanded', 'false')
   const snoozeButton = actionButton(
-    snoozed ? 'card-snooze active' : 'card-snooze',
-    snoozed ? t('notifPaused') : t('notifPauseAction'),
+    paused ? 'card-snooze active' : 'card-snooze',
+    paused ? pausedLabel : t('notifPauseAction'),
     'bellOff'
   )
   const removeButton = actionButton('card-remove', t('deleteTitle'), 'close')
@@ -111,7 +112,7 @@ export function renderCard(streamer: Streamer, actions: CardActions): HTMLElemen
           },
           [streamer.displayName]
         ),
-        snoozed ? h('span', { class: 'card-snoozed', title: t('notifPaused') }, [icon('bellOff')]) : null,
+        paused ? h('span', { class: 'card-snoozed', title: pausedLabel }, [icon('bellOff')]) : null,
         teamBadge(streamer)
       ]),
       subLine(streamer)

@@ -39,6 +39,10 @@ describe('shouldNotify', () => {
     expect(shouldNotify(streamer(), streamer({ isLive: true, snoozedUntil: NOW - 1 }), NOW)).toBe(true)
   })
 
+  it('never notifies for a muted streamer', () => {
+    expect(shouldNotify(streamer(), streamer({ isLive: true, muted: true }), NOW)).toBe(false)
+  })
+
   it('ignores a stream that restarts right after a crash', () => {
     const next = streamer({ isLive: true, notifiedAt: NOW - NOTIFICATION_COOLDOWN + 1 })
     expect(shouldNotify(streamer(), next, NOW)).toBe(false)

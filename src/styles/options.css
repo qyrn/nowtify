@@ -382,6 +382,12 @@ div.setting {
   margin-bottom: 10px;
 }
 
+.team-card-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+}
+
 .team-card-title {
   display: flex;
   align-items: center;

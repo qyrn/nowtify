@@ -2,7 +2,7 @@ import '../../styles/base.css'
 import '../../styles/popup.css'
 import { browser } from 'wxt/browser'
 import { AddForm } from '../../popup/add-form'
-import { closeSnoozeMenus, openSnoozeMenu } from '../../popup/snooze-menu'
+import { closeSnoozeMenus, openSnoozeMenu, type PauseChoice } from '../../popup/snooze-menu'
 import { StreamerList } from '../../popup/streamer-list'
 import { TeamFilter } from '../../popup/team-filter'
 import { byId } from '../../shared/dom'
@@ -33,8 +33,8 @@ const list = new StreamerList(listElement, {
     void browser.tabs.create({ url: `https://www.twitch.tv/${streamer.login}` })
   },
   snooze: (streamer, card) => {
-    openSnoozeMenu(streamer, card, (until) => {
-      void snooze(streamer, until)
+    openSnoozeMenu(streamer, card, (choice) => {
+      void pause(streamer, choice)
     })
   },
   remove: (streamer) => {
@@ -96,9 +96,14 @@ async function connect(): Promise<void> {
   }
 }
 
-async function snooze(streamer: Streamer, until: number | null): Promise<void> {
-  await send('setSnooze', { id: streamer.id, until })
-  toast(until ? t('snoozeToastPaused') : t('snoozeToastResumed'), 'success')
+function pauseToast(streamer: Streamer, choice: PauseChoice): string {
+  if (choice.muted) return t('muteToast', streamer.displayName)
+  return choice.snoozedUntil ? t('snoozeToastPaused') : t('snoozeToastResumed')
+}
+
+async function pause(streamer: Streamer, choice: PauseChoice): Promise<void> {
+  await send('setPause', { ids: [streamer.id], ...choice })
+  toast(pauseToast(streamer, choice), 'success')
   await reload()
 }
 

@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser'
 import { loadSettings } from '../shared/settings'
-import { channelKey, isSnoozed, type Streamer } from '../shared/streamer'
+import { channelKey, notificationsPaused, type Streamer } from '../shared/streamer'
 import {
   CHECK_ALARM,
   CHECK_PERIOD_MINUTES,
@@ -143,12 +143,12 @@ async function enrich(token: string, streamer: Streamer, now: number): Promise<v
 }
 
 export function shouldNotify(previous: Streamer, next: Streamer, now: number): boolean {
-  if (!next.isLive || previous.isLive || isSnoozed(next, now)) return false
+  if (!next.isLive || previous.isLive || notificationsPaused(next, now)) return false
   return next.notifiedAt === null || now - next.notifiedAt >= NOTIFICATION_COOLDOWN
 }
 
 function checkOwnedFields(streamer: Streamer): Partial<Streamer> {
-  const { id, snoozedUntil, addedAt, ...fields } = streamer
+  const { id, snoozedUntil, muted, addedAt, ...fields } = streamer
   return fields
 }
 

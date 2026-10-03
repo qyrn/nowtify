@@ -74,6 +74,12 @@
   "snoozeCancel": { "message": "Resume notifications" },
   "snoozeToastPaused": { "message": "Notifications paused for this streamer" },
   "snoozeToastResumed": { "message": "Notifications resumed" },
+  "muteForever": { "message": "Stop notifying me" },
+  "notifMuted": { "message": "Notifications off" },
+  "muteToast": {
+    "message": "You won't be notified about $NAME$ anymore",
+    "placeholders": { "name": { "content": "$1" } }
+  },
 
   "deleteTitle": { "message": "Remove" },
   "cancelLabel": { "message": "Cancel" },
@@ -166,6 +172,10 @@
   "teamsManagementHeader": { "message": "Teams" },
   "noTeamsAdded": { "message": "No team yet. Type team/name in the popup to add a whole Twitch team." },
   "deleteTeamButton": { "message": "Remove team" },
+  "teamMuteButton": { "message": "Mute" },
+  "teamUnmuteButton": { "message": "Unmute" },
+  "teamMutedToast": { "message": "$TEAM$ muted", "placeholders": { "team": { "content": "$1" } } },
+  "teamUnmutedToast": { "message": "$TEAM$ unmuted", "placeholders": { "team": { "content": "$1" } } },
   "confirmDeleteTeamText": {
     "message": "Every $TEAM$ member will be removed from your list.",
     "placeholders": { "team": { "content": "$1" } }

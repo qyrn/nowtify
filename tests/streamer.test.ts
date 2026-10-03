@@ -97,3 +97,13 @@ describe('isRecentlyLive', () => {
     expect(isRecentlyLive(streamer({ isLive: true, lastLiveAt: now }), now)).toBe(false)
   })
 })
+
+describe('muted streamers', () => {
+  it('treats streamers saved before muting existed as not muted', () => {
+    expect(normalizeStreamer({ id: 'x', login: 'kamet0' })?.muted).toBe(false)
+  })
+
+  it('keeps the muted flag from a backup', () => {
+    expect(normalizeStreamer({ id: 'x', login: 'kamet0', muted: true })?.muted).toBe(true)
+  })
+})

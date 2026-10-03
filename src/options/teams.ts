@@ -21,6 +21,24 @@ function memberChip(member: Streamer): HTMLElement {
   return h('li', { class: 'chip' }, [h('span', { class: 'chip-label' }, [member.displayName]), remove])
 }
 
+function muteButton(label: string, members: Streamer[]): HTMLButtonElement {
+  const muted = members.every((member) => member.muted)
+  const button = h('button', { type: 'button', class: 'btn btn-small', 'aria-pressed': String(muted) }, [
+    t(muted ? 'teamUnmuteButton' : 'teamMuteButton')
+  ])
+  button.addEventListener('click', () => {
+    send('setPause', { ids: members.map((member) => member.id), snoozedUntil: null, muted: !muted })
+      .then(async () => {
+        toast(t(muted ? 'teamUnmutedToast' : 'teamMutedToast', label), 'success')
+        await refreshTeams()
+      })
+      .catch(() => {
+        toast(t('settingsSaveError'), 'error')
+      })
+  })
+  return button
+}
+
 function teamCard(team: string, label: string, members: Streamer[]): HTMLElement {
   const remove = h('button', { type: 'button', class: 'btn btn-small btn-danger-ghost' }, [
     t('deleteTeamButton')
@@ -45,7 +63,7 @@ function teamCard(team: string, label: string, members: Streamer[]): HTMLElement
         label,
         h('span', { class: 'team-card-count' }, [String(members.length)])
       ]),
-      remove
+      h('div', { class: 'team-card-actions' }, [muteButton(label, members), remove])
     ]),
     h('ul', { class: 'chips' }, members.map(memberChip))
   ])
