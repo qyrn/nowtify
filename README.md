@@ -6,12 +6,12 @@
 
 Une notification sur ton bureau dès qu'un de tes streamers Twitch lance son live.
 
-[![Chrome Web Store](https://img.shields.io/badge/chrome%20web%20store-installer-fcd34d?style=for-the-badge&logo=googlechrome&logoColor=0e0e10)](https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg)
+[![Chrome Web Store](https://img.shields.io/badge/chrome%20web%20store-installer-e4572e?style=for-the-badge&logo=googlechrome&logoColor=ffffff)](https://chromewebstore.google.com/detail/nowtify/emjhkfephckipmmlecbkmpjphfjalkhg)
 [![Version](https://img.shields.io/github/v/release/qyrn/nowtify?label=version&color=27272a&style=for-the-badge)](../../releases/latest)
 
 <br />
 
-<img src="docs/popup.png" width="360" alt="La popup de Nowtify avec deux streamers en live et l'aperçu d'un stream" />
+<img src="docs/popup.png" width="360" alt="La popup de Nowtify avec trois streamers en live et l'aperçu d'un stream" />
 
 </div>
 
@@ -23,15 +23,15 @@ Pas de compte à créer, pas de serveur entre toi et Twitch. Tout reste dans ton
 
 ## 👀 Ce qu'il y a dedans
 
-Clique sur l'icône et tu as ta liste. Ceux qui sont en live remontent en haut avec leur nombre de viewers, les autres affichent depuis combien de temps ils ont coupé leur dernier live. Le petit chiffre sur l'icône, c'est le nombre de streamers en live en ce moment.
+Clique sur l'icône et tu as ta liste. Ceux qui sont en live sont regroupés en haut avec leur nombre de viewers, les autres affichent depuis combien de temps ils ont coupé leur dernier live. Le petit chiffre sur l'icône, c'est le nombre de streamers en live en ce moment.
 
-Clique sur une carte pour ouvrir le stream. La petite flèche à côté du statut déplie un aperçu : la miniature du live, le jeu et les viewers.
+Clique sur un streamer pour ouvrir son live. Au survol, trois boutons apparaissent : la flèche déplie un aperçu (la miniature, depuis combien de temps le live tourne et le nombre exact de viewers), la cloche barrée met ses notifs en pause, la croix le retire de ta liste.
 
 Si un streamer hors ligne a rempli son planning Twitch, son prochain live s'affiche sous son nom.
 
 ## 👥 Des teams entières
 
-Tape `team/` suivi du nom d'une team Twitch (par exemple `team/solary`) et tous ses membres arrivent d'un coup. Un filtre apparaît ensuite en haut de la liste pour n'afficher qu'une team.
+Tape `team/` suivi du nom d'une team Twitch (par exemple `team/solary`) et tous ses membres arrivent d'un coup, avec le logo de la team à côté de leur nom. Un filtre apparaît ensuite en haut de la liste pour n'afficher qu'une team.
 
 Tu peux aussi coller un lien, `twitch.tv/zerator` ou `twitch.tv/team/solary`, ça marche pareil.
 
@@ -40,12 +40,14 @@ Tu peux aussi coller un lien, `twitch.tv/zerator` ou `twitch.tv/team/solary`, ç
 <div align="center">
 <img src="docs/snooze.png" width="300" alt="Le menu de pause sur un streamer : pendant 1 heure ou jusqu'à demain matin" />
 &nbsp;&nbsp;
-<img src="docs/compact.png" width="300" alt="La vue compacte en grille de trois colonnes" />
+<img src="docs/light.png" width="300" alt="La popup de Nowtify en thème clair" />
 </div>
 
-Quelqu'un lance trois lives par jour et tu n'as pas envie d'être prévenu à chaque fois ? Passe la souris sur sa carte, clique sur la cloche barrée, et coupe ses notifs pendant une heure ou jusqu'à demain matin. Il reste dans ta liste, avec une petite cloche jaune pour te rappeler qu'il est en pause.
+Quelqu'un lance trois lives par jour et tu n'as pas envie d'être prévenu à chaque fois ? Passe la souris sur lui, clique sur la cloche barrée, et coupe ses notifs pendant une heure ou jusqu'à demain matin. Il reste dans ta liste, avec une petite cloche barrée à côté de son nom pour te rappeler qu'il est en pause.
 
-Quand la liste s'allonge, le bouton en forme de grille passe en vue compacte : trois streamers par ligne, juste l'avatar, le nom et le statut.
+## 🌗 Clair ou sombre
+
+Nowtify suit le thème de Chrome. Si tu préfères l'un ou l'autre, tu peux le forcer dans les réglages.
 
 ## 📊 L'historique
 
@@ -88,7 +90,7 @@ Twitch a invalidé le token, ça arrive au bout d'un moment ou si tu changes ton
 <details>
 <summary><b>Aucune notification n'apparaît</b></summary>
 <br />
-Vérifie dans l'ordre : que les notifications sont activées dans les réglages de Nowtify, que le streamer n'est pas en pause (cloche jaune à côté de son nom), et que Windows ou macOS laisse Chrome afficher des notifications. Sur Windows, le mode Ne pas déranger les bloque toutes.
+Vérifie dans l'ordre : que les notifications sont activées dans les réglages de Nowtify, que le streamer n'est pas en pause (cloche barrée à côté de son nom), et que Windows ou macOS laisse Chrome afficher des notifications. Sur Windows, le mode Ne pas déranger les bloque toutes.
 </details>
 
 <details>
@@ -120,6 +122,7 @@ pnpm lint
 pnpm test
 pnpm build        # compile l'extension dans .output/chrome-mv3
 pnpm zip          # génère .output/nowtify-x.y.z-chrome.zip
+pnpm icons        # régénère les icônes PNG depuis branding/logo.svg
 ```
 
 Pour la charger dans ton Chrome habituel : `pnpm build`, puis dans `chrome://extensions`, « Charger l'extension non empaquetée » sur le dossier `.output/chrome-mv3`. La racine du dépôt ne contient pas de `manifest.json`, WXT le génère au build.
