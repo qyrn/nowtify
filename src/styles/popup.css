@@ -293,7 +293,7 @@ body {
 .list-filter:focus-visible {
   box-shadow:
     var(--well-shadow),
-    0 0 0 2px var(--accent-border);
+    0 0 0 1px var(--line-strong);
 }
 
 .list-filter::-webkit-search-cancel-button {
