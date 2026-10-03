@@ -142,7 +142,7 @@ async function enrich(token: string, streamer: Streamer, now: number): Promise<v
   }
 }
 
-function shouldNotify(previous: Streamer, next: Streamer, now: number): boolean {
+export function shouldNotify(previous: Streamer, next: Streamer, now: number): boolean {
   if (!next.isLive || previous.isLive || isSnoozed(next, now)) return false
   return next.notifiedAt === null || now - next.notifiedAt >= NOTIFICATION_COOLDOWN
 }
