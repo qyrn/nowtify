@@ -37,6 +37,10 @@ Tape `team/` suivi du nom d'une team Twitch (par exemple `team/solary`) et tous 
 
 Tu peux aussi coller un lien, `twitch.tv/zerator` ou `twitch.tv/team/solary`, ça marche pareil.
 
+<div align="center">
+<img src="docs/search.png" width="300" alt="La recherche de Nowtify avec le nombre de followers et la coche des partenaires" />
+</div>
+
 Tu suis déjà plein de monde sur Twitch ? Dans les réglages, « Voir mes follows » liste toutes tes chaînes suivies : coche celles que tu veux et ajoute-les d'un coup. Ensuite, quand tu cherches un streamer, ceux que tu suis passent en premier, avec leur nombre de followers et une coche pour les partenaires.
 
 ## 🔕 La pause par streamer
@@ -49,7 +53,7 @@ Tu suis déjà plein de monde sur Twitch ? Dans les réglages, « Voir mes follo
 
 Quelqu'un lance trois lives par jour et tu n'as pas envie d'être prévenu à chaque fois ? Passe la souris sur lui, clique sur la cloche barrée, et coupe ses notifs pendant une heure ou jusqu'à demain matin. Il reste dans ta liste, avec une petite cloche barrée à côté de son nom pour te rappeler qu'il est en pause. Si tu veux le garder sans plus jamais être prévenu, choisis « Ne plus me prévenir ». Pour une team entière, le bouton « Couper les notifs » est dans les réglages.
 
-La notification elle-même a deux boutons : « Regarder » ouvre le live, « Pause jusqu'à demain » coupe ce streamer jusqu'au lendemain matin.
+La notification elle-même a deux boutons : « Regarder » ouvre le live, « Pause jusqu'à demain » coupe ce streamer jusqu'au lendemain matin. Et si au moins trois de tes streamers lancent leur live en même temps, une seule notification les regroupe au lieu de t'en envoyer une par personne.
 
 ## 🌗 Clair ou sombre
 
