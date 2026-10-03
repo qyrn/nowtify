@@ -16,7 +16,7 @@ import {
 } from './config'
 import { forEachConcurrently } from './concurrency'
 import { addHistoryEntry, closeHistoryEntry, getAllStreamers, patchStreamers } from './database'
-import { notifyLive } from './notifier'
+import { notifyLives } from './notifier'
 import { getToken, invalidateToken } from './twitch-auth'
 import {
   getChannelTeam,
@@ -194,7 +194,7 @@ async function runCheck(): Promise<void> {
   }
 
   await patchStreamers(patches)
-  await Promise.all(toNotify.map((streamer) => notifyLive(streamer, settings.persistentNotifications)))
+  await notifyLives(toNotify, settings.persistentNotifications)
 
   const liveCount = nextStates.filter((streamer) => streamer.isLive).length
   await updateBadge(liveCount)

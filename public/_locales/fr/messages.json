@@ -133,6 +133,14 @@
     "placeholders": { "name": { "content": "$1" } }
   },
   "notificationWatchButton": { "message": "Regarder" },
+  "notificationGroupTitle": {
+    "message": "$COUNT$ streamers viennent de passer en live",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "notificationGroupMore": {
+    "message": "$NAMES$ et $COUNT$ autres",
+    "placeholders": { "names": { "content": "$1" }, "count": { "content": "$2" } }
+  },
   "notificationSnoozeButton": { "message": "Pause jusqu'à demain" },
 
   "optionsTitle": { "message": "Paramètres de Nowtify" },

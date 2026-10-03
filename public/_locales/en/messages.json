@@ -130,6 +130,14 @@
     "placeholders": { "name": { "content": "$1" } }
   },
   "notificationWatchButton": { "message": "Watch" },
+  "notificationGroupTitle": {
+    "message": "$COUNT$ streamers just went live",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "notificationGroupMore": {
+    "message": "$NAMES$ and $COUNT$ more",
+    "placeholders": { "names": { "content": "$1" }, "count": { "content": "$2" } }
+  },
   "notificationSnoozeButton": { "message": "Pause until tomorrow" },
 
   "optionsTitle": { "message": "Nowtify settings" },
