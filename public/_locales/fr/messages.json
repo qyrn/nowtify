@@ -6,9 +6,17 @@
 
   "settingsTitle": { "message": "Paramètres" },
   "searchPlaceholder": { "message": "Nom, lien ou team/nom" },
+  "filterLabel": { "message": "Filtrer ta liste" },
+  "filterPlaceholder": { "message": "Filtrer ta liste" },
+  "filterPlaceholderPlural": {
+    "message": "Filtrer tes $COUNT$ suivis",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "noMatchText": {
+    "message": "Personne ne correspond à « $QUERY$ ». Pour ajouter quelqu'un, utilise le champ du haut.",
+    "placeholders": { "query": { "content": "$1" } }
+  },
   "liveLed": { "message": "$COUNT$ live", "placeholders": { "count": { "content": "$1" } } },
-  "followedCount": { "message": "$COUNT$ suivi", "placeholders": { "count": { "content": "$1" } } },
-  "followedCountPlural": { "message": "$COUNT$ suivis", "placeholders": { "count": { "content": "$1" } } },
   "groupLive": { "message": "En live" },
   "groupOffline": { "message": "Hors ligne" },
   "liveSince": {

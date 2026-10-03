@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   isRecentlyLive,
+  matchesQuery,
   normalizeStreamer,
   parseAddInput,
   sortStreamers,
@@ -105,5 +106,37 @@ describe('muted streamers', () => {
 
   it('keeps the muted flag from a backup', () => {
     expect(normalizeStreamer({ id: 'x', login: 'kamet0', muted: true })?.muted).toBe(true)
+  })
+})
+
+describe('matchesQuery', () => {
+  const kameto = streamer({
+    login: 'kamet0',
+    displayName: 'Kamet0',
+    team: 'karminecorp',
+    teamDisplayName: 'Karmine Corp',
+    game: 'League of Legends',
+    title: 'Soirée ranked'
+  })
+
+  it('matches everything with an empty query', () => {
+    expect(matchesQuery(kameto, '  ')).toBe(true)
+  })
+
+  it('matches the name, the team, the game and the title', () => {
+    expect(['kame', 'KARMINE', 'legends', 'ranked'].map((query) => matchesQuery(kameto, query))).toEqual([
+      true,
+      true,
+      true,
+      true
+    ])
+  })
+
+  it('ignores accents', () => {
+    expect(matchesQuery(kameto, 'soiree')).toBe(true)
+  })
+
+  it('rejects unrelated queries', () => {
+    expect(matchesQuery(kameto, 'valorant')).toBe(false)
   })
 })

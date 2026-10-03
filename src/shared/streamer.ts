@@ -126,6 +126,18 @@ export function channelKey(streamer: Pick<Streamer, 'twitchId' | 'login'>): stri
   return streamer.twitchId ?? streamer.login
 }
 
+function fold(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+}
+
+export function matchesQuery(streamer: Streamer, query: string): boolean {
+  const needle = fold(query.trim())
+  if (!needle) return true
+  return [streamer.displayName, streamer.login, teamLabel(streamer), streamer.game, streamer.title].some(
+    (value) => value !== null && fold(value).includes(needle)
+  )
+}
+
 export function isRecentlyLive(streamer: Streamer, now = Date.now()): boolean {
   return !streamer.isLive && streamer.lastLiveAt !== null && now - streamer.lastLiveAt < RECENTLY_LIVE_WINDOW
 }

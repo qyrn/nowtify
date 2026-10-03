@@ -80,7 +80,15 @@
       </form>
 
       <div class="toolbar hidden" id="toolbar">
-        <span class="followed-count" id="followedCount"></span>
+        <input
+          type="search"
+          class="list-filter"
+          id="listFilter"
+          maxlength="40"
+          autocomplete="off"
+          spellcheck="false"
+          data-i18n-title="filterLabel"
+        />
         <div class="team-filter hidden" id="teamFilter">
           <button
             type="button"
@@ -107,6 +115,7 @@
       </div>
 
       <div class="streamer-list" id="streamerList"></div>
+      <p class="no-match hidden" id="noMatch"></p>
 
       <div class="empty-state hidden" id="emptyState">
         <svg class="empty-logo" aria-hidden="true"><use href="#logo" /></svg>

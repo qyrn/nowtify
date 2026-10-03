@@ -6,9 +6,17 @@
 
   "settingsTitle": { "message": "Settings" },
   "searchPlaceholder": { "message": "Streamer name, link or team/name" },
+  "filterLabel": { "message": "Filter your list" },
+  "filterPlaceholder": { "message": "Filter your list" },
+  "filterPlaceholderPlural": {
+    "message": "Filter $COUNT$ followed",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "noMatchText": {
+    "message": "Nobody matches \"$QUERY$\". To add someone, use the field at the top.",
+    "placeholders": { "query": { "content": "$1" } }
+  },
   "liveLed": { "message": "$COUNT$ live", "placeholders": { "count": { "content": "$1" } } },
-  "followedCount": { "message": "$COUNT$ followed", "placeholders": { "count": { "content": "$1" } } },
-  "followedCountPlural": { "message": "$COUNT$ followed", "placeholders": { "count": { "content": "$1" } } },
   "groupLive": { "message": "Live" },
   "groupOffline": { "message": "Offline" },
   "liveSince": { "message": "Live for $DURATION$", "placeholders": { "duration": { "content": "$1" } } },

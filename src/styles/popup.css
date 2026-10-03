@@ -237,14 +237,44 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   min-height: 30px;
   margin: 10px 16px 0;
 }
 
-.followed-count {
-  font-family: var(--mono);
-  font-size: 11px;
+.list-filter {
+  flex: 1;
+  min-width: 0;
+  height: 30px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 7px;
+  outline: none;
+  background: var(--well);
+  box-shadow: var(--well-shadow);
+  font-size: 12.5px;
+  appearance: none;
+}
+
+.list-filter::placeholder {
   color: var(--faint);
+}
+
+.list-filter:focus-visible {
+  box-shadow:
+    var(--well-shadow),
+    0 0 0 2px var(--accent-border);
+}
+
+.list-filter::-webkit-search-cancel-button {
+  display: none;
+}
+
+.no-match {
+  padding: 28px 24px 18px;
+  font-size: 13px;
+  text-align: center;
+  color: var(--dim);
 }
 
 .team-filter {

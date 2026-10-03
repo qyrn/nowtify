@@ -2,11 +2,12 @@ import '../../styles/base.css'
 import '../../styles/popup.css'
 import { browser } from 'wxt/browser'
 import { AddForm } from '../../popup/add-form'
+import { ListFilter } from '../../popup/list-filter'
 import { closeSnoozeMenus, openSnoozeMenu, type PauseChoice } from '../../popup/snooze-menu'
 import { StreamerList } from '../../popup/streamer-list'
 import { TeamFilter } from '../../popup/team-filter'
 import { byId } from '../../shared/dom'
-import { plural, t, translatePage } from '../../shared/i18n'
+import { t, translatePage } from '../../shared/i18n'
 import { send, type AuthState } from '../../shared/messages'
 import { loadSettings } from '../../shared/settings'
 import { followThemeSetting } from '../../shared/theme'
@@ -20,18 +21,17 @@ const authBannerButton = byId('authBannerBtn', HTMLButtonElement)
 const listElement = byId('streamerList', HTMLDivElement)
 const emptyState = byId('emptyState', HTMLDivElement)
 const toolbar = byId('toolbar', HTMLDivElement)
-const followedCount = byId('followedCount', HTMLSpanElement)
 const liveLed = byId('liveLed', HTMLSpanElement)
 const liveLedText = byId('liveLedText', HTMLSpanElement)
 
 let streamers: Streamer[] = []
 let refreshing = false
+let visible: Streamer[] = []
 
 const teamFilter = new TeamFilter(render)
+const listFilter = new ListFilter(render, openFirstMatch)
 const list = new StreamerList(listElement, {
-  open: (streamer) => {
-    void browser.tabs.create({ url: `https://www.twitch.tv/${streamer.login}` })
-  },
+  open: openStream,
   snooze: (streamer, card) => {
     openSnoozeMenu(streamer, card, (choice) => {
       void pause(streamer, choice)
@@ -46,13 +46,23 @@ const addForm = new AddForm(reload)
 function render(): void {
   const sorted = sortStreamers(streamers)
   teamFilter.update(sorted)
-  list.render(teamFilter.apply(sorted))
+  visible = listFilter.apply(teamFilter.apply(sorted))
+  list.render(visible)
+  listFilter.update(streamers.length, visible.length)
   const live = streamers.filter((streamer) => streamer.isLive).length
   liveLed.classList.toggle('hidden', live === 0)
   liveLedText.textContent = t('liveLed', live)
   toolbar.classList.toggle('hidden', streamers.length === 0)
-  followedCount.textContent = plural(streamers.length, 'followedCount', 'followedCountPlural')
   emptyState.classList.toggle('hidden', streamers.length > 0)
+}
+
+function openStream(streamer: Streamer): void {
+  void browser.tabs.create({ url: `https://www.twitch.tv/${streamer.login}` })
+}
+
+function openFirstMatch(): void {
+  const [first] = visible
+  if (first) openStream(first)
 }
 
 async function reload(): Promise<void> {
@@ -148,6 +158,7 @@ async function start(): Promise<void> {
   setInterval(render, 60_000)
 
   await reload()
+  if (streamers.length > 0) listFilter.focus()
   renderAuth(await send('getAuthState', null))
   await refresh()
 }
