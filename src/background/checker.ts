@@ -29,6 +29,11 @@ let runningCheck: Promise<void> | null = null
 const isDue = (checkedAt: number | null, interval: number, now: number): boolean =>
   checkedAt === null || now - checkedAt > interval
 
+export async function ensureCheckAlarm(): Promise<void> {
+  if (await browser.alarms.get(CHECK_ALARM)) return
+  await browser.alarms.create(CHECK_ALARM, { periodInMinutes: CHECK_PERIOD_MINUTES })
+}
+
 export async function scheduleChecks(liveCount: number): Promise<void> {
   const period = liveCount > 0 ? CHECK_PERIOD_MINUTES_WHILE_LIVE : CHECK_PERIOD_MINUTES
   const alarm = await browser.alarms.get(CHECK_ALARM)

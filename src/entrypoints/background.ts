@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
-import { checkAllStreamers, scheduleChecks } from '../background/checker'
+import { checkAllStreamers, ensureCheckAlarm } from '../background/checker'
 import { CHECK_ALARM } from '../background/config'
 import { openNotification } from '../background/notifier'
 import { routeMessage } from '../background/router'
@@ -28,5 +28,5 @@ export default defineBackground(() => {
     void openNotification(notificationId)
   })
   browser.runtime.onMessage.addListener(routeMessage)
-  void scheduleChecks(0)
+  void ensureCheckAlarm()
 })
