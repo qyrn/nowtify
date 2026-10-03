@@ -113,6 +113,8 @@
     "message": "$NAME$ just went live on Twitch",
     "placeholders": { "name": { "content": "$1" } }
   },
+  "notificationWatchButton": { "message": "Watch" },
+  "notificationSnoozeButton": { "message": "Pause until tomorrow" },
 
   "optionsTitle": { "message": "Nowtify settings" },
   "optionsSubtitle": { "message": "Settings, history and backups" },

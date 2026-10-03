@@ -1,15 +1,7 @@
 import { h } from '../shared/dom'
 import { t } from '../shared/i18n'
+import { SNOOZE_HOUR, tomorrowMorning } from '../shared/snooze'
 import { isSnoozed, type Streamer } from '../shared/streamer'
-
-const HOUR = 60 * 60 * 1000
-
-function tomorrowMorning(): number {
-  const date = new Date()
-  date.setDate(date.getDate() + 1)
-  date.setHours(9, 0, 0, 0)
-  return date.getTime()
-}
 
 export function closeSnoozeMenus(): void {
   document.querySelectorAll('.snooze-menu').forEach((menu) => {
@@ -29,8 +21,8 @@ export function openSnoozeMenu(
   const options: [string, () => number | null][] = isSnoozed(streamer)
     ? [[t('snoozeCancel'), () => null]]
     : [
-        [t('snooze1h'), () => Date.now() + HOUR],
-        [t('snoozeTomorrow'), tomorrowMorning]
+        [t('snooze1h'), () => Date.now() + SNOOZE_HOUR],
+        [t('snoozeTomorrow'), () => tomorrowMorning()]
       ]
 
   const buttons = options.map(([label, until]) => {

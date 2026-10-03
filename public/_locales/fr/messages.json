@@ -116,6 +116,8 @@
     "message": "$NAME$ vient de lancer son live sur Twitch",
     "placeholders": { "name": { "content": "$1" } }
   },
+  "notificationWatchButton": { "message": "Regarder" },
+  "notificationSnoozeButton": { "message": "Pause jusqu'à demain" },
 
   "optionsTitle": { "message": "Paramètres de Nowtify" },
   "optionsSubtitle": { "message": "Réglages, historique et sauvegardes" },

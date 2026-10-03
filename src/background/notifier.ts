@@ -1,7 +1,11 @@
 import { browser } from 'wxt/browser'
+import { tomorrowMorning } from '../shared/snooze'
 import type { Streamer } from '../shared/streamer'
+import { getAllStreamers, patchStreamers } from './database'
 
 const PREFIX = 'live:'
+const WATCH_BUTTON = 0
+const SNOOZE_BUTTON = 1
 
 async function createNotification(id: string, streamer: Streamer, iconUrl: string, persistent: boolean) {
   await browser.notifications.create(id, {
@@ -11,7 +15,11 @@ async function createNotification(id: string, streamer: Streamer, iconUrl: strin
     message: streamer.title ?? browser.i18n.getMessage('notificationBodyFallback', [streamer.displayName]),
     contextMessage: streamer.game ?? '',
     priority: 2,
-    requireInteraction: persistent
+    requireInteraction: persistent,
+    buttons: [
+      { title: browser.i18n.getMessage('notificationWatchButton') },
+      { title: browser.i18n.getMessage('notificationSnoozeButton') }
+    ]
   })
 }
 
@@ -27,9 +35,30 @@ export async function notifyLive(streamer: Streamer, persistent: boolean): Promi
   }
 }
 
+function loginFrom(notificationId: string): string | null {
+  if (!notificationId.startsWith(PREFIX)) return null
+  return notificationId.slice(PREFIX.length).split(':')[0] ?? null
+}
+
+async function snoozeUntilTomorrow(login: string): Promise<void> {
+  const streamer = (await getAllStreamers()).find((candidate) => candidate.login === login)
+  if (!streamer) return
+  await patchStreamers(new Map([[streamer.id, { snoozedUntil: tomorrowMorning() }]]))
+}
+
 export async function openNotification(notificationId: string): Promise<void> {
-  if (!notificationId.startsWith(PREFIX)) return
-  const login = notificationId.slice(PREFIX.length).split(':')[0]
-  if (login) await browser.tabs.create({ url: `https://www.twitch.tv/${login}` })
+  const login = loginFrom(notificationId)
+  if (!login) return
+  await browser.tabs.create({ url: `https://www.twitch.tv/${login}` })
   await browser.notifications.clear(notificationId)
+}
+
+export async function handleNotificationButton(notificationId: string, buttonIndex: number): Promise<void> {
+  const login = loginFrom(notificationId)
+  if (!login) return
+  if (buttonIndex === WATCH_BUTTON) await openNotification(notificationId)
+  if (buttonIndex === SNOOZE_BUTTON) {
+    await snoozeUntilTomorrow(login)
+    await browser.notifications.clear(notificationId)
+  }
 }

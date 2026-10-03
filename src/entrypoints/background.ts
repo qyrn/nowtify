@@ -2,7 +2,7 @@ import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
 import { checkAllStreamers, ensureCheckAlarm } from '../background/checker'
 import { CHECK_ALARM } from '../background/config'
-import { openNotification } from '../background/notifier'
+import { handleNotificationButton, openNotification } from '../background/notifier'
 import { routeMessage } from '../background/router'
 
 const LEGACY_LOCAL_KEYS = /^(avatar_|thumbnail_|teamLogo_)|^(notifiedStreamers|notificationUrls|history)$/
@@ -26,6 +26,9 @@ export default defineBackground(() => {
   })
   browser.notifications.onClicked.addListener((notificationId) => {
     void openNotification(notificationId)
+  })
+  browser.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
+    void handleNotificationButton(notificationId, buttonIndex)
   })
   browser.runtime.onMessage.addListener(routeMessage)
   void ensureCheckAlarm()
