@@ -27,6 +27,8 @@ Clique sur l'icône et tu as ta liste. Ceux qui sont en live sont regroupés en 
 
 Clique sur un streamer pour ouvrir son live. Au survol, trois boutons apparaissent : la flèche déplie un aperçu (la miniature, depuis combien de temps le live tourne et le nombre exact de viewers), la cloche barrée met ses notifs en pause, la croix le retire de ta liste.
 
+Quand la liste s'allonge, le champ juste au-dessus filtre tes streamers par nom, team, jeu ou titre du live. Il est prêt dès que la popup s'ouvre : tape quelques lettres, Entrée ouvre le premier résultat. Et `Alt+Maj+N` ouvre la popup sans toucher à la souris (modifiable dans les réglages).
+
 Si un streamer hors ligne a rempli son planning Twitch, son prochain live s'affiche sous son nom.
 
 ## 👥 Des teams entières
@@ -43,7 +45,9 @@ Tu peux aussi coller un lien, `twitch.tv/zerator` ou `twitch.tv/team/solary`, ç
 <img src="docs/light.png" width="300" alt="La popup de Nowtify en thème clair" />
 </div>
 
-Quelqu'un lance trois lives par jour et tu n'as pas envie d'être prévenu à chaque fois ? Passe la souris sur lui, clique sur la cloche barrée, et coupe ses notifs pendant une heure ou jusqu'à demain matin. Il reste dans ta liste, avec une petite cloche barrée à côté de son nom pour te rappeler qu'il est en pause.
+Quelqu'un lance trois lives par jour et tu n'as pas envie d'être prévenu à chaque fois ? Passe la souris sur lui, clique sur la cloche barrée, et coupe ses notifs pendant une heure ou jusqu'à demain matin. Il reste dans ta liste, avec une petite cloche barrée à côté de son nom pour te rappeler qu'il est en pause. Si tu veux le garder sans plus jamais être prévenu, choisis « Ne plus me prévenir ». Pour une team entière, le bouton « Couper les notifs » est dans les réglages.
+
+La notification elle-même a deux boutons : « Regarder » ouvre le live, « Pause jusqu'à demain » coupe ce streamer jusqu'au lendemain matin.
 
 ## 🌗 Clair ou sombre
 
