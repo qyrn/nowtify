@@ -18,7 +18,7 @@
 }
 
 .page-subtitle {
-  color: var(--text-dim);
+  color: var(--dim);
   font-size: 12.5px;
 }
 
@@ -30,8 +30,8 @@
 
 .section {
   padding: 20px 22px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: var(--radius);
 }
 
@@ -45,7 +45,7 @@
 
 .section-title {
   margin-bottom: 14px;
-  color: var(--text-dim);
+  color: var(--dim);
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 500;
@@ -59,7 +59,7 @@
 
 .muted {
   margin-bottom: 14px;
-  color: var(--text-dim);
+  color: var(--dim);
   font-size: 12.5px;
   line-height: 1.5;
 }
@@ -67,7 +67,7 @@
 .empty {
   grid-column: 1 / -1;
   padding: 14px 0;
-  color: var(--text-faint);
+  color: var(--faint);
   font-size: 12.5px;
   text-align: center;
   list-style: none;
@@ -78,8 +78,8 @@
   align-items: center;
   gap: 8px;
   padding: 8px 14px;
-  background: var(--surface-hover);
-  border: 1px solid var(--border);
+  background: var(--raised);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   font-size: 12.5px;
   font-weight: 600;
@@ -90,7 +90,7 @@
 }
 
 .btn:hover {
-  border-color: var(--border-hover);
+  border-color: var(--line-strong);
 }
 
 .btn:disabled {
@@ -113,7 +113,7 @@
 }
 
 .btn-danger-ghost {
-  color: var(--text-dim);
+  color: var(--dim);
 }
 
 .btn-danger-ghost:hover:not(:disabled) {
@@ -170,7 +170,7 @@
 }
 
 .setting + .setting {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
 }
 
 .setting-text {
@@ -184,7 +184,7 @@
 }
 
 .setting-desc {
-  color: var(--text-dim);
+  color: var(--dim);
   font-size: 12px;
   line-height: 1.4;
 }
@@ -195,8 +195,8 @@
   width: 38px;
   height: 22px;
   appearance: none;
-  background: var(--surface-hover);
-  border: 1px solid var(--border-hover);
+  background: var(--raised);
+  border: 1px solid var(--line-strong);
   border-radius: 999px;
   cursor: pointer;
   transition:
@@ -212,7 +212,7 @@
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: var(--text-dim);
+  background: var(--dim);
   transition:
     transform 0.2s var(--ease),
     background 0.2s var(--ease);
@@ -233,6 +233,34 @@
   cursor: default;
 }
 
+div.setting {
+  cursor: default;
+}
+
+.segmented {
+  display: flex;
+  flex-shrink: 0;
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  background: var(--well);
+  box-shadow: var(--well-shadow);
+}
+
+.segmented button {
+  padding: 5px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font-size: 12.5px;
+  color: var(--dim);
+}
+
+.segmented button[aria-checked='true'] {
+  background: var(--key);
+  box-shadow: var(--key-shadow);
+  color: var(--ink);
+}
+
 .stats {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
@@ -245,8 +273,8 @@
   gap: 4px;
   min-width: 0;
   padding: 12px 14px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--chassis);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
 }
 
@@ -260,12 +288,12 @@
 }
 
 .stat-label {
-  color: var(--text-dim);
+  color: var(--dim);
   font-size: 11.5px;
 }
 
 .stat-detail {
-  color: var(--text-faint);
+  color: var(--faint);
   font-size: 11px;
 }
 
@@ -282,7 +310,7 @@
 }
 
 .history-item + .history-item {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--line);
 }
 
 .history-body {
@@ -298,7 +326,7 @@
 
 .history-title {
   overflow: hidden;
-  color: var(--text-dim);
+  color: var(--dim);
   font-size: 12px;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -308,7 +336,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  color: var(--text-faint);
+  color: var(--faint);
   font-size: 11px;
 }
 
@@ -325,7 +353,7 @@
 
 .history-time {
   flex-shrink: 0;
-  color: var(--text-faint);
+  color: var(--faint);
   font-family: var(--mono);
   font-size: 10.5px;
 }
@@ -338,8 +366,8 @@
 
 .team-card {
   padding: 12px 14px;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: var(--chassis);
+  border: 1px solid var(--line);
   border-radius: var(--radius-sm);
 }
 
@@ -360,7 +388,7 @@
 }
 
 .team-card-count {
-  color: var(--text-faint);
+  color: var(--faint);
   font-family: var(--mono);
   font-size: 11px;
   font-weight: 500;
@@ -378,14 +406,14 @@
   align-items: center;
   gap: 4px;
   padding: 4px 4px 4px 10px;
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: 999px;
   font-size: 12px;
 }
 
 .chip-label {
-  color: var(--text-dim);
+  color: var(--dim);
 }
 
 .chip-remove {
@@ -397,7 +425,7 @@
   background: none;
   border: none;
   border-radius: 50%;
-  color: var(--text-faint);
+  color: var(--faint);
 }
 
 .chip-remove .icon {
@@ -417,7 +445,7 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 28px;
-  color: var(--text-faint);
+  color: var(--faint);
   font-family: var(--mono);
   font-size: 11px;
 }
@@ -429,7 +457,7 @@
 }
 
 .footer-links a {
-  color: var(--text-dim);
+  color: var(--dim);
   font-family: var(--sans);
   font-size: 12px;
   text-decoration: none;

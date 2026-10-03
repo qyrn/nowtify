@@ -1,28 +1,39 @@
 import { browser } from 'wxt/browser'
-import { isRecord, readBoolean } from './guards'
+import { isRecord, readBoolean, readString } from './guards'
+
+export const THEMES = ['auto', 'dark', 'light'] as const
+export type Theme = (typeof THEMES)[number]
 
 export interface Settings {
   notifications: boolean
   persistentNotifications: boolean
   confirmDelete: boolean
   compactMode: boolean
+  theme: Theme
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   notifications: true,
   persistentNotifications: false,
   confirmDelete: true,
-  compactMode: false
+  compactMode: false,
+  theme: 'auto'
+}
+
+export function isTheme(value: unknown): value is Theme {
+  return THEMES.some((theme) => theme === value)
 }
 
 export function normalizeSettings(raw: unknown): Settings {
   if (!isRecord(raw)) return { ...DEFAULT_SETTINGS }
+  const theme = readString(raw, 'theme')
   return {
     notifications: readBoolean(raw, 'notifications') ?? DEFAULT_SETTINGS.notifications,
     persistentNotifications:
       readBoolean(raw, 'persistentNotifications') ?? DEFAULT_SETTINGS.persistentNotifications,
     confirmDelete: readBoolean(raw, 'confirmDelete') ?? DEFAULT_SETTINGS.confirmDelete,
-    compactMode: readBoolean(raw, 'compactMode') ?? DEFAULT_SETTINGS.compactMode
+    compactMode: readBoolean(raw, 'compactMode') ?? DEFAULT_SETTINGS.compactMode,
+    theme: isTheme(theme) ? theme : DEFAULT_SETTINGS.theme
   }
 }
 

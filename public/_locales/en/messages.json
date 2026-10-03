@@ -130,6 +130,11 @@
   "persistentToggleDesc": { "message": "Notifications stay until you close them instead of fading out" },
   "confirmDeleteToggleTitle": { "message": "Confirm before removing" },
   "confirmDeleteToggleDesc": { "message": "Ask before a streamer or a team is removed from your list" },
+  "themeTitle": { "message": "Theme" },
+  "themeDesc": { "message": "Auto follows the Chrome theme" },
+  "themeAuto": { "message": "Auto" },
+  "themeDark": { "message": "Dark" },
+  "themeLight": { "message": "Light" },
   "settingsSaveError": { "message": "Could not save the setting" },
 
   "statisticsHeader": { "message": "Statistics" },

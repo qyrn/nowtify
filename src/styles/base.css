@@ -1,28 +1,56 @@
-@import '@fontsource-variable/geist';
-@import '@fontsource-variable/geist-mono';
+@import '@fontsource-variable/bricolage-grotesque/opsz.css';
+@import '@fontsource-variable/jetbrains-mono';
 
 :root {
-  color-scheme: dark;
-  --bg: #0e0e10;
-  --surface: #18181b;
-  --surface-hover: #1f1f23;
-  --border: #27272a;
-  --border-hover: #3f3f46;
-  --text: #fafafa;
-  --text-dim: #a1a1aa;
-  --text-faint: #7d7d86;
-  --accent: #fcd34d;
-  --accent-soft: rgba(252, 211, 77, 0.12);
-  --accent-border: rgba(252, 211, 77, 0.4);
-  --on-accent: #0e0e10;
-  --danger: #ff5c5c;
-  --danger-soft: rgba(255, 92, 92, 0.1);
-  --danger-border: rgba(255, 92, 92, 0.35);
+  color-scheme: light dark;
+  --chassis: light-dark(#e8e6e1, #121110);
+  --panel: light-dark(#f6f5f2, #1c1a18);
+  --raised: light-dark(#fbfaf8, #24221f);
+  --well: light-dark(#ecebe7, #0f0e0d);
+  --line: light-dark(#dcd9d3, #2b2926);
+  --line-strong: light-dark(#c9c5bd, #3a3733);
+  --ink: light-dark(#1b1a18, #f1ede6);
+  --dim: light-dark(#5f5c56, #a39d93);
+  --faint: light-dark(#8c887f, #6f6a62);
+  --accent: #e4572e;
+  --accent-text: light-dark(#c2421d, #f0764f);
+  --accent-soft: light-dark(rgba(228, 87, 46, 0.1), rgba(228, 87, 46, 0.14));
+  --accent-border: rgba(228, 87, 46, 0.45);
+  --on-accent: #fff;
+  --danger: light-dark(#c62f2f, #ff5c5c);
+  --danger-soft: light-dark(rgba(198, 47, 47, 0.08), rgba(255, 92, 92, 0.1));
+  --danger-border: light-dark(rgba(198, 47, 47, 0.35), rgba(255, 92, 92, 0.35));
+  --cap: radial-gradient(circle at 40% 35%, #f48a63, #d4471f);
+  --well-shadow:
+    inset 0 1px 2px light-dark(rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.7)),
+    inset 0 0 0 1px light-dark(transparent, rgba(0, 0, 0, 0.45)),
+    0 1px 0 light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.07));
+  --key: linear-gradient(light-dark(#fdfcfa, #2c2925), light-dark(#efede8, #221f1c));
+  --key-shadow:
+    inset 0 1px 0 light-dark(#fff, rgba(255, 255, 255, 0.09)),
+    0 0 0 1px light-dark(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.55)),
+    0 1px 3px light-dark(rgba(0, 0, 0, 0.14), rgba(0, 0, 0, 0.5));
+  --cap-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.4), inset 0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 0 0 1px light-dark(transparent, rgba(0, 0, 0, 0.55)),
+    0 2px 6px light-dark(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.6)),
+    0 0 14px light-dark(transparent, rgba(228, 87, 46, 0.3));
+  --panel-shadow:
+    inset 0 1px 0 light-dark(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.06)),
+    0 12px 32px light-dark(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.45));
   --radius: 10px;
   --radius-sm: 8px;
   --ease: cubic-bezier(0.4, 0, 0.2, 1);
-  --sans: 'Geist Variable', system-ui, sans-serif;
-  --mono: 'Geist Mono Variable', ui-monospace, monospace;
+  --sans: 'Bricolage Grotesque Variable', system-ui, sans-serif;
+  --mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
 }
 
 *,
@@ -36,8 +64,8 @@
 body {
   font-family: var(--sans);
   font-size: 13px;
-  background: var(--bg);
-  color: var(--text);
+  background: var(--chassis);
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -73,8 +101,9 @@ button:disabled {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: var(--surface-hover);
-  color: var(--text-dim);
+  background: var(--well);
+  box-shadow: var(--well-shadow);
+  color: var(--dim);
   font-family: var(--mono);
   font-weight: 600;
 }
@@ -93,12 +122,12 @@ button:disabled {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--border);
+  background: var(--line);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--border-hover);
+  background: var(--line-strong);
 }
 
 .ui-overlay {
@@ -109,7 +138,7 @@ button:disabled {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(0, 0, 0, 0.7);
+  background: light-dark(rgba(27, 26, 24, 0.35), rgba(0, 0, 0, 0.65));
   animation: ui-fade 0.15s var(--ease);
 }
 
@@ -117,23 +146,24 @@ button:disabled {
   width: 300px;
   max-width: 100%;
   padding: 20px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--panel-shadow);
   animation: ui-rise 0.2s var(--ease);
 }
 
 .ui-modal-title {
   margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .ui-modal-message {
   margin-bottom: 18px;
   font-size: 12.5px;
   line-height: 1.5;
-  color: var(--text-dim);
+  color: var(--dim);
 }
 
 .ui-modal-actions {
@@ -145,36 +175,29 @@ button:disabled {
 
 .ui-btn {
   padding: 8px 14px;
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 12.5px;
+  font-weight: 650;
+  border: 0;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface-hover);
-  transition:
-    border-color 0.15s var(--ease),
-    background 0.15s var(--ease),
-    color 0.15s var(--ease);
+  background: var(--key);
+  box-shadow: var(--key-shadow);
+  transition: filter 0.15s var(--ease);
 }
 
 .ui-btn:hover {
-  border-color: var(--border-hover);
+  filter: brightness(1.06);
 }
 
 .ui-btn-primary {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--cap);
+  box-shadow: var(--cap-shadow);
   color: var(--on-accent);
 }
 
 .ui-btn-danger {
   background: var(--danger);
-  border-color: var(--danger);
+  box-shadow: var(--key-shadow);
   color: var(--on-accent);
-}
-
-.ui-btn-primary:hover,
-.ui-btn-danger:hover {
-  border-color: var(--text);
 }
 
 .ui-toast-stack {
@@ -197,9 +220,9 @@ button:disabled {
   font-weight: 500;
   text-align: center;
   border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text-dim);
+  background: var(--key);
+  box-shadow: var(--key-shadow);
+  color: var(--ink);
   animation: ui-rise 0.2s var(--ease);
   transition: opacity 0.2s var(--ease);
 }
@@ -209,12 +232,10 @@ button:disabled {
 }
 
 .ui-toast-success {
-  border-color: var(--accent-border);
-  color: var(--accent);
+  color: var(--accent-text);
 }
 
 .ui-toast-error {
-  border-color: var(--danger-border);
   color: var(--danger);
 }
 

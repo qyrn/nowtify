@@ -9,6 +9,7 @@ import { byId } from '../../shared/dom'
 import { t, translatePage } from '../../shared/i18n'
 import { send, type AuthState } from '../../shared/messages'
 import { loadSettings, updateSettings } from '../../shared/settings'
+import { followThemeSetting } from '../../shared/theme'
 import { sortStreamers, teamLabel, type Streamer } from '../../shared/streamer'
 import { confirmDanger, dialog, toast } from '../../shared/ui'
 
@@ -130,6 +131,7 @@ async function setCompact(compact: boolean): Promise<void> {
 
 async function start(): Promise<void> {
   translatePage()
+  void followThemeSetting()
   const settings = await loadSettings()
   listElement.classList.toggle('compact', settings.compactMode)
   compactButton.setAttribute('aria-pressed', String(settings.compactMode))

@@ -8,9 +8,11 @@ import { setupPreferences } from '../../options/preferences'
 import { refreshTeams } from '../../options/teams'
 import { byId } from '../../shared/dom'
 import { t, translatePage } from '../../shared/i18n'
+import { followThemeSetting } from '../../shared/theme'
 
 async function start(): Promise<void> {
   translatePage()
+  void followThemeSetting()
   document.title = t('optionsTitle')
   byId('version', HTMLSpanElement).textContent = `Nowtify ${browser.runtime.getManifest().version}`
   setupBackup(async () => {
