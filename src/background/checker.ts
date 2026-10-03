@@ -1,4 +1,5 @@
 import { browser } from 'wxt/browser'
+import { readNumber } from '../shared/guards'
 import { loadSettings } from '../shared/settings'
 import { channelKey, notificationsPaused, type Streamer } from '../shared/streamer'
 import {
@@ -7,6 +8,7 @@ import {
   CHECK_PERIOD_MINUTES_WHILE_LIVE,
   ENRICH_CONCURRENCY,
   NOTIFICATION_COOLDOWN,
+  POPUP_REFRESH_MIN_INTERVAL,
   PROFILE_RECHECK_INTERVAL,
   SCHEDULE_RECHECK_INTERVAL,
   TEAM_RECHECK_INTERVAL,
@@ -199,6 +201,11 @@ async function runCheck(): Promise<void> {
   await scheduleChecks(liveCount)
   await browser.storage.session.set({ authExpired: false })
   await browser.storage.local.set({ lastCheckAt: now })
+}
+
+export async function refreshIfStale(now = Date.now()): Promise<void> {
+  const lastCheckAt = readNumber(await browser.storage.local.get('lastCheckAt'), 'lastCheckAt') ?? 0
+  if (now - lastCheckAt >= POPUP_REFRESH_MIN_INTERVAL) await checkAllStreamers()
 }
 
 export function checkAllStreamers(): Promise<void> {

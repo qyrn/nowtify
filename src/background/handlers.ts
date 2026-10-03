@@ -13,7 +13,7 @@ import type {
 } from '../shared/messages'
 import { loadSettings, updateSettings } from '../shared/settings'
 import { createStreamer, isValidLogin, isValidTeamName, type Streamer } from '../shared/streamer'
-import { applyLiveState, checkAllStreamers } from './checker'
+import { applyLiveState, checkAllStreamers, refreshIfStale } from './checker'
 import { suggestChannels } from './channel-search'
 import { HISTORY_LIMIT } from './config'
 import { fetchFollows } from './follows'
@@ -186,7 +186,7 @@ async function importBackup(raw: unknown): Promise<ImportResult> {
 export const handlers: Handlers = {
   getStreamers: () => getAllStreamers(),
   refresh: async () => {
-    await checkAllStreamers()
+    await refreshIfStale()
     return getAllStreamers()
   },
   addStreamer: ({ login: loginName }) => addStreamer(loginName),
