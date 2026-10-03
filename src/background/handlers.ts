@@ -1,4 +1,5 @@
 import { createBackup, parseBackup } from '../shared/backup'
+import { historyLinker } from '../shared/history'
 import type {
   AddStreamerResult,
   AddTeamResult,
@@ -150,7 +151,7 @@ async function importBackup(raw: unknown): Promise<ImportResult> {
   const fresh = backup.streamers.filter((streamer) => !known.has(streamer.login))
   await putStreamers(fresh.map((streamer) => ({ ...streamer, id: crypto.randomUUID() })))
   await updateSettings(backup.settings)
-  const historyAdded = await importHistory(backup.history)
+  const historyAdded = await importHistory(backup.history.map(historyLinker(backup.streamers)))
   void checkAllStreamers()
   return { streamersAdded: fresh.length, historyAdded }
 }

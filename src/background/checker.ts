@@ -1,6 +1,6 @@
 import { browser } from 'wxt/browser'
 import { loadSettings } from '../shared/settings'
-import { isSnoozed, type Streamer } from '../shared/streamer'
+import { channelKey, isSnoozed, type Streamer } from '../shared/streamer'
 import {
   CHECK_ALARM,
   CHECK_PERIOD_MINUTES,
@@ -120,7 +120,7 @@ async function enrichTeam(token: string, streamer: Streamer, now: number): Promi
 async function recordTransitions(previous: Streamer, next: Streamer, now: number): Promise<void> {
   if (next.isLive && !previous.isLive) {
     await addHistoryEntry({
-      streamerId: next.id,
+      streamerId: channelKey(next),
       displayName: next.displayName,
       title: next.title,
       game: next.game,
@@ -130,7 +130,7 @@ async function recordTransitions(previous: Streamer, next: Streamer, now: number
       endedAt: null
     })
   }
-  if (!next.isLive && previous.isLive) await closeHistoryEntry(next.id, now)
+  if (!next.isLive && previous.isLive) await closeHistoryEntry(channelKey(next), now)
 }
 
 async function enrich(token: string, streamer: Streamer, now: number): Promise<void> {

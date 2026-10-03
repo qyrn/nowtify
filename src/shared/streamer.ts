@@ -119,6 +119,10 @@ export function normalizeStreamer(raw: unknown): Streamer | null {
   }
 }
 
+export function channelKey(streamer: Pick<Streamer, 'twitchId' | 'login'>): string {
+  return streamer.twitchId ?? streamer.login
+}
+
 export function isRecentlyLive(streamer: Streamer, now = Date.now()): boolean {
   return !streamer.isLive && streamer.lastLiveAt !== null && now - streamer.lastLiveAt < RECENTLY_LIVE_WINDOW
 }

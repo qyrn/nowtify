@@ -1,9 +1,9 @@
-import { normalizeHistoryEntry, type HistoryEntry } from '../shared/history'
+import { historyLinker, normalizeHistoryEntry, type HistoryEntry } from '../shared/history'
 import { normalizeStreamer, type Streamer } from '../shared/streamer'
 import { HISTORY_LIMIT } from './config'
 
 const DB_NAME = 'NowtifyDB'
-const DB_VERSION = 2
+const DB_VERSION = 3
 const STREAMERS = 'streamers'
 const HISTORY = 'history'
 
@@ -34,6 +34,26 @@ function completion(transaction: IDBTransaction): Promise<void> {
   })
 }
 
+function linkStoredHistoryToChannels(transaction: IDBTransaction): void {
+  const streamersRequest = transaction.objectStore(STREAMERS).getAll()
+  streamersRequest.onsuccess = () => {
+    const link = historyLinker(
+      streamersRequest.result.map(normalizeStreamer).filter((streamer) => streamer !== null)
+    )
+    const cursorRequest = transaction.objectStore(HISTORY).openCursor()
+    cursorRequest.onsuccess = () => {
+      const cursor = cursorRequest.result
+      if (!cursor) return
+      const entry = normalizeHistoryEntry(cursor.value)
+      const linked = entry ? link(entry) : null
+      if (entry && linked && linked.streamerId !== entry.streamerId) {
+        cursor.update({ ...(cursor.value as object), streamerId: linked.streamerId })
+      }
+      cursor.continue()
+    }
+  }
+}
+
 function upgrade(request: IDBOpenDBRequest, oldVersion: number): void {
   const db = request.result
   if (oldVersion < 1) {
@@ -45,6 +65,9 @@ function upgrade(request: IDBOpenDBRequest, oldVersion: number): void {
   }
   if (oldVersion < 2) {
     request.transaction?.objectStore(HISTORY).createIndex('streamerId', 'streamerId')
+  }
+  if (oldVersion >= 1 && oldVersion < 3 && request.transaction) {
+    linkStoredHistoryToChannels(request.transaction)
   }
 }
 

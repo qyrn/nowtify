@@ -1,4 +1,5 @@
 import { isRecord, readNumber, readString } from './guards'
+import { channelKey, type Streamer } from './streamer'
 
 export interface HistoryEntry {
   streamerId: string
@@ -36,6 +37,16 @@ export function normalizeHistoryEntry(raw: unknown): HistoryEntry | null {
     timestamp,
     startedAt: readNumber(raw, 'startedAt'),
     endedAt: readNumber(raw, 'endedAt')
+  }
+}
+
+export function historyLinker(
+  streamers: Pick<Streamer, 'id' | 'twitchId' | 'login'>[]
+): (entry: HistoryEntry) => HistoryEntry {
+  const keys = new Map(streamers.map((streamer) => [streamer.id, channelKey(streamer)]))
+  return (entry) => {
+    const key = keys.get(entry.streamerId)
+    return key ? { ...entry, streamerId: key } : entry
   }
 }
 
