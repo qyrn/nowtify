@@ -1,5 +1,5 @@
-import { avatar, h } from '../shared/dom'
-import { formatSince, formatUntil, formatViewers } from '../shared/format'
+import { avatar, h, monogram } from '../shared/dom'
+import { formatDuration, formatExactCount, formatSince, formatUntil, formatViewers } from '../shared/format'
 import { t } from '../shared/i18n'
 import { icon } from '../shared/icons'
 import { isRecentlyLive, isSnoozed, teamLabel, type Streamer } from '../shared/streamer'
@@ -10,32 +10,39 @@ export interface CardActions {
   remove: (streamer: Streamer) => void
 }
 
-function statusBadge(streamer: Streamer): HTMLElement {
-  if (streamer.isLive) {
-    const label = streamer.viewerCount ? formatViewers(streamer.viewerCount) : t('liveBadge')
-    return h('span', { class: 'status status-live' }, [h('span', { class: 'status-dot' }), label])
-  }
-  const label = streamer.lastLiveAt ? formatSince(streamer.lastLiveAt) : t('statusOffline')
-  return h('span', { class: 'status' }, [label])
-}
-
 function teamBadge(streamer: Streamer): HTMLElement | null {
   const label = teamLabel(streamer)
   if (!label) return null
-  const logo = streamer.teamLogoUrl
-    ? h('img', { class: 'team-logo', src: streamer.teamLogoUrl, alt: '', referrerpolicy: 'no-referrer' })
-    : null
-  logo?.addEventListener('error', () => {
-    logo.remove()
-  })
-  return h('span', { class: 'team', title: label }, [logo, h('span', { class: 'team-name' }, [label])])
+  const badge = h('span', { class: 'card-team', title: label }, [monogram(label)])
+  if (streamer.teamLogoUrl) {
+    const logo = h('img', { src: streamer.teamLogoUrl, alt: '', referrerpolicy: 'no-referrer' })
+    logo.addEventListener('error', () => {
+      logo.remove()
+      badge.textContent = monogram(label)
+    })
+    badge.replaceChildren(logo)
+  }
+  return badge
 }
 
-function scheduleLine(streamer: Streamer): HTMLElement | null {
-  if (streamer.isLive || streamer.nextStreamAt === null) return null
+function subLine(streamer: Streamer): HTMLElement | null {
+  if (streamer.isLive) {
+    const parts = [
+      streamer.game ? h('span', { class: 'card-game' }, [streamer.game]) : null,
+      streamer.title ? h('span', { class: 'card-title' }, [streamer.title]) : null
+    ]
+    if (parts.every((part) => part === null)) return null
+    return h('div', { class: 'card-sub', title: streamer.title ?? '' }, parts)
+  }
+  if (streamer.nextStreamAt === null) return null
   const when = formatUntil(streamer.nextStreamAt)
   if (!when) return null
-  return h('div', { class: 'schedule' }, [icon('calendar'), t('nextStreamLabel', when)])
+  return h('div', { class: 'card-sub card-next' }, [icon('calendar'), t('nextStreamLabel', when)])
+}
+
+function sideLabel(streamer: Streamer): string {
+  if (streamer.isLive) return streamer.viewerCount ? formatViewers(streamer.viewerCount) : t('liveBadge')
+  return streamer.lastLiveAt ? formatSince(streamer.lastLiveAt) : t('statusOffline')
 }
 
 function preview(streamer: Streamer): HTMLElement | null {
@@ -49,21 +56,25 @@ function preview(streamer: Streamer): HTMLElement | null {
   thumbnail.addEventListener('error', () => {
     thumbnail.remove()
   })
+  const elapsed = streamer.startedAt === null ? null : Date.now() - streamer.startedAt
   return h('div', { class: 'preview' }, [
     thumbnail,
     h('div', { class: 'preview-meta' }, [
-      h('span', { class: 'preview-game' }, [icon('gamepad'), streamer.game ?? t('streamInProgress')]),
+      h('span', {}, [
+        elapsed !== null && elapsed > 0 ? t('liveSince', formatDuration(elapsed)) : t('streamInProgress')
+      ]),
       streamer.viewerCount
-        ? h('span', { class: 'preview-viewers' }, [
-            icon('eye'),
-            t('viewersCount', formatViewers(streamer.viewerCount))
-          ])
+        ? h('span', { class: 'preview-viewers' }, [t('viewersCount', formatExactCount(streamer.viewerCount))])
         : null
     ])
   ])
 }
 
-function actionButton(className: string, label: string, iconName: 'bellOff' | 'close'): HTMLButtonElement {
+function actionButton(
+  className: string,
+  label: string,
+  iconName: 'bellOff' | 'close' | 'chevronDown'
+): HTMLButtonElement {
   return h(
     'button',
     { type: 'button', class: `card-action ${className}`, title: label, 'aria-label': label },
@@ -74,59 +85,45 @@ function actionButton(className: string, label: string, iconName: 'bellOff' | 'c
 export function renderCard(streamer: Streamer, actions: CardActions): HTMLElement {
   const snoozed = isSnoozed(streamer)
   const previewBlock = preview(streamer)
-  const toggle = previewBlock
-    ? h(
-        'button',
-        { type: 'button', class: 'preview-toggle', 'aria-expanded': 'false', title: t('previewTitle') },
-        [icon('chevronDown')]
-      )
-    : null
+  const toggle = previewBlock ? actionButton('preview-toggle', t('previewTitle'), 'chevronDown') : null
+  toggle?.setAttribute('aria-expanded', 'false')
   const snoozeButton = actionButton(
-    snoozed ? 'snooze active' : 'snooze',
+    snoozed ? 'card-snooze active' : 'card-snooze',
     snoozed ? t('notifPaused') : t('notifPauseAction'),
     'bellOff'
   )
-  const removeButton = actionButton('remove', t('deleteTitle'), 'close')
+  const removeButton = actionButton('card-remove', t('deleteTitle'), 'close')
 
   const classes = ['card']
   if (streamer.isLive) classes.push('live')
   if (isRecentlyLive(streamer)) classes.push('recent')
-  if (snoozed) classes.push('snoozed')
 
   const card = h('article', { class: classes.join(' '), 'data-id': streamer.id }, [
-    h('div', { class: 'card-main' }, [
-      avatar(streamer.avatarUrl, streamer.displayName, 'card-avatar'),
-      h('div', { class: 'card-body' }, [
-        h('div', { class: 'card-line' }, [
-          h(
-            'a',
-            {
-              class: 'card-name',
-              href: `https://www.twitch.tv/${streamer.login}`,
-              title: streamer.displayName
-            },
-            [streamer.displayName]
-          ),
-          snoozed
-            ? h('span', { class: 'snoozed-indicator', title: t('notifPaused') }, [icon('bellOff')])
-            : null,
-          statusBadge(streamer),
-          toggle
-        ]),
-        h('div', { class: 'card-line card-sub' }, [
-          h('span', { class: 'card-title', title: streamer.title ?? '' }, [streamer.title ?? '']),
-          teamBadge(streamer)
-        ]),
-        scheduleLine(streamer)
-      ])
+    avatar(streamer.avatarUrl, streamer.displayName, 'card-avatar'),
+    h('div', { class: 'card-body' }, [
+      h('div', { class: 'card-top' }, [
+        h(
+          'a',
+          {
+            class: 'card-name',
+            href: `https://www.twitch.tv/${streamer.login}`,
+            title: streamer.displayName
+          },
+          [streamer.displayName]
+        ),
+        snoozed ? h('span', { class: 'card-snoozed', title: t('notifPaused') }, [icon('bellOff')]) : null,
+        teamBadge(streamer)
+      ]),
+      subLine(streamer)
     ]),
-    h('div', { class: 'card-actions' }, [snoozeButton, removeButton]),
+    h('span', { class: 'card-side' }, [sideLabel(streamer)]),
+    h('div', { class: 'card-actions' }, [toggle, snoozeButton, removeButton]),
     previewBlock
   ])
 
   card.addEventListener('click', (event) => {
     const target = event.target instanceof Element ? event.target : null
-    if (target?.closest('.card-actions, .preview-toggle, .snooze-menu')) return
+    if (target?.closest('.card-actions, .snooze-menu')) return
     event.preventDefault()
     actions.open(streamer)
   })

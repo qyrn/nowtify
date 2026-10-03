@@ -6,24 +6,26 @@ import { closeSnoozeMenus, openSnoozeMenu } from '../../popup/snooze-menu'
 import { StreamerList } from '../../popup/streamer-list'
 import { TeamFilter } from '../../popup/team-filter'
 import { byId } from '../../shared/dom'
-import { t, translatePage } from '../../shared/i18n'
+import { plural, t, translatePage } from '../../shared/i18n'
 import { send, type AuthState } from '../../shared/messages'
-import { loadSettings, updateSettings } from '../../shared/settings'
+import { loadSettings } from '../../shared/settings'
 import { followThemeSetting } from '../../shared/theme'
 import { sortStreamers, teamLabel, type Streamer } from '../../shared/streamer'
 import { confirmDanger, dialog, toast } from '../../shared/ui'
 
-const refreshButton = byId('refreshBtn', HTMLButtonElement)
-const compactButton = byId('compactBtn', HTMLButtonElement)
 const settingsButton = byId('settingsBtn', HTMLButtonElement)
 const authBanner = byId('authBanner', HTMLDivElement)
 const authBannerText = byId('authBannerText', HTMLSpanElement)
 const authBannerButton = byId('authBannerBtn', HTMLButtonElement)
 const listElement = byId('streamerList', HTMLDivElement)
 const emptyState = byId('emptyState', HTMLDivElement)
-const liveCount = byId('liveCount', HTMLSpanElement)
+const toolbar = byId('toolbar', HTMLDivElement)
+const followedCount = byId('followedCount', HTMLSpanElement)
+const liveLed = byId('liveLed', HTMLSpanElement)
+const liveLedText = byId('liveLedText', HTMLSpanElement)
 
 let streamers: Streamer[] = []
+let refreshing = false
 
 const teamFilter = new TeamFilter(render)
 const list = new StreamerList(listElement, {
@@ -46,7 +48,10 @@ function render(): void {
   teamFilter.update(sorted)
   list.render(teamFilter.apply(sorted))
   const live = streamers.filter((streamer) => streamer.isLive).length
-  liveCount.textContent = streamers.length > 0 ? t('liveCountLabel', live, streamers.length) : ''
+  liveLed.classList.toggle('hidden', live === 0)
+  liveLedText.textContent = t('liveLed', live)
+  toolbar.classList.toggle('hidden', streamers.length === 0)
+  followedCount.textContent = plural(streamers.length, 'followedCount', 'followedCountPlural')
   emptyState.classList.toggle('hidden', streamers.length > 0)
 }
 
@@ -56,8 +61,8 @@ async function reload(): Promise<void> {
 }
 
 async function refresh(): Promise<void> {
-  if (refreshButton.classList.contains('busy')) return
-  refreshButton.classList.add('busy')
+  if (refreshing) return
+  refreshing = true
   try {
     streamers = await send('refresh', null)
     render()
@@ -65,7 +70,7 @@ async function refresh(): Promise<void> {
   } catch {
     toast(t('loadErrorText'), 'error')
   } finally {
-    refreshButton.classList.remove('busy')
+    refreshing = false
   }
 }
 
@@ -123,25 +128,14 @@ async function remove(streamer: Streamer): Promise<void> {
   await reload()
 }
 
-async function setCompact(compact: boolean): Promise<void> {
-  listElement.classList.toggle('compact', compact)
-  compactButton.setAttribute('aria-pressed', String(compact))
-  await updateSettings({ compactMode: compact })
-}
-
 async function start(): Promise<void> {
   translatePage()
   void followThemeSetting()
-  const settings = await loadSettings()
-  listElement.classList.toggle('compact', settings.compactMode)
-  compactButton.setAttribute('aria-pressed', String(settings.compactMode))
-
-  refreshButton.addEventListener('click', () => void refresh())
-  compactButton.addEventListener('click', () => void setCompact(!listElement.classList.contains('compact')))
   settingsButton.addEventListener('click', () => void browser.runtime.openOptionsPage())
   authBannerButton.addEventListener('click', () => void connect())
   document.addEventListener('click', (event) => {
-    if (event.target instanceof Element && !event.target.closest('.snooze, .snooze-menu')) closeSnoozeMenus()
+    if (event.target instanceof Element && !event.target.closest('.card-snooze, .snooze-menu'))
+      closeSnoozeMenus()
   })
   browser.storage.local.onChanged.addListener((changes) => {
     if ('lastCheckAt' in changes) void reload()

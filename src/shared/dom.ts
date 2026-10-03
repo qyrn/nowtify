@@ -29,6 +29,15 @@ export function initials(name: string): string {
   return (letters.slice(0, 2) || '?').toUpperCase()
 }
 
+export function monogram(name: string): string {
+  const words = name.split(/\s+/).filter((word) => /[\p{L}\p{N}]/u.test(word))
+  if (words.length < 2) return initials(name)
+  return words
+    .slice(0, 2)
+    .map((word) => initials(word).charAt(0))
+    .join('')
+}
+
 export function avatar(url: string | null, name: string, className: string): HTMLElement {
   const fallback = h('span', { class: `${className} avatar-fallback`, 'aria-hidden': 'true' }, [
     initials(name)

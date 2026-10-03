@@ -17,6 +17,9 @@
   --accent-soft: light-dark(rgba(228, 87, 46, 0.1), rgba(228, 87, 46, 0.14));
   --accent-border: rgba(228, 87, 46, 0.45);
   --on-accent: #fff;
+  --led: light-dark(rgba(228, 87, 46, 0.35), rgba(228, 87, 46, 0.5));
+  --rim: light-dark(#d5d1c9, #3a3733);
+  --bezel: #24201c;
   --danger: light-dark(#c62f2f, #ff5c5c);
   --danger-soft: light-dark(rgba(198, 47, 47, 0.08), rgba(255, 92, 92, 0.1));
   --danger-border: light-dark(rgba(198, 47, 47, 0.35), rgba(255, 92, 92, 0.35));

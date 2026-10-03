@@ -1,3 +1,5 @@
+import { h } from '../shared/dom'
+import { t } from '../shared/i18n'
 import type { Streamer } from '../shared/streamer'
 import { renderCard, type CardActions } from './streamer-card'
 
@@ -6,14 +8,31 @@ interface RenderedCard {
   element: HTMLElement
 }
 
+interface Group {
+  section: HTMLElement
+  list: HTMLElement
+}
+
+function createGroup(label: string): Group {
+  const list = h('div', { class: 'group-list' })
+  return {
+    section: h('section', { class: 'group hidden' }, [h('p', { class: 'group-label' }, [label]), list]),
+    list
+  }
+}
+
 export class StreamerList {
   private readonly cards = new Map<string, RenderedCard>()
+  private readonly live = createGroup(t('groupLive'))
+  private readonly offline = createGroup(t('groupOffline'))
   private firstRender = true
 
   constructor(
-    private readonly container: HTMLElement,
+    container: HTMLElement,
     private readonly actions: CardActions
-  ) {}
+  ) {
+    container.replaceChildren(this.live.section, this.offline.section)
+  }
 
   render(streamers: Streamer[]): void {
     const visibleIds = new Set(streamers.map((streamer) => streamer.id))
@@ -23,12 +42,24 @@ export class StreamerList {
       this.cards.delete(id)
     }
 
+    this.fill(
+      this.live,
+      streamers.filter((streamer) => streamer.isLive)
+    )
+    this.fill(
+      this.offline,
+      streamers.filter((streamer) => !streamer.isLive)
+    )
+    this.firstRender = false
+  }
+
+  private fill(group: Group, streamers: Streamer[]): void {
+    group.section.classList.toggle('hidden', streamers.length === 0)
     streamers.forEach((streamer, index) => {
       const element = this.cardFor(streamer)
-      const current = this.container.children[index]
-      if (current !== element) this.container.insertBefore(element, current ?? null)
+      const current = group.list.children[index]
+      if (current !== element) group.list.insertBefore(element, current ?? null)
     })
-    this.firstRender = false
   }
 
   private cardFor(streamer: Streamer): HTMLElement {

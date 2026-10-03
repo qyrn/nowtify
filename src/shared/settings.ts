@@ -8,7 +8,6 @@ export interface Settings {
   notifications: boolean
   persistentNotifications: boolean
   confirmDelete: boolean
-  compactMode: boolean
   theme: Theme
 }
 
@@ -16,7 +15,6 @@ export const DEFAULT_SETTINGS: Settings = {
   notifications: true,
   persistentNotifications: false,
   confirmDelete: true,
-  compactMode: false,
   theme: 'auto'
 }
 
@@ -32,7 +30,6 @@ export function normalizeSettings(raw: unknown): Settings {
     persistentNotifications:
       readBoolean(raw, 'persistentNotifications') ?? DEFAULT_SETTINGS.persistentNotifications,
     confirmDelete: readBoolean(raw, 'confirmDelete') ?? DEFAULT_SETTINGS.confirmDelete,
-    compactMode: readBoolean(raw, 'compactMode') ?? DEFAULT_SETTINGS.compactMode,
     theme: isTheme(theme) ? theme : DEFAULT_SETTINGS.theme
   }
 }

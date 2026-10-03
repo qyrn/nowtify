@@ -4,19 +4,22 @@
     "message": "Une notification sur ton bureau dès qu'un de tes streamers Twitch passe en live"
   },
 
-  "refreshTitle": { "message": "Actualiser" },
-  "compactModeTitle": { "message": "Vue compacte" },
   "settingsTitle": { "message": "Paramètres" },
   "searchPlaceholder": { "message": "Nom, lien ou team/nom" },
+  "liveLed": { "message": "$COUNT$ live", "placeholders": { "count": { "content": "$1" } } },
+  "followedCount": { "message": "$COUNT$ suivi", "placeholders": { "count": { "content": "$1" } } },
+  "followedCountPlural": { "message": "$COUNT$ suivis", "placeholders": { "count": { "content": "$1" } } },
+  "groupLive": { "message": "En live" },
+  "groupOffline": { "message": "Hors ligne" },
+  "liveSince": {
+    "message": "En live depuis $DURATION$",
+    "placeholders": { "duration": { "content": "$1" } }
+  },
   "addButton": { "message": "Ajouter" },
   "allTeams": { "message": "Toutes les teams" },
   "emptyStateTitle": { "message": "Personne pour l'instant" },
   "emptyStateText": {
     "message": "Cherche un streamer au-dessus, ou tape team/ suivi du nom d'une team Twitch pour ajouter tous ses membres."
-  },
-  "liveCountLabel": {
-    "message": "$LIVE$/$TOTAL$ en live",
-    "placeholders": { "live": { "content": "$1" }, "total": { "content": "$2" } }
   },
 
   "twitchConnectRequiredText": { "message": "Connecte ton compte Twitch pour lancer le suivi" },
@@ -91,8 +94,8 @@
   "deleteErrorGeneric": { "message": "Suppression impossible, réessaie" },
 
   "timeLessThanHour": { "message": "< 1h" },
-  "timeHours": { "message": "$COUNT$h", "placeholders": { "count": { "content": "$1" } } },
-  "timeDays": { "message": "$COUNT$j", "placeholders": { "count": { "content": "$1" } } },
+  "timeHours": { "message": "$COUNT$ h", "placeholders": { "count": { "content": "$1" } } },
+  "timeDays": { "message": "$COUNT$ j", "placeholders": { "count": { "content": "$1" } } },
   "timeWeeks": { "message": "$COUNT$ sem.", "placeholders": { "count": { "content": "$1" } } },
   "timeMonths": { "message": "$COUNT$ mois", "placeholders": { "count": { "content": "$1" } } },
   "timeYear": { "message": "$COUNT$ an", "placeholders": { "count": { "content": "$1" } } },

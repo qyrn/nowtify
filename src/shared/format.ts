@@ -4,10 +4,18 @@ const MINUTE = 60_000
 const HOUR = 60 * MINUTE
 const DAY = 24 * HOUR
 
+function compact(value: number, suffix: string): string {
+  return `${value >= 100 ? Math.round(value) : value.toFixed(1).replace(/\.0$/, '')}${suffix}`
+}
+
 export function formatViewers(count: number): string {
   if (count < 1000) return String(count)
   const thousands = count / 1000
-  return `${thousands >= 100 ? Math.round(thousands) : thousands.toFixed(1).replace(/\.0$/, '')}K`
+  return thousands < 999.5 ? compact(thousands, 'K') : compact(count / 1_000_000, 'M')
+}
+
+export function formatExactCount(count: number): string {
+  return new Intl.NumberFormat(locale()).format(count)
 }
 
 export function formatSince(timestamp: number, now = Date.now()): string {

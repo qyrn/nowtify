@@ -3,7 +3,7 @@ import { t } from '../shared/i18n'
 import { isTheme, loadSettings, updateSettings, type Settings } from '../shared/settings'
 import { toast } from '../shared/ui'
 
-type ToggleKey = Exclude<keyof Settings, 'compactMode' | 'theme'>
+type ToggleKey = Exclude<keyof Settings, 'theme'>
 
 const toggles: [ToggleKey, HTMLInputElement][] = [
   ['notifications', byId('notificationsToggle', HTMLInputElement)],

@@ -1,6 +1,5 @@
-import { avatar, byId, h } from '../shared/dom'
+import { avatar, byId, h, monogram } from '../shared/dom'
 import { plural, t } from '../shared/i18n'
-import { icon } from '../shared/icons'
 import { send, type ChannelSuggestion, type TeamSuggestion } from '../shared/messages'
 import { parseAddInput } from '../shared/streamer'
 import { toast } from '../shared/ui'
@@ -96,8 +95,8 @@ export class AddForm {
   private teamItem(team: TeamSuggestion): HTMLButtonElement {
     const item = h('button', { type: 'button', class: 'suggestion', role: 'option' }, [
       team.logoUrl
-        ? avatar(team.logoUrl, team.displayName, 'suggestion-avatar')
-        : h('span', { class: 'suggestion-avatar avatar-fallback' }, [icon('users')]),
+        ? avatar(team.logoUrl, team.displayName, 'suggestion-avatar team')
+        : h('span', { class: 'suggestion-avatar team avatar-fallback' }, [monogram(team.displayName)]),
       h('span', { class: 'suggestion-name' }, [team.displayName]),
       h('span', { class: 'suggestion-badge' }, [
         plural(team.memberCount, 'teamMembersCount', 'teamMembersCountPlural')

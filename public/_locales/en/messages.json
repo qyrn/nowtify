@@ -4,19 +4,19 @@
     "message": "Get a desktop notification the moment your favorite Twitch streamers go live"
   },
 
-  "refreshTitle": { "message": "Refresh" },
-  "compactModeTitle": { "message": "Compact view" },
   "settingsTitle": { "message": "Settings" },
   "searchPlaceholder": { "message": "Streamer name, link or team/name" },
+  "liveLed": { "message": "$COUNT$ live", "placeholders": { "count": { "content": "$1" } } },
+  "followedCount": { "message": "$COUNT$ followed", "placeholders": { "count": { "content": "$1" } } },
+  "followedCountPlural": { "message": "$COUNT$ followed", "placeholders": { "count": { "content": "$1" } } },
+  "groupLive": { "message": "Live" },
+  "groupOffline": { "message": "Offline" },
+  "liveSince": { "message": "Live for $DURATION$", "placeholders": { "duration": { "content": "$1" } } },
   "addButton": { "message": "Add" },
   "allTeams": { "message": "All teams" },
   "emptyStateTitle": { "message": "Nobody here yet" },
   "emptyStateText": {
     "message": "Search for a streamer above, or type team/ followed by a Twitch team name to add the whole roster."
-  },
-  "liveCountLabel": {
-    "message": "$LIVE$/$TOTAL$ live",
-    "placeholders": { "live": { "content": "$1" }, "total": { "content": "$2" } }
   },
 
   "twitchConnectRequiredText": { "message": "Connect your Twitch account to start tracking" },
