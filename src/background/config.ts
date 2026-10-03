@@ -18,3 +18,5 @@ export const TOKEN_REVALIDATE_INTERVAL = 30 * MINUTE
 export const SILENT_LOGIN_INTERVAL = 5 * MINUTE
 
 export const HISTORY_LIMIT = 500
+
+export const ENRICH_CONCURRENCY = 6

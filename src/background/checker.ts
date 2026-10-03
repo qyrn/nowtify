@@ -5,12 +5,14 @@ import {
   CHECK_ALARM,
   CHECK_PERIOD_MINUTES,
   CHECK_PERIOD_MINUTES_WHILE_LIVE,
+  ENRICH_CONCURRENCY,
   NOTIFICATION_COOLDOWN,
   PROFILE_RECHECK_INTERVAL,
   SCHEDULE_RECHECK_INTERVAL,
   TEAM_RECHECK_INTERVAL,
   VOD_RECHECK_INTERVAL
 } from './config'
+import { forEachConcurrently } from './concurrency'
 import { addHistoryEntry, closeHistoryEntry, getAllStreamers, patchStreamers } from './database'
 import { notifyLive } from './notifier'
 import { getToken, invalidateToken } from './twitch-auth'
@@ -131,10 +133,18 @@ async function recordTransitions(previous: Streamer, next: Streamer, now: number
   if (!next.isLive && previous.isLive) await closeHistoryEntry(next.id, now)
 }
 
-async function shouldNotify(previous: Streamer, next: Streamer, now: number): Promise<boolean> {
+async function enrich(token: string, streamer: Streamer, now: number): Promise<void> {
+  try {
+    await enrichTeam(token, streamer, now)
+    if (!streamer.isLive) await enrichOffline(token, streamer, now)
+  } catch (error) {
+    if (error instanceof TwitchAuthError) throw error
+  }
+}
+
+function shouldNotify(previous: Streamer, next: Streamer, now: number): boolean {
   if (!next.isLive || previous.isLive || isSnoozed(next, now)) return false
-  if (next.notifiedAt !== null && now - next.notifiedAt < NOTIFICATION_COOLDOWN) return false
-  return (await loadSettings()).notifications
+  return next.notifiedAt === null || now - next.notifiedAt >= NOTIFICATION_COOLDOWN
 }
 
 function checkOwnedFields(streamer: Streamer): Partial<Streamer> {
@@ -157,12 +167,15 @@ async function runCheck(): Promise<void> {
   }
 
   const now = Date.now()
+  const settings = await loadSettings()
   const nextStates = streamers.map((streamer) => ({ ...streamer }))
   await refreshProfiles(token, nextStates, now)
   const liveStreams = await getLiveStreams(
     token,
     nextStates.map((streamer) => streamer.login)
   )
+  for (const next of nextStates) applyLiveState(next, liveStreams.get(next.login), now)
+  await forEachConcurrently(nextStates, ENRICH_CONCURRENCY, (next) => enrich(token, next, now))
 
   const patches = new Map<string, Partial<Streamer>>()
   const toNotify: Streamer[] = []
@@ -170,14 +183,7 @@ async function runCheck(): Promise<void> {
   for (const [index, next] of nextStates.entries()) {
     const previous = streamers[index]
     if (!previous) continue
-    applyLiveState(next, liveStreams.get(next.login), now)
-    try {
-      await enrichTeam(token, next, now)
-      if (!next.isLive) await enrichOffline(token, next, now)
-    } catch (error) {
-      if (error instanceof TwitchAuthError) throw error
-    }
-    if (await shouldNotify(previous, next, now)) {
+    if (settings.notifications && shouldNotify(previous, next, now)) {
       next.notifiedAt = now
       toNotify.push(next)
     }
@@ -186,8 +192,7 @@ async function runCheck(): Promise<void> {
   }
 
   await patchStreamers(patches)
-  const persistent = (await loadSettings()).persistentNotifications
-  await Promise.all(toNotify.map((streamer) => notifyLive(streamer, persistent)))
+  await Promise.all(toNotify.map((streamer) => notifyLive(streamer, settings.persistentNotifications)))
 
   const liveCount = nextStates.filter((streamer) => streamer.isLive).length
   await updateBadge(liveCount)
