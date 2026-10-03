@@ -37,6 +37,8 @@ Tape `team/` suivi du nom d'une team Twitch (par exemple `team/solary`) et tous 
 
 Tu peux aussi coller un lien, `twitch.tv/zerator` ou `twitch.tv/team/solary`, ça marche pareil.
 
+Tu suis déjà plein de monde sur Twitch ? Dans les réglages, « Voir mes follows » liste toutes tes chaînes suivies : coche celles que tu veux et ajoute-les d'un coup. Ensuite, quand tu cherches un streamer, ceux que tu suis passent en premier, avec leur nombre de followers et une coche pour les partenaires.
+
 ## 🔕 La pause par streamer
 
 <div align="center">
@@ -79,7 +81,7 @@ Nowtify vérifie toutes les 5 minutes qui est en live, et toutes les minutes dè
 
 Ta liste, ton historique et tes réglages sont stockés par Chrome sur ta machine. L'extension ne parle qu'à Twitch : pour la connexion, pour savoir qui est en live, et pour afficher les avatars et les miniatures. Il n'y a aucun serveur à moi, aucun outil de stats, et même les polices sont incluses dans l'extension.
 
-La connexion Twitch ne demande aucun droit sur ton compte. Le token ne peut lire que ce que tout le monde voit déjà sur Twitch, et il est révoqué quand tu te déconnectes.
+Par défaut, la connexion Twitch ne demande aucun droit sur ton compte : le token ne peut lire que ce que tout le monde voit déjà sur Twitch, et il est révoqué quand tu te déconnectes. La seule exception, c'est l'import de tes follows : Twitch te demande alors une fois l'autorisation de lire la liste des chaînes que tu suis. Cette liste reste dans ton navigateur et disparaît à la déconnexion.
 
 Le détail complet est dans la [politique de confidentialité](https://nowtify.qyrn.dev/privacy.html).
 

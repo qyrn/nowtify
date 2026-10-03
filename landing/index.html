@@ -203,8 +203,8 @@
               <code>team/nightowls</code>
               <h3 data-i18n="spec1.title">Whole teams</h3>
               <p data-i18n="spec1.text">
-                Type team/ followed by a Twitch team name to add every member at once, then filter the list by
-                team.
+                Type team/ followed by a Twitch team name to add every member at once, or import the channels
+                you already follow on Twitch from the settings.
               </p>
             </div>
             <div class="spec">
@@ -331,8 +331,10 @@
             <details>
               <summary data-i18n="faq1.q">Why does it need my Twitch account?</summary>
               <p data-i18n="faq1.a">
-                Twitch refuses API requests without a token, even for public data. Nowtify asks for no
-                permission on your account: the token can only read what anyone can already see on Twitch.
+                Twitch refuses API requests without a token, even for public data. By default Nowtify asks for
+                no permission on your account: the token can only read what anyone can already see on Twitch.
+                The only exception is the optional follows import, which asks to read the list of channels you
+                follow.
               </p>
             </details>
             <details>
@@ -422,7 +424,7 @@
           "features.title": "The rest of the popup",
           "features.lede": "Small things that make a long list easier to live with.",
           "spec1.title": "Whole teams",
-          "spec1.text": "Type team/ followed by a Twitch team name to add every member at once, then filter the list by team.",
+          "spec1.text": "Type team/ followed by a Twitch team name to add every member at once, or import the channels you already follow on Twitch from the settings.",
           "spec2.label": "1 h / tomorrow",
           "spec2.title": "Snooze one channel",
           "spec2.text": "Mute a streamer for an hour, until tomorrow morning or for good, without removing them. A whole team can be muted from the settings.",
@@ -449,7 +451,7 @@
           "privacy.link": "Read the privacy policy",
           "faq.title": "Questions people ask",
           "faq1.q": "Why does it need my Twitch account?",
-          "faq1.a": "Twitch refuses API requests without a token, even for public data. Nowtify asks for no permission on your account: the token can only read what anyone can already see on Twitch.",
+          "faq1.a": "Twitch refuses API requests without a token, even for public data. By default Nowtify asks for no permission on your account: the token can only read what anyone can already see on Twitch. The only exception is the optional follows import, which asks to read the list of channels you follow.",
           "faq2.q": "How long before the notification shows up?",
           "faq2.a": "Nowtify checks every 5 minutes, and every minute once someone on your list is live. Expect the notification within 5 minutes of the stream starting.",
           "faq3.q": "Does it work when Chrome is closed?",
@@ -495,7 +497,7 @@
           "features.title": "Le reste de la popup",
           "features.lede": "Des petits détails qui rendent une longue liste plus facile à gérer.",
           "spec1.title": "Des teams entières",
-          "spec1.text": "Tape team/ suivi du nom d'une team Twitch pour ajouter tous ses membres d'un coup, puis filtre ta liste par team.",
+          "spec1.text": "Tape team/ suivi du nom d'une team Twitch pour ajouter tous ses membres d'un coup, ou importe depuis les réglages les chaînes que tu suis déjà sur Twitch.",
           "spec2.label": "1 h / demain",
           "spec2.title": "Mettre un streamer en pause",
           "spec2.text": "Coupe les notifs d'un streamer pendant une heure, jusqu'à demain matin ou pour de bon, sans le retirer de ta liste. Une team entière se coupe depuis les réglages.",
@@ -522,7 +524,7 @@
           "privacy.link": "Lire la politique de confidentialité",
           "faq.title": "Les questions qu'on me pose",
           "faq1.q": "Pourquoi il faut se connecter à Twitch ?",
-          "faq1.a": "Twitch refuse toute requête sans token, même pour des infos publiques. Nowtify ne demande aucun droit sur ton compte : le token ne peut lire que ce que tout le monde voit déjà sur Twitch.",
+          "faq1.a": "Twitch refuse toute requête sans token, même pour des infos publiques. Par défaut, Nowtify ne demande aucun droit sur ton compte : le token ne peut lire que ce que tout le monde voit déjà sur Twitch. La seule exception, c'est l'import de tes follows, facultatif, qui demande à lire la liste des chaînes que tu suis.",
           "faq2.q": "Combien de temps avant la notification ?",
           "faq2.a": "Nowtify vérifie toutes les 5 minutes, et toutes les minutes dès qu'un de tes streamers est en live. Compte jusqu'à 5 minutes après le début du live.",
           "faq3.q": "Ça marche quand Chrome est fermé ?",

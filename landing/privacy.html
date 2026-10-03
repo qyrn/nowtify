@@ -34,7 +34,7 @@
     </header>
 
     <main class="wrap doc">
-      <p class="kicker" data-i18n="updated">Last updated on October 3, 2026</p>
+      <p class="kicker" data-i18n="updated">Last updated on October 4, 2026</p>
       <h1 data-i18n="title">Privacy policy</h1>
       <p data-i18n="intro">
         Nowtify is a Chrome extension that notifies you when Twitch streamers go live. This page lists every
@@ -60,6 +60,11 @@
           Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your
           bookmarks. The developer never receives them.
         </li>
+        <li data-i18n="stored.follows">
+          If you use the follows import, the names of the channels you follow on Twitch, in Chrome's local
+          extension storage. Nowtify uses them to put those channels first in the search, refreshes them at
+          most once a day, and deletes them when you disconnect.
+        </li>
       </ul>
 
       <h2 data-i18n="network.title">Who Nowtify talks to</h2>
@@ -69,7 +74,8 @@
           disconnect.
         </li>
         <li data-i18n="network.api">
-          api.twitch.tv, to find channels, read who is live, and fetch teams, past broadcasts and schedules.
+          api.twitch.tv, to find channels, read who is live, fetch teams, past broadcasts and schedules, and,
+          only if you allow it, read the channels you follow.
         </li>
         <li data-i18n="network.cdn">
           static-cdn.jtvnw.net, Twitch's image server, to display avatars, team logos and stream thumbnails.
@@ -83,8 +89,10 @@
       <h2 data-i18n="login.title">The Twitch login</h2>
       <p data-i18n="login.text">
         The login goes through Chrome's own identity window, on Twitch's website. Nowtify never sees your
-        password. It asks for no permission scope, so the token can only read public data. Disconnecting from
-        the settings page deletes the token and asks Twitch to revoke it.
+        password. By default it asks for no permission scope, so the token can only read public data. If you
+        use the follows import, Twitch asks you once to allow one extra scope, user:read:follows, which only
+        lets Nowtify read the list of channels you follow. Disconnecting from the settings page deletes the
+        token and that list, and asks Twitch to revoke the token.
       </p>
 
       <h2 data-i18n="permissions.title">Permissions requested</h2>
@@ -157,7 +165,7 @@
           "meta.description": "What data Nowtify touches, where it is stored and what it never does. No server, no analytics.",
           "lang.switch": "Passer en français",
           "nav.back": "Back to the home page",
-          "updated": "Last updated on October 3, 2026",
+          "updated": "Last updated on October 4, 2026",
           "title": "Privacy policy",
           "intro": "Nowtify is a Chrome extension that notifies you when Twitch streamers go live. This page lists every piece of data it touches and where that data goes.",
           "summary": "Short version: Nowtify has no server and no analytics. Everything it knows stays in your browser, and the only outside service it talks to is Twitch.",
@@ -167,11 +175,11 @@
           "stored.settings": "Your preferences (notifications, notifications kept on screen, delete confirmation, theme), in Chrome's synced storage. If Chrome sync is on, Google syncs them between your devices like your bookmarks. The developer never receives them.",
           "network.title": "Who Nowtify talks to",
           "network.id": "id.twitch.tv, to log you in, check that your token is still valid, and revoke it when you disconnect.",
-          "network.api": "api.twitch.tv, to find channels, read who is live, and fetch teams, past broadcasts and schedules.",
+          "network.api": "api.twitch.tv, to find channels, read who is live, fetch teams, past broadcasts and schedules, and, only if you allow it, read the channels you follow.",
           "network.cdn": "static-cdn.jtvnw.net, Twitch's image server, to display avatars, team logos and stream thumbnails.",
           "network.none": "That's the whole list. Fonts and icons ship inside the extension, and there is no analytics, crash reporting or advertising code.",
           "login.title": "The Twitch login",
-          "login.text": "The login goes through Chrome's own identity window, on Twitch's website. Nowtify never sees your password. It asks for no permission scope, so the token can only read public data. Disconnecting from the settings page deletes the token and asks Twitch to revoke it.",
+          "login.text": "The login goes through Chrome's own identity window, on Twitch's website. Nowtify never sees your password. By default it asks for no permission scope, so the token can only read public data. If you use the follows import, Twitch asks you once to allow one extra scope, user:read:follows, which only lets Nowtify read the list of channels you follow. Disconnecting from the settings page deletes the token and that list, and asks Twitch to revoke the token.",
           "permissions.title": "Permissions requested",
           "permissions.notifications": "Show a desktop notification when a streamer goes live.",
           "permissions.storage": "Keep your token, profile and preferences.",
@@ -184,14 +192,15 @@
           "delete.text": "Uninstalling the extension deletes everything it stored. You can also disconnect Twitch, clear the history or remove streamers at any time from the settings page. There is no account to delete anywhere else, because there isn't one.",
           "contact.title": "Contact",
           "contact.text": "Questions about this policy:",
-          "footer.made": "Made by"
+          "footer.made": "Made by",
+          "stored.follows": "If you use the follows import, the names of the channels you follow on Twitch, in Chrome's local extension storage. Nowtify uses them to put those channels first in the search, refreshes them at most once a day, and deletes them when you disconnect."
         },
         "fr": {
           "meta.title": "Nowtify : politique de confidentialité",
           "meta.description": "Les données que Nowtify utilise, où elles sont stockées et ce qu'elle ne fait jamais. Pas de serveur, pas de stats.",
           "lang.switch": "Switch to English",
           "nav.back": "Retour à l'accueil",
-          "updated": "Mise à jour le 3 octobre 2026",
+          "updated": "Mise à jour le 4 octobre 2026",
           "title": "Politique de confidentialité",
           "intro": "Nowtify est une extension Chrome qui te prévient quand des streamers Twitch passent en live. Cette page liste toutes les données qu'elle manipule et où elles vont.",
           "summary": "En bref : Nowtify n'a ni serveur ni outil de stats. Tout ce qu'elle sait reste dans ton navigateur, et le seul service extérieur auquel elle parle, c'est Twitch.",
@@ -201,11 +210,11 @@
           "stored.settings": "Tes préférences (notifications, notifications gardées à l'écran, confirmation de suppression, thème), dans le stockage synchronisé de Chrome. Si la synchro Chrome est activée, Google les synchronise entre tes appareils comme tes favoris. Le développeur ne les reçoit jamais.",
           "network.title": "À qui Nowtify parle",
           "network.id": "id.twitch.tv, pour te connecter, vérifier que ton token est encore valide, et le révoquer quand tu te déconnectes.",
-          "network.api": "api.twitch.tv, pour chercher des chaînes, savoir qui est en live, et récupérer les teams, les anciens lives et les plannings.",
+          "network.api": "api.twitch.tv, pour trouver des chaînes, savoir qui est en live, récupérer les teams, les anciens lives et les plannings, et, seulement si tu l'autorises, lire les chaînes que tu suis.",
           "network.cdn": "static-cdn.jtvnw.net, le serveur d'images de Twitch, pour afficher les avatars, les logos de team et les miniatures.",
           "network.none": "C'est toute la liste. Les polices et les icônes sont incluses dans l'extension, et il n'y a aucun code de stats, de rapport de crash ou de pub.",
           "login.title": "La connexion Twitch",
-          "login.text": "La connexion passe par la fenêtre d'identification de Chrome, sur le site de Twitch. Nowtify ne voit jamais ton mot de passe. Elle ne demande aucun droit, donc le token ne peut lire que des données publiques. Te déconnecter depuis les réglages supprime le token et demande à Twitch de le révoquer.",
+          "login.text": "La connexion passe par la fenêtre d'identité de Chrome, sur le site de Twitch. Nowtify ne voit jamais ton mot de passe. Par défaut, elle ne demande aucun droit, donc le token ne peut lire que des données publiques. Si tu utilises l'import de tes follows, Twitch te demande une seule fois d'autoriser un droit en plus, user:read:follows, qui permet seulement à Nowtify de lire la liste des chaînes que tu suis. La déconnexion depuis les réglages supprime le token et cette liste, et demande à Twitch de révoquer le token.",
           "permissions.title": "Permissions demandées",
           "permissions.notifications": "Afficher une notification quand un streamer passe en live.",
           "permissions.storage": "Garder ton token, ton profil et tes préférences.",
@@ -218,7 +227,8 @@
           "delete.text": "Désinstaller l'extension supprime tout ce qu'elle a stocké. Tu peux aussi te déconnecter de Twitch, effacer l'historique ou retirer des streamers à tout moment depuis les réglages. Il n'y a aucun compte à supprimer ailleurs, puisqu'il n'y en a pas.",
           "contact.title": "Contact",
           "contact.text": "Une question sur cette politique :",
-          "footer.made": "Fait par"
+          "footer.made": "Fait par",
+          "stored.follows": "Si tu utilises l'import de tes follows, les noms des chaînes que tu suis sur Twitch, dans le stockage local de l'extension. Nowtify s'en sert pour les mettre en tête de la recherche, les rafraîchit au plus une fois par jour, et les supprime quand tu te déconnectes."
         }
       }
     </script>
