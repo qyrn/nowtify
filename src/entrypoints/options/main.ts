@@ -4,6 +4,7 @@ import { browser } from 'wxt/browser'
 import { setupAccount } from '../../options/account'
 import { refreshActivity, setupActivity } from '../../options/activity'
 import { setupBackup } from '../../options/backup'
+import { setupFollowsImport } from '../../options/follows-import'
 import { setupPreferences } from '../../options/preferences'
 import { setupShortcut } from '../../options/shortcut'
 import { refreshTeams } from '../../options/teams'
@@ -16,6 +17,7 @@ async function start(): Promise<void> {
   void followThemeSetting()
   document.title = t('optionsTitle')
   byId('version', HTMLSpanElement).textContent = `Nowtify ${browser.runtime.getManifest().version}`
+  setupFollowsImport()
   setupBackup(async () => {
     await Promise.all([refreshTeams(), refreshActivity()])
   })

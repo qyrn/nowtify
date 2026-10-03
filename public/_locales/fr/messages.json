@@ -156,6 +156,31 @@
   "themeAuto": { "message": "Auto" },
   "themeDark": { "message": "Sombre" },
   "themeLight": { "message": "Clair" },
+  "followsHeader": { "message": "Tes follows Twitch" },
+  "followsDesc": {
+    "message": "Choisis qui ajouter parmi les chaînes que tu suis sur Twitch. La première fois, Twitch te demande l'autorisation de lire tes follows."
+  },
+  "followsButton": { "message": "Voir mes follows" },
+  "followsSummary": {
+    "message": "$NEW$ à ajouter sur $TOTAL$ suivis",
+    "placeholders": { "new": { "content": "$1" }, "total": { "content": "$2" } }
+  },
+  "followsSelectAll": { "message": "Tout cocher" },
+  "followsSelectNone": { "message": "Tout décocher" },
+  "followsFilter": { "message": "Filtrer" },
+  "followsAdd": { "message": "Ajouter ($COUNT$)", "placeholders": { "count": { "content": "$1" } } },
+  "followsAlreadyAdded": { "message": "déjà ajouté" },
+  "followsImportedToast": {
+    "message": "$COUNT$ streamer ajouté",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "followsImportedToastPlural": {
+    "message": "$COUNT$ streamers ajoutés",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "followsAccessDenied": { "message": "Twitch n'a pas donné l'accès à tes follows" },
+  "followsLoadError": { "message": "Impossible de récupérer tes follows" },
+  "followsEmpty": { "message": "Tu ne suis aucune chaîne sur Twitch" },
   "shortcutTitle": { "message": "Raccourci clavier" },
   "shortcutDesc": { "message": "$KEYS$ ouvre Nowtify", "placeholders": { "keys": { "content": "$1" } } },
   "shortcutNone": { "message": "Aucun raccourci pour ouvrir Nowtify" },

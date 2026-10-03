@@ -221,6 +221,35 @@ export async function getTeam(token: string, name: string): Promise<TwitchTeam |
   }
 }
 
+export interface FollowedChannel {
+  login: string
+  displayName: string
+}
+
+export async function getFollowedChannels(
+  token: string,
+  userId: string,
+  max: number
+): Promise<FollowedChannel[]> {
+  const channels: FollowedChannel[] = []
+  let cursor: string | null = null
+  do {
+    const query: Query = [
+      ['user_id', userId],
+      ['first', String(BATCH_SIZE)]
+    ]
+    if (cursor) query.push(['after', cursor])
+    const body = await helix(token, 'channels/followed', query)
+    if (!body) break
+    for (const record of readRecords(body, 'data')) {
+      const login = readString(record, 'broadcaster_login')?.toLowerCase()
+      if (login) channels.push({ login, displayName: readString(record, 'broadcaster_name') ?? login })
+    }
+    cursor = isRecord(body.pagination) ? readString(body.pagination, 'cursor') : null
+  } while (cursor && channels.length < max)
+  return channels.slice(0, max)
+}
+
 export async function getChannelTeam(token: string, broadcasterId: string): Promise<TwitchTeamInfo | null> {
   const [record] = await helixList(token, 'teams/channel', [['broadcaster_id', broadcasterId]])
   if (!record) return null

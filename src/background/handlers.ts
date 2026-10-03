@@ -4,6 +4,7 @@ import type {
   AddStreamerResult,
   AddTeamResult,
   ChannelSuggestion,
+  FollowsResult,
   ImportResult,
   MessageRequest,
   MessageResponse,
@@ -15,6 +16,7 @@ import { createStreamer, isValidLogin, isValidTeamName, type Streamer } from '..
 import { applyLiveState, checkAllStreamers } from './checker'
 import { suggestChannels } from './channel-search'
 import { HISTORY_LIMIT } from './config'
+import { fetchFollows } from './follows'
 import {
   clearHistory,
   deleteStreamers,
@@ -24,12 +26,13 @@ import {
   patchStreamers,
   putStreamers
 } from './database'
-import { getAuthState, getToken, login, logout } from './twitch-auth'
+import { getAuthState, getToken, login, logout, requestFollowsAccess } from './twitch-auth'
 import { getLiveStreams, getTeam, getUsersByLogin } from './twitch-api'
 
 type Handlers = { [K in MessageType]: (payload: MessageRequest<K>) => Promise<MessageResponse<K>> }
 
 const MAX_QUERY_LENGTH = 50
+const MAX_IMPORT = 500
 const SUGGESTION_LIMIT = 5
 
 async function withBaselineLiveState(token: string, streamers: Streamer[]): Promise<Streamer[]> {
@@ -102,6 +105,40 @@ async function addTeam(nameInput: string): Promise<AddTeamResult> {
   await putStreamers(await withBaselineLiveState(token, created))
   void checkAllStreamers()
   return { status: 'added', displayName: team.displayName, added: created.length }
+}
+
+async function twitchFollows(): Promise<FollowsResult> {
+  const token = await getToken()
+  if (!token) return { status: 'disconnected' }
+  const channels = await fetchFollows(token)
+  if (!channels) return { status: 'needsAccess' }
+  const known = new Set((await getAllStreamers()).map((streamer) => streamer.login))
+  return {
+    status: 'ok',
+    channels: channels.map((channel) => ({ ...channel, added: known.has(channel.login) }))
+  }
+}
+
+async function importStreamers(loginsInput: string[]): Promise<number> {
+  const known = new Set((await getAllStreamers()).map((streamer) => streamer.login))
+  const logins = [...new Set(loginsInput.map((login) => login.trim().toLowerCase()))]
+    .filter((login) => isValidLogin(login) && !known.has(login))
+    .slice(0, MAX_IMPORT)
+  if (logins.length === 0) return 0
+  const token = await getToken()
+  if (!token) return 0
+  const users = await getUsersByLogin(token, logins)
+  const created = users.map((user) =>
+    createStreamer({
+      login: user.login,
+      displayName: user.displayName,
+      twitchId: user.id,
+      avatarUrl: user.avatarUrl
+    })
+  )
+  await putStreamers(await withBaselineLiveState(token, created))
+  void checkAllStreamers()
+  return created.length
 }
 
 async function suggestions(queryInput: string): Promise<ChannelSuggestion[]> {
@@ -182,5 +219,8 @@ export const handlers: Handlers = {
   },
   exportBackup: async () =>
     createBackup(await getAllStreamers(), await loadSettings(), await getHistory(HISTORY_LIMIT)),
-  importBackup: ({ backup }) => importBackup(backup)
+  importBackup: ({ backup }) => importBackup(backup),
+  getTwitchFollows: () => twitchFollows(),
+  requestFollowsAccess: () => requestFollowsAccess(),
+  importStreamers: ({ logins }) => importStreamers(logins)
 }

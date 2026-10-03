@@ -1,5 +1,6 @@
 import type { ChannelSuggestion } from '../shared/messages'
 import { lookalikeLogins, rankChannels } from './channel-ranking'
+import { followedLogins } from './follows'
 import {
   getFollowerTotal,
   getLiveStreams,
@@ -61,7 +62,8 @@ export async function suggestChannels(
   query: string,
   limit: number
 ): Promise<ChannelSuggestion[]> {
-  const shortlist = rankChannels(await withLookalikes(token, query), query, SHORTLIST_SIZE, new Map())
+  const [channels, followed] = await Promise.all([withLookalikes(token, query), followedLogins(token)])
+  const shortlist = rankChannels(channels, query, SHORTLIST_SIZE, new Map(), followed)
   const users = await getUsersByLogin(
     token,
     shortlist.map((channel) => channel.login)
@@ -73,5 +75,5 @@ export async function suggestChannels(
     followers: followers.get(channel.login) ?? null,
     partner: partners.has(channel.login)
   }))
-  return rankChannels(suggestions, query, limit, followers)
+  return rankChannels(suggestions, query, limit, followers, followed)
 }

@@ -42,6 +42,15 @@ export type AddTeamResult =
   | { status: 'empty' }
   | { status: 'disconnected' }
 
+export interface FollowedChannelChoice {
+  login: string
+  displayName: string
+  added: boolean
+}
+
+export type FollowsResult =
+  { status: 'ok'; channels: FollowedChannelChoice[] } | { status: 'needsAccess' } | { status: 'disconnected' }
+
 export interface ImportResult {
   streamersAdded: number
   historyAdded: number
@@ -64,6 +73,9 @@ export interface MessageMap {
   logout: { request: null; response: null }
   exportBackup: { request: null; response: Backup }
   importBackup: { request: { backup: unknown }; response: ImportResult }
+  getTwitchFollows: { request: null; response: FollowsResult }
+  requestFollowsAccess: { request: null; response: boolean }
+  importStreamers: { request: { logins: string[] }; response: number }
 }
 
 export type MessageType = keyof MessageMap
@@ -93,7 +105,10 @@ const MESSAGE_TYPES: readonly MessageType[] = [
   'login',
   'logout',
   'exportBackup',
-  'importBackup'
+  'importBackup',
+  'getTwitchFollows',
+  'requestFollowsAccess',
+  'importStreamers'
 ]
 
 export function isEnvelope(value: unknown): value is Envelope {

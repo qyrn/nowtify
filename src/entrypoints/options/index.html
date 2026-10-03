@@ -57,6 +57,36 @@
           </div>
         </section>
 
+        <section class="section" aria-labelledby="followsTitle">
+          <h2 class="section-title" id="followsTitle" data-i18n="followsHeader"></h2>
+          <div class="setting">
+            <span class="setting-text">
+              <span class="setting-desc" data-i18n="followsDesc"></span>
+            </span>
+            <button type="button" class="btn" id="followsOpenBtn" data-i18n="followsButton"></button>
+          </div>
+          <div class="follows-panel hidden" id="followsPanel">
+            <div class="follows-head">
+              <span class="follows-summary" id="followsSummary"></span>
+              <button type="button" class="btn btn-small" id="followsToggleAll"></button>
+            </div>
+            <input
+              type="search"
+              class="follows-filter"
+              id="followsFilter"
+              maxlength="40"
+              autocomplete="off"
+              spellcheck="false"
+              data-i18n-placeholder="followsFilter"
+            />
+            <ul class="follows-list" id="followsList"></ul>
+            <div class="button-row">
+              <button type="button" class="btn btn-primary" id="followsAddBtn"></button>
+              <button type="button" class="btn" id="followsCancelBtn" data-i18n="cancelLabel"></button>
+            </div>
+          </div>
+        </section>
+
         <section class="section" aria-labelledby="preferencesTitle">
           <h2 class="section-title" id="preferencesTitle" data-i18n="preferencesHeader"></h2>
           <div class="setting">

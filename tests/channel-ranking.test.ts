@@ -37,7 +37,7 @@ describe('rankChannels', () => {
       ['kameto', 910],
       ['kamet0', 2_129_717]
     ])
-    expect(rankChannels(channels, 'kameto', 5, followers).map((item) => item.login)).toEqual([
+    expect(rankChannels(channels, 'kameto', 5, followers, new Set()).map((item) => item.login)).toEqual([
       'kamet0',
       'kameto',
       'kametori_',
@@ -53,24 +53,33 @@ describe('rankChannels', () => {
       ['kametori_', 5400],
       ['kametosha', 30]
     ])
-    expect(rankChannels(channels, 'kameto', 5, followers).map((item) => item.login)).toEqual([
+    expect(rankChannels(channels, 'kameto', 5, followers, new Set()).map((item) => item.login)).toEqual([
       'kametori_',
       'kametoreact',
       'kametosha'
     ])
   })
 
-  it('keeps the Twitch order without follower data', () => {
-    expect(rankChannels(TWITCH_SEARCH_FOR_KAMETO, 'kameto', 3, new Map()).map((item) => item.login)).toEqual([
-      'kameto',
-      'kametori_',
-      'kametoreact'
+  it('puts a channel you follow ahead of a bigger one that matches as well', () => {
+    const channels = [channel('kametori_'), channel('kametosha')]
+    const followers = new Map([
+      ['kametori_', 5400],
+      ['kametosha', 30]
     ])
+    expect(
+      rankChannels(channels, 'kameto', 5, followers, new Set(['kametosha'])).map((item) => item.login)
+    ).toEqual(['kametosha', 'kametori_'])
+  })
+
+  it('keeps the Twitch order without follower data', () => {
+    expect(
+      rankChannels(TWITCH_SEARCH_FOR_KAMETO, 'kameto', 3, new Map(), new Set()).map((item) => item.login)
+    ).toEqual(['kameto', 'kametori_', 'kametoreact'])
   })
 
   it('keeps channels Twitch matched on something else, after the name matches', () => {
     const channels = [channel('lck'), channel('kameto')]
-    expect(rankChannels(channels, 'kameto', 5, new Map()).map((item) => item.login)).toEqual([
+    expect(rankChannels(channels, 'kameto', 5, new Map(), new Set()).map((item) => item.login)).toEqual([
       'kameto',
       'lck'
     ])

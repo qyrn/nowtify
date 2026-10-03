@@ -6,6 +6,13 @@ import { getAuthenticatedUser } from './twitch-api'
 
 type TokenCheck = 'valid' | 'invalid' | 'unreachable'
 
+export const FOLLOWS_SCOPE = 'user:read:follows'
+
+async function readGrantedScopes(): Promise<string[]> {
+  const { twitchScopes } = await browser.storage.local.get('twitchScopes')
+  return Array.isArray(twitchScopes) ? twitchScopes.filter((scope) => typeof scope === 'string') : []
+}
+
 async function readStoredToken(): Promise<string | null> {
   const { twitchAuth } = await browser.storage.local.get('twitchAuth')
   return isRecord(twitchAuth) ? readString(twitchAuth, 'access_token') : null
@@ -43,14 +50,19 @@ async function validateToken(token: string): Promise<TokenCheck> {
   }
 }
 
-async function runAuthFlow(interactive: boolean): Promise<string | null> {
+interface AuthResult {
+  token: string
+  scopes: string[]
+}
+
+async function runAuthFlow(interactive: boolean, scopes: string[]): Promise<AuthResult | null> {
   const state = crypto.randomUUID()
   const url = new URL('https://id.twitch.tv/oauth2/authorize')
   url.search = new URLSearchParams({
     client_id: TWITCH_CLIENT_ID,
     redirect_uri: browser.identity.getRedirectURL(),
     response_type: 'token',
-    scope: '',
+    scope: scopes.join(' '),
     state
   }).toString()
 
@@ -58,11 +70,17 @@ async function runAuthFlow(interactive: boolean): Promise<string | null> {
   if (!responseUrl) return null
   const params = new URLSearchParams(new URL(responseUrl).hash.slice(1))
   if (params.get('state') !== state) return null
-  return params.get('access_token')
+  const token = params.get('access_token')
+  if (!token) return null
+  const granted = params.get('scope')
+  return { token, scopes: granted === null ? scopes : granted.split(' ').filter(Boolean) }
 }
 
-async function storeToken(token: string): Promise<void> {
-  await browser.storage.local.set({ twitchAuth: { access_token: token, obtained_at: Date.now() } })
+async function storeToken({ token, scopes }: AuthResult): Promise<void> {
+  await browser.storage.local.set({
+    twitchAuth: { access_token: token, obtained_at: Date.now() },
+    twitchScopes: scopes
+  })
   await browser.storage.local.remove('twitchLoggedOut')
   await browser.storage.session.set({ authExpired: false, tokenValidatedAt: Date.now() })
 }
@@ -87,10 +105,10 @@ async function trySilentLogin(): Promise<string | null> {
   await browser.storage.session.set({ silentLoginAt: Date.now() })
 
   try {
-    const token = await runAuthFlow(false)
-    if (!token) return null
-    await storeToken(token)
-    return token
+    const result = await runAuthFlow(false, await readGrantedScopes())
+    if (!result) return null
+    await storeToken(result)
+    return result.token
   } catch {
     return null
   }
@@ -119,10 +137,10 @@ export async function invalidateToken(): Promise<void> {
 }
 
 export async function login(): Promise<TwitchProfile> {
-  const token = await runAuthFlow(true)
-  if (!token) throw new Error(browser.i18n.getMessage('loginCancelledError'))
-  await storeToken(token)
-  const profile = await storeProfile(token)
+  const result = await runAuthFlow(true, await readGrantedScopes())
+  if (!result) throw new Error(browser.i18n.getMessage('loginCancelledError'))
+  await storeToken(result)
+  const profile = await storeProfile(result.token)
   if (!profile) throw new Error(browser.i18n.getMessage('loginProfileError'))
   return profile
 }
@@ -130,7 +148,7 @@ export async function login(): Promise<TwitchProfile> {
 export async function logout(): Promise<void> {
   const token = await readStoredToken()
   await browser.storage.local.set({ twitchLoggedOut: true })
-  await browser.storage.local.remove(['twitchAuth', 'twitchUser'])
+  await browser.storage.local.remove(['twitchAuth', 'twitchUser', 'twitchScopes', 'twitchFollows'])
   await browser.storage.session.set({ authExpired: false, tokenValidatedAt: 0 })
   if (!token) return
   await fetch('https://id.twitch.tv/oauth2/revoke', {
@@ -140,12 +158,31 @@ export async function logout(): Promise<void> {
   }).catch(() => null)
 }
 
+export async function hasFollowsAccess(): Promise<boolean> {
+  return (await readGrantedScopes()).includes(FOLLOWS_SCOPE)
+}
+
+export async function requestFollowsAccess(): Promise<boolean> {
+  const scopes = [...new Set([...(await readGrantedScopes()), FOLLOWS_SCOPE])]
+  const result = await runAuthFlow(true, scopes)
+  if (!result?.scopes.includes(FOLLOWS_SCOPE)) return false
+  await storeToken(result)
+  return true
+}
+
+async function connectedProfile(token: string): Promise<TwitchProfile | null> {
+  return (await readStoredProfile()) ?? (await storeProfile(token).catch(() => null))
+}
+
+export async function connectedUserId(token: string): Promise<string | null> {
+  return (await connectedProfile(token))?.id ?? null
+}
+
 export async function getAuthState(): Promise<AuthState> {
   const token = await getToken()
   if (!token) {
     const { authExpired } = await browser.storage.session.get('authExpired')
     return authExpired === true ? { status: 'expired' } : { status: 'disconnected' }
   }
-  const user = (await readStoredProfile()) ?? (await storeProfile(token).catch(() => null))
-  return { status: 'connected', user }
+  return { status: 'connected', user: await connectedProfile(token) }
 }

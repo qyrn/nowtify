@@ -153,6 +153,31 @@
   "themeAuto": { "message": "Auto" },
   "themeDark": { "message": "Dark" },
   "themeLight": { "message": "Light" },
+  "followsHeader": { "message": "Your Twitch follows" },
+  "followsDesc": {
+    "message": "Pick who to add among the channels you follow on Twitch. The first time, Twitch asks you to allow reading your follows."
+  },
+  "followsButton": { "message": "Show my follows" },
+  "followsSummary": {
+    "message": "$NEW$ of $TOTAL$ followed not added yet",
+    "placeholders": { "new": { "content": "$1" }, "total": { "content": "$2" } }
+  },
+  "followsSelectAll": { "message": "Select all" },
+  "followsSelectNone": { "message": "Clear" },
+  "followsFilter": { "message": "Filter" },
+  "followsAdd": { "message": "Add ($COUNT$)", "placeholders": { "count": { "content": "$1" } } },
+  "followsAlreadyAdded": { "message": "already added" },
+  "followsImportedToast": {
+    "message": "$COUNT$ streamer added",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "followsImportedToastPlural": {
+    "message": "$COUNT$ streamers added",
+    "placeholders": { "count": { "content": "$1" } }
+  },
+  "followsAccessDenied": { "message": "Twitch didn't grant access to your follows" },
+  "followsLoadError": { "message": "Couldn't load your follows" },
+  "followsEmpty": { "message": "You don't follow any channel on Twitch" },
   "shortcutTitle": { "message": "Keyboard shortcut" },
   "shortcutDesc": { "message": "$KEYS$ opens Nowtify", "placeholders": { "keys": { "content": "$1" } } },
   "shortcutNone": { "message": "No shortcut opens Nowtify" },

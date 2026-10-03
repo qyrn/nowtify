@@ -38,7 +38,8 @@ export function rankChannels<T extends Named>(
   channels: T[],
   query: string,
   limit: number,
-  followers: ReadonlyMap<string, number>
+  followers: ReadonlyMap<string, number>,
+  followed: ReadonlySet<string>
 ): T[] {
   const needle = loose(query.trim())
   return channels
@@ -46,9 +47,12 @@ export function rankChannels<T extends Named>(
       channel,
       order,
       score: relevance(channel, needle),
+      followed: followed.has(channel.login) ? 1 : 0,
       followers: followers.get(channel.login) ?? -1
     }))
-    .sort((a, b) => b.score - a.score || b.followers - a.followers || a.order - b.order)
+    .sort(
+      (a, b) => b.score - a.score || b.followed - a.followed || b.followers - a.followers || a.order - b.order
+    )
     .slice(0, limit)
     .map(({ channel }) => channel)
 }
