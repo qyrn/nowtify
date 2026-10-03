@@ -5,6 +5,7 @@ import { setupAccount } from '../../options/account'
 import { refreshActivity, setupActivity } from '../../options/activity'
 import { setupBackup } from '../../options/backup'
 import { setupPreferences } from '../../options/preferences'
+import { setupShortcut } from '../../options/shortcut'
 import { refreshTeams } from '../../options/teams'
 import { byId } from '../../shared/dom'
 import { t, translatePage } from '../../shared/i18n'
@@ -21,7 +22,7 @@ async function start(): Promise<void> {
   browser.storage.local.onChanged.addListener((changes) => {
     if ('lastCheckAt' in changes) void Promise.all([refreshTeams(), refreshActivity()])
   })
-  await Promise.all([setupAccount(), setupPreferences(), setupActivity(), refreshTeams()])
+  await Promise.all([setupAccount(), setupPreferences(), setupShortcut(), setupActivity(), refreshTeams()])
 }
 
 void start()

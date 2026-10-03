@@ -154,6 +154,10 @@
   "themeAuto": { "message": "Auto" },
   "themeDark": { "message": "Sombre" },
   "themeLight": { "message": "Clair" },
+  "shortcutTitle": { "message": "Raccourci clavier" },
+  "shortcutDesc": { "message": "$KEYS$ ouvre Nowtify", "placeholders": { "keys": { "content": "$1" } } },
+  "shortcutNone": { "message": "Aucun raccourci pour ouvrir Nowtify" },
+  "shortcutChange": { "message": "Modifier" },
   "settingsSaveError": { "message": "Impossible d'enregistrer le réglage" },
 
   "statisticsHeader": { "message": "Statistiques" },

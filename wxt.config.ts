@@ -19,6 +19,11 @@ export default defineConfig({
     action: {
       default_title: '__MSG_extName__'
     },
+    commands: {
+      _execute_action: {
+        suggested_key: { default: 'Alt+Shift+N' }
+      }
+    },
     permissions: ['notifications', 'storage', 'alarms', 'identity'],
     host_permissions: ['https://api.twitch.tv/*', 'https://id.twitch.tv/*']
   }

@@ -151,6 +151,10 @@
   "themeAuto": { "message": "Auto" },
   "themeDark": { "message": "Dark" },
   "themeLight": { "message": "Light" },
+  "shortcutTitle": { "message": "Keyboard shortcut" },
+  "shortcutDesc": { "message": "$KEYS$ opens Nowtify", "placeholders": { "keys": { "content": "$1" } } },
+  "shortcutNone": { "message": "No shortcut opens Nowtify" },
+  "shortcutChange": { "message": "Change" },
   "settingsSaveError": { "message": "Could not save the setting" },
 
   "statisticsHeader": { "message": "Statistics" },
