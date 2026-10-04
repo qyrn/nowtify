@@ -41,9 +41,14 @@ function applyLanguage(language) {
     const text = dictionary[element.dataset.i18nLabel]
     if (text !== undefined) element.setAttribute('aria-label', text)
   })
-  document.querySelectorAll('[data-src-fr]').forEach((image) => {
-    image.dataset.srcEn ??= image.getAttribute('src')
-    image.src = language === 'fr' ? image.dataset.srcFr : image.dataset.srcEn
+  document.querySelectorAll('[data-src-fr]').forEach((element) => {
+    element.dataset.srcEn ??= element.getAttribute('src')
+    const source = language === 'fr' ? element.dataset.srcFr : element.dataset.srcEn
+    if (element.getAttribute('src') !== source) element.setAttribute('src', source)
+  })
+  document.querySelectorAll('[data-poster-fr]').forEach((video) => {
+    video.dataset.posterEn ??= video.getAttribute('poster')
+    video.setAttribute('poster', language === 'fr' ? video.dataset.posterFr : video.dataset.posterEn)
   })
   const switcher = document.querySelector('.lang-switch')
   if (switcher) {
@@ -51,6 +56,25 @@ function applyLanguage(language) {
     switcher.setAttribute('aria-label', dictionary['lang.switch'])
   }
 }
+
+function setupPlayer(player) {
+  const video = player.querySelector('video')
+  const button = player.querySelector('.play')
+  button.addEventListener('click', () => {
+    video.controls = true
+    player.classList.add('playing')
+    video.play().catch(() => {
+      video.controls = false
+      player.classList.remove('playing')
+    })
+  })
+  video.addEventListener('emptied', () => {
+    video.controls = false
+    player.classList.remove('playing')
+  })
+}
+
+document.querySelectorAll('.player').forEach(setupPlayer)
 
 let current = detectLanguage()
 applyLanguage(current)

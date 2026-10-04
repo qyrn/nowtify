@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
+      content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; media-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'"
     />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <title>Nowtify: Twitch live notifications for Chrome</title>
@@ -123,6 +123,35 @@
           </div>
         </div>
       </div>
+
+      <section id="demo" aria-labelledby="demo-title">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="section-index">0:27</p>
+            <div>
+              <h2 id="demo-title" data-i18n="demo.title">The tour in 27 seconds</h2>
+              <p data-i18n="demo.lede">
+                Notification, search, mute, theme: everything Nowtify does, with sound.
+              </p>
+            </div>
+          </div>
+          <div class="player">
+            <video
+              src="assets/video/promo-en.mp4"
+              data-src-fr="assets/video/promo-fr.mp4"
+              poster="assets/video/poster-en.jpg"
+              data-poster-fr="assets/video/poster-fr.jpg"
+              width="1920"
+              height="1080"
+              preload="none"
+              playsinline
+            ></video>
+            <button type="button" class="play" aria-label="Play the video" data-i18n-label="demo.play">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5z" /></svg>
+            </button>
+          </div>
+        </div>
+      </section>
 
       <section id="how" aria-labelledby="how-title">
         <div class="wrap">
@@ -403,6 +432,9 @@
           "hero.cta": "Add to Chrome",
           "hero.note": "Free, open source, MIT",
           "hero.browsers": "Also installs on Edge, Brave and Vivaldi.",
+          "demo.title": "The tour in 27 seconds",
+          "demo.lede": "Notification, search, mute, theme: everything Nowtify does, with sound.",
+          "demo.play": "Play the video",
           "hero.alt": "The Nowtify popup with three live streamers and an open stream preview",
           "toast.time": "now",
           "toast.title": "pixel_ash is live",
@@ -476,6 +508,9 @@
           "hero.cta": "Ajouter à Chrome",
           "hero.note": "Gratuit, open source, MIT",
           "hero.browsers": "S'installe aussi sur Edge, Brave et Vivaldi.",
+          "demo.title": "Le tour en 27 secondes",
+          "demo.lede": "Notif, recherche, sourdine, thème : tout ce que fait Nowtify, avec le son.",
+          "demo.play": "Lancer la vidéo",
           "hero.alt": "La popup de Nowtify avec trois streamers en live et un aperçu de stream ouvert",
           "toast.time": "maintenant",
           "toast.title": "pixel_ash est en live",
