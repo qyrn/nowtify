@@ -13,6 +13,8 @@ Une notification sur ton bureau dès qu'un de tes streamers Twitch lance son liv
 
 <img src="docs/popup.png" width="360" alt="La popup de Nowtify avec trois streamers en live et l'aperçu d'un stream" />
 
+<sub>Les streamers des captures sont de vrais exemples, sans lien avec Nowtify.</sub>
+
 </div>
 
 <br />
