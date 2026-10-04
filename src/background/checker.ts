@@ -48,8 +48,8 @@ export async function scheduleChecks(liveCount: number): Promise<void> {
 
 async function updateBadge(liveCount: number): Promise<void> {
   await browser.action.setBadgeText({ text: liveCount > 0 ? String(Math.min(liveCount, 99)) : '' })
-  await browser.action.setBadgeBackgroundColor({ color: '#FCD34D' })
-  await browser.action.setBadgeTextColor({ color: '#0E0E10' })
+  await browser.action.setBadgeBackgroundColor({ color: '#E4572E' })
+  await browser.action.setBadgeTextColor({ color: '#FFFFFF' })
 }
 
 async function refreshProfiles(token: string, streamers: Streamer[], now: number): Promise<void> {
