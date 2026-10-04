@@ -4,6 +4,11 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Only check the Chrome Web Store credentials, upload nothing
+        type: boolean
+        default: true
 
 permissions:
   contents: read
@@ -28,7 +33,7 @@ jobs:
       - run: pnpm test
       - run: pnpm zip
       - name: Upload and submit for review
-        run: pnpm wxt submit --chrome-zip .output/*-chrome.zip
+        run: pnpm wxt submit --chrome-zip .output/*-chrome.zip ${{ inputs.dry_run && '--dry-run' || '' }}
         env:
           CHROME_API_VERSION: v2
           CHROME_EXTENSION_ID: emjhkfephckipmmlecbkmpjphfjalkhg
