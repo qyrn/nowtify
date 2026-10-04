@@ -473,6 +473,16 @@ section {
   fill: #fff;
 }
 
+.player-note {
+  margin-top: 14px;
+  color: var(--faint);
+  font-size: 13px;
+}
+
+.player-note a {
+  color: var(--dim);
+}
+
 .player.playing .play {
   opacity: 0;
   pointer-events: none;
