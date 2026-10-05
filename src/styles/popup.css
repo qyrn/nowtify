@@ -644,8 +644,31 @@ body {
   color: #e9e4dc;
 }
 
-.preview-viewers {
+.preview-count {
   color: #f0764f;
+}
+
+.preview:not(:has(.preview-thumbnail)) .preview-meta {
+  position: static;
+  padding-top: 8px;
+  background: none;
+  color: var(--dim);
+}
+
+.preview:not(:has(.preview-thumbnail)) .preview-count {
+  color: var(--accent-text);
+}
+
+.preview-vod {
+  cursor: pointer;
+}
+
+.preview-vod .preview-thumbnail {
+  transition: opacity 0.15s var(--ease);
+}
+
+.preview-vod:hover .preview-thumbnail {
+  opacity: 0.85;
 }
 
 .snooze-menu {

@@ -20,11 +20,19 @@ export interface Streamer {
   startedAt: number | null
   lastLiveAt: number | null
   nextStreamAt: number | null
+  lastVod: StreamVod | null
   vodCheckedAt: number | null
   scheduleCheckedAt: number | null
   notifiedAt: number | null
   snoozedUntil: number | null
   muted: boolean
+}
+
+export interface StreamVod {
+  id: string
+  duration: number
+  viewCount: number | null
+  thumbnailUrl: string | null
 }
 
 export const RECENTLY_LIVE_WINDOW = 12 * 60 * 60 * 1000
@@ -80,12 +88,30 @@ export function createStreamer(profile: {
     startedAt: null,
     lastLiveAt: null,
     nextStreamAt: null,
+    lastVod: null,
     vodCheckedAt: null,
     scheduleCheckedAt: null,
     notifiedAt: null,
     snoozedUntil: null,
     muted: false
   }
+}
+
+function normalizeVod(raw: unknown): StreamVod | null {
+  if (!isRecord(raw)) return null
+  const id = readString(raw, 'id')
+  const duration = readNumber(raw, 'duration')
+  if (!id || !/^\d+$/.test(id) || duration === null) return null
+  return {
+    id,
+    duration,
+    viewCount: readNumber(raw, 'viewCount'),
+    thumbnailUrl: readHttpsUrl(raw, 'thumbnailUrl')
+  }
+}
+
+export function vodUrl(vod: StreamVod): string {
+  return `https://www.twitch.tv/videos/${vod.id}`
 }
 
 export function normalizeStreamer(raw: unknown): Streamer | null {
@@ -114,6 +140,7 @@ export function normalizeStreamer(raw: unknown): Streamer | null {
     startedAt: readTimestamp(raw, 'startedAt'),
     lastLiveAt: readNumber(raw, 'lastLiveAt') ?? readNumber(raw, 'lastLiveDate'),
     nextStreamAt: readNumber(raw, 'nextStreamAt'),
+    lastVod: normalizeVod(raw.lastVod),
     vodCheckedAt: readNumber(raw, 'vodCheckedAt'),
     scheduleCheckedAt: readNumber(raw, 'scheduleCheckedAt'),
     notifiedAt: readNumber(raw, 'notifiedAt'),

@@ -38,6 +38,15 @@ export interface TwitchStream {
   startedAt: number | null
 }
 
+export interface TwitchArchive {
+  id: string
+  title: string | null
+  startedAt: number
+  duration: number
+  viewCount: number | null
+  thumbnailUrl: string | null
+}
+
 export interface TwitchChannel {
   login: string
   displayName: string
@@ -270,13 +279,33 @@ export async function getFollowerTotal(token: string, broadcasterId: string): Pr
   return body ? readNumber(body, 'total') : null
 }
 
-export async function getLatestArchiveDate(token: string, userId: string): Promise<number | null> {
+export function parseVideoDuration(value: string): number | null {
+  const match = /^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?$/.exec(value)
+  if (!match || value.length === 0) return null
+  const [, hours = '0', minutes = '0', seconds = '0'] = match
+  return ((Number(hours) * 60 + Number(minutes)) * 60 + Number(seconds)) * 1000
+}
+
+export async function getLatestArchive(token: string, userId: string): Promise<TwitchArchive | null> {
   const [video] = await helixList(token, 'videos', [
     ['user_id', userId],
     ['type', 'archive'],
     ['first', '1']
   ])
-  return video ? readTimestamp(video, 'created_at') : null
+  if (!video) return null
+  const id = readString(video, 'id')
+  const startedAt = readTimestamp(video, 'created_at')
+  const duration = parseVideoDuration(readString(video, 'duration') ?? '')
+  if (!id || !/^\d+$/.test(id) || startedAt === null || duration === null) return null
+  const thumbnail = readString(video, 'thumbnail_url')
+  return {
+    id,
+    title: readString(video, 'title'),
+    startedAt,
+    duration,
+    viewCount: readNumber(video, 'view_count'),
+    thumbnailUrl: thumbnail ? thumbnail.replace('%{width}', '440').replace('%{height}', '248') : null
+  }
 }
 
 export async function getNextScheduledStream(token: string, broadcasterId: string): Promise<number | null> {

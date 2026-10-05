@@ -1,4 +1,4 @@
-import { locale, plural, t } from './i18n'
+import { locale, t } from './i18n'
 
 const MINUTE = 60_000
 const HOUR = 60 * MINUTE
@@ -16,17 +16,6 @@ export function formatViewers(count: number): string {
 
 export function formatExactCount(count: number): string {
   return new Intl.NumberFormat(locale()).format(count)
-}
-
-export function formatSince(timestamp: number, now = Date.now()): string {
-  const elapsed = now - timestamp
-  if (elapsed < HOUR) return t('timeLessThanHour')
-  if (elapsed < DAY) return t('timeHours', Math.floor(elapsed / HOUR))
-  const days = Math.floor(elapsed / DAY)
-  if (days < 7) return t('timeDays', days)
-  if (days < 35) return t('timeWeeks', Math.floor(days / 7))
-  if (days < 365) return t('timeMonths', Math.floor(days / 30))
-  return plural(Math.floor(days / 365), 'timeYear', 'timeYears')
 }
 
 export function formatUntil(timestamp: number, now = Date.now()): string | null {

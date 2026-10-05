@@ -4,6 +4,7 @@ import { browser } from 'wxt/browser'
 import { AddForm } from '../../popup/add-form'
 import { ListFilter } from '../../popup/list-filter'
 import { closeSnoozeMenus, openSnoozeMenu, type PauseChoice } from '../../popup/snooze-menu'
+import { channelUrl } from '../../popup/streamer-card'
 import { StreamerList } from '../../popup/streamer-list'
 import { TeamFilter } from '../../popup/team-filter'
 import { byId } from '../../shared/dom'
@@ -31,7 +32,7 @@ let visible: Streamer[] = []
 const teamFilter = new TeamFilter(render)
 const listFilter = new ListFilter(render, openFirstMatch)
 const list = new StreamerList(listElement, {
-  open: openStream,
+  open: openUrl,
   snooze: (streamer, card) => {
     openSnoozeMenu(streamer, card, (choice) => {
       void pause(streamer, choice)
@@ -56,13 +57,13 @@ function render(): void {
   emptyState.classList.toggle('hidden', streamers.length > 0)
 }
 
-function openStream(streamer: Streamer): void {
-  void browser.tabs.create({ url: `https://www.twitch.tv/${streamer.login}` })
+function openUrl(url: string): void {
+  void browser.tabs.create({ url })
 }
 
 function openFirstMatch(): void {
   const [first] = visible
-  if (first) openStream(first)
+  if (first) openUrl(channelUrl(first))
 }
 
 async function reload(): Promise<void> {

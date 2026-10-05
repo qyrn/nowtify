@@ -12,6 +12,7 @@ import {
   PROFILE_RECHECK_INTERVAL,
   SCHEDULE_RECHECK_INTERVAL,
   TEAM_RECHECK_INTERVAL,
+  VOD_MATCH_TOLERANCE,
   VOD_RECHECK_INTERVAL
 } from './config'
 import { forEachConcurrently } from './concurrency'
@@ -20,11 +21,12 @@ import { notifyLives } from './notifier'
 import { getToken, invalidateToken } from './twitch-auth'
 import {
   getChannelTeam,
-  getLatestArchiveDate,
+  getLatestArchive,
   getLiveStreams,
   getNextScheduledStream,
   getUsersByLogin,
   TwitchAuthError,
+  type TwitchArchive,
   type TwitchStream
 } from './twitch-api'
 
@@ -85,21 +87,44 @@ export function applyLiveState(streamer: Streamer, stream: TwitchStream | undefi
     streamer.startedAt = stream.startedAt ?? streamer.startedAt ?? now
     streamer.lastLiveAt = now
     streamer.nextStreamAt = null
+    streamer.lastVod = null
     return
   }
-  if (streamer.isLive) streamer.lastLiveAt = now
+  if (streamer.isLive) {
+    streamer.lastLiveAt = now
+    streamer.vodCheckedAt = null
+  }
   streamer.isLive = false
   streamer.viewerCount = null
   streamer.thumbnailUrl = null
+}
+
+export function applyArchive(streamer: Streamer, archive: TwitchArchive | null): void {
+  const lastSeenLive = streamer.lastLiveAt ?? 0
+  const endedAt = archive ? archive.startedAt + archive.duration : 0
+  if (!archive || endedAt < lastSeenLive - VOD_MATCH_TOLERANCE) {
+    streamer.lastVod = null
+    return
+  }
+  streamer.lastVod = {
+    id: archive.id,
+    duration: archive.duration,
+    viewCount: archive.viewCount,
+    thumbnailUrl: archive.thumbnailUrl
+  }
+  if (archive.startedAt > lastSeenLive) {
+    streamer.title = archive.title
+    streamer.game = null
+  }
+  streamer.lastLiveAt = Math.max(lastSeenLive, endedAt)
 }
 
 async function enrichOffline(token: string, streamer: Streamer, now: number): Promise<void> {
   if (!streamer.twitchId) return
 
   if (isDue(streamer.vodCheckedAt, VOD_RECHECK_INTERVAL, now)) {
-    const archivedAt = await getLatestArchiveDate(token, streamer.twitchId)
+    applyArchive(streamer, await getLatestArchive(token, streamer.twitchId))
     streamer.vodCheckedAt = now
-    if (archivedAt !== null && archivedAt > (streamer.lastLiveAt ?? 0)) streamer.lastLiveAt = archivedAt
   }
 
   if (isDue(streamer.scheduleCheckedAt, SCHEDULE_RECHECK_INTERVAL, now)) {

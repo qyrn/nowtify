@@ -69,6 +69,9 @@
   "statusOffline": { "message": "Offline" },
   "streamInProgress": { "message": "Stream in progress" },
   "previewTitle": { "message": "Show stream preview" },
+  "vodPreviewTitle": { "message": "Show the replay" },
+  "vodSummary": { "message": "Replay · $DURATION$", "placeholders": { "duration": { "content": "$1" } } },
+  "vodViews": { "message": "$COUNT$ views", "placeholders": { "count": { "content": "$1" } } },
   "viewersCount": {
     "message": "$COUNT$ viewers",
     "placeholders": { "count": { "content": "$1" } }
@@ -106,13 +109,6 @@
   "deleteWholeTeam": { "message": "Whole team" },
   "deleteErrorGeneric": { "message": "Could not remove it, try again" },
 
-  "timeLessThanHour": { "message": "< 1h" },
-  "timeHours": { "message": "$COUNT$h", "placeholders": { "count": { "content": "$1" } } },
-  "timeDays": { "message": "$COUNT$d", "placeholders": { "count": { "content": "$1" } } },
-  "timeWeeks": { "message": "$COUNT$w", "placeholders": { "count": { "content": "$1" } } },
-  "timeMonths": { "message": "$COUNT$mo", "placeholders": { "count": { "content": "$1" } } },
-  "timeYear": { "message": "$COUNT$y", "placeholders": { "count": { "content": "$1" } } },
-  "timeYears": { "message": "$COUNT$y", "placeholders": { "count": { "content": "$1" } } },
   "scheduleInMinutes": { "message": "in $COUNT$ min", "placeholders": { "count": { "content": "$1" } } },
   "scheduleToday": { "message": "today, $TIME$", "placeholders": { "time": { "content": "$1" } } },
   "scheduleTomorrow": { "message": "tomorrow, $TIME$", "placeholders": { "time": { "content": "$1" } } },

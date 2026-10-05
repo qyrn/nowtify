@@ -39,6 +39,21 @@ describe('parseAddInput', () => {
 })
 
 describe('normalizeStreamer', () => {
+  it('keeps a valid replay and drops a malformed one', () => {
+    const vod = {
+      id: '2200',
+      duration: 3_600_000,
+      viewCount: 12,
+      thumbnailUrl: 'https://static-cdn.jtvnw.net/v.jpg'
+    }
+    expect(normalizeStreamer({ login: 'zerator', lastVod: vod })?.lastVod).toEqual(vod)
+    expect(normalizeStreamer({ login: 'zerator', lastVod: { ...vod, id: '../x' } })?.lastVod).toBeNull()
+    expect(
+      normalizeStreamer({ login: 'zerator', lastVod: { ...vod, thumbnailUrl: 'http://a.b/v.jpg' } })?.lastVod
+        ?.thumbnailUrl
+    ).toBeNull()
+  })
+
   it('migrates records written by v3.3', () => {
     const legacy = normalizeStreamer({
       id: 'twitch_zerator_1',
