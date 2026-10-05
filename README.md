@@ -121,6 +121,10 @@ Nowtify cherche le nom d'utilisateur exact, celui qui apparaît dans l'adresse d
 C'est normal : Chrome réveille l'extension toutes les 5 minutes au maximum. Et Chrome doit être ouvert, une fenêtre réduite suffit.
 </details>
 
+## 💬 Un bug, une idée ?
+
+Un truc qui casse ou qui te manque ? [Signale un bug](../../issues/new?template=bug.yml) ou [propose une idée](../../issues/new?template=idea.yml), un petit formulaire te guide. Pas de compte GitHub ? Écris à [contact@qyrn.dev](mailto:contact@qyrn.dev?subject=Nowtify). Le lien est aussi en bas de la page de réglages de l'extension.
+
 ---
 
 <details>
