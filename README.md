@@ -11,9 +11,9 @@ Une notification sur ton bureau dès qu'un de tes streamers Twitch lance son liv
 
 <br />
 
-<img src="docs/popup.png" width="360" alt="La popup de Nowtify avec trois streamers en live et l'aperçu d'un stream" />
+<a href="https://nowtify.qyrn.dev/#demo"><img src="docs/promo.webp" width="720" alt="La visite de Nowtify en 27 secondes : la notification, l'ajout d'un streamer, la pause et le thème" /></a>
 
-<sub>Les streamers des captures sont de vrais exemples, sans lien avec Nowtify.</sub>
+<sub>La visite en 27 secondes. Avec le son, c'est sur <a href="https://nowtify.qyrn.dev/#demo">le site</a>. Les streamers montrés sont de vrais exemples, sans lien avec Nowtify.</sub>
 
 </div>
 
@@ -24,6 +24,10 @@ Nowtify, c'est une petite extension Chrome qui surveille les chaînes Twitch que
 Pas de compte à créer, pas de serveur entre toi et Twitch. Tout reste dans ton navigateur.
 
 ## 👀 Ce qu'il y a dedans
+
+<div align="center">
+<img src="docs/popup.png" width="360" alt="La popup de Nowtify avec trois streamers en live et l'aperçu d'un stream" />
+</div>
 
 Clique sur l'icône et tu as ta liste. Ceux qui sont en live sont regroupés en haut avec leur nombre de viewers, les autres affichent leur dernier live (il y a combien de temps, le jeu, le titre). Clique sur la flèche pour voir la redif avec sa durée et son nombre de vues, avant de te lancer dedans. Le petit chiffre sur l'icône, c'est le nombre de streamers en live en ce moment.
 
@@ -139,7 +143,7 @@ pnpm icons        # régénère les icônes PNG depuis branding/logo.svg
 
 Pour la charger dans ton Chrome habituel : `pnpm build`, puis dans `chrome://extensions`, « Charger l'extension non empaquetée » sur le dossier `.output/chrome-mv3`. La racine du dépôt ne contient pas de `manifest.json`, WXT le génère au build.
 
-Pour publier une version : monte `version` dans `package.json`, lance `pnpm zip`, envoie le zip sur le tableau de bord du Chrome Web Store, puis joins-le à une release GitHub.
+Pour publier une version : monte `version` dans `package.json`, lance `pnpm zip`, puis publie une release GitHub `vX.Y.Z` avec le zip en pièce jointe. Le workflow `Publish` vérifie que le tag colle à la version, envoie le zip au Chrome Web Store et le soumet à la validation de Google. Pour tester les identifiants sans rien envoyer, lance-le à la main depuis l'onglet Actions (case `dry_run` cochée par défaut).
 
 | Dossier                    | Rôle                                                                   |
 | -------------------------- | ---------------------------------------------------------------------- |
