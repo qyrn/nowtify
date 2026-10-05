@@ -1,0 +1,28 @@
+name: Un bug
+description: Quelque chose ne marche pas comme prévu
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Ce qui se passe
+      description: Ce que tu as fait, ce que tu attendais, et ce qui s'est passé à la place.
+      placeholder: J'ai ajouté team/solary, la liste est restée vide.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version de Nowtify
+      description: Elle est écrite en bas de la page de réglages.
+      placeholder: '4.0.0'
+  - type: input
+    id: browser
+    attributes:
+      label: Navigateur et système
+      placeholder: Chrome 141 sur Windows 11
+  - type: textarea
+    id: more
+    attributes:
+      label: Autre chose ?
+      description: Une capture d'écran aide beaucoup. Pense à masquer ce que tu ne veux pas montrer.

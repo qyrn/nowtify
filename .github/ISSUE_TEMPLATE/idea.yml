@@ -1,0 +1,17 @@
+name: Une idée
+description: Un truc qui te manque ou qui pourrait marcher mieux
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: Ton idée
+      description: Ce que tu voudrais que Nowtify fasse.
+      placeholder: Pouvoir trier ma liste par nombre de viewers.
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Pourquoi
+      description: Dans quelle situation ça t'aiderait ?
