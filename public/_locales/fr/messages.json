@@ -252,6 +252,6 @@
   },
 
   "websiteLink": { "message": "Site web" },
-  "reportBugLink": { "message": "Signaler un bug" },
+  "feedbackLink": { "message": "Un bug, une idée ?" },
   "privacyLink": { "message": "Confidentialité" }
 }

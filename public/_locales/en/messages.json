@@ -241,6 +241,6 @@
   },
 
   "websiteLink": { "message": "Website" },
-  "reportBugLink": { "message": "Report a bug" },
+  "feedbackLink": { "message": "Bug or idea?" },
   "privacyLink": { "message": "Privacy" }
 }
