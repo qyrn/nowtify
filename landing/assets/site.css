@@ -729,6 +729,60 @@ section {
   color: var(--dim);
 }
 
+.feedback {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.feedback-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: var(--panel-shadow);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color 0.2s var(--ease),
+    transform 0.15s var(--ease);
+}
+
+.feedback-card:hover {
+  border-color: var(--accent-border);
+}
+
+.feedback-card:active {
+  transform: translateY(1px);
+}
+
+.feedback-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.feedback-via {
+  color: var(--accent-text);
+  font-family: var(--mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.feedback-card strong {
+  font-size: 18px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.feedback-card span:last-child {
+  color: var(--dim);
+  font-size: 15px;
+}
+
 .footer {
   padding: 36px 0 48px;
   border-top: 1px solid var(--line);
@@ -887,6 +941,10 @@ section {
   }
 
   .flow {
+    grid-template-columns: 1fr;
+  }
+
+  .feedback {
     grid-template-columns: 1fr;
   }
 
