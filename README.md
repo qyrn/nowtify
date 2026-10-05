@@ -25,7 +25,7 @@ Pas de compte à créer, pas de serveur entre toi et Twitch. Tout reste dans ton
 
 ## 👀 Ce qu'il y a dedans
 
-Clique sur l'icône et tu as ta liste. Ceux qui sont en live sont regroupés en haut avec leur nombre de viewers, les autres affichent depuis combien de temps ils ont coupé leur dernier live. Le petit chiffre sur l'icône, c'est le nombre de streamers en live en ce moment.
+Clique sur l'icône et tu as ta liste. Ceux qui sont en live sont regroupés en haut avec leur nombre de viewers, les autres affichent leur dernier live (il y a combien de temps, le jeu, le titre). Clique sur la flèche pour voir la redif avec sa durée et son nombre de vues, avant de te lancer dedans. Le petit chiffre sur l'icône, c'est le nombre de streamers en live en ce moment.
 
 Clique sur un streamer pour ouvrir son live. Au survol, trois boutons apparaissent : la flèche déplie un aperçu (la miniature, depuis combien de temps le live tourne et le nombre exact de viewers), la cloche barrée met ses notifs en pause, la croix le retire de ta liste.
 
